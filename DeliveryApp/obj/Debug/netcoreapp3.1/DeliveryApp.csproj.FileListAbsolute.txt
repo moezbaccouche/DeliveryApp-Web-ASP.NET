@@ -182,3 +182,4 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Category\AllCategories.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Product\AddProduct.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Product\AllProducts.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout2.cshtml.g.cs
