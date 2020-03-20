@@ -1,0 +1,52 @@
+﻿@model DeliveryApp.Models.ViewModels.CategoryViewModel
+@{
+    ViewData["Title"] = "AllCategories";
+    ViewBag.CurrentController = "Category";
+    ViewBag.CurrentAction = "AllCategories";
+    ViewBag.CurrentView = "Catégories";
+}
+
+<div class="container-fluid">
+    <h1>Toutes les catégories</h1>
+
+    @if (Model.Message != null)
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
+
+
+
+    <div class="row">
+        @foreach (var category in Model.Categories)
+        {
+            <div class="col-md-4 col-sm-4 col-lg-4">
+                <div class="card" style="width: 18rem; height: 350px">
+                    <img height="180" src="@Url.Content(category.ImagePath)" class="card-img-top" alt="Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@category.Name</h5>
+                        <p class="card-text">@category.Description</p>
+                        <div class="float-right">
+                            <a href="#" class="btn btn-info"><i class="fa fa-pencil"></i></a>
+                            <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+
+    @*@foreach (var category in Model.Categories)
+        {
+            <div class="card" style="width: 18rem;">
+                <img src="@Url.Content(category.ImagePath)" class="card-img-top" alt="Image">
+                <div class="card-body">
+                    <h5 class="card-title">@category.Name</h5>
+                    <p class="card-text">@category.Description</p>
+                    <a href="#" class="btn btn-alert"><i class="fa fa-trash"></i></a>
+                </div>
+            </div>
+        }*@
+
+</div>
+

@@ -1,0 +1,53 @@
+﻿@model DeliveryApp.Models.Data.Category
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Nouvelle catégorie";
+    ViewBag.CurrentController = "Category";
+    ViewBag.CurrentAction = "AddCategory";
+}
+
+
+<div class="container-fluid">
+    <h1>Ajout d'une nouvelle catégorie</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form enctype="multipart/form-data" method="post">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Name" class="bmd-label-floating">Nom</label>
+                                    <input type="text" asp-for="Name" class="form-control">
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="Description" class="bmd-label-floating">Description</label>
+                                    <input type="text" asp-for="Description" class="form-control">
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="file-field">
+                                    <div class="btn btn-default btn-sm">
+                                        <span>Image</span>
+                                        <input type="file" name="file">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button style="margin-top: 20px" type="submit" class="btn btn-primary pull-left">Ajouter</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

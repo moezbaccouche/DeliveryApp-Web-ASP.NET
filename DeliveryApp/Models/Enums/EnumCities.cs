@@ -1,0 +1,30 @@
+﻿namespace DeliveryApp.Models.Data
+{
+    public enum EnumCities
+    {
+        Ariana,
+        Beja,
+        BenArous,
+        Bizerte,
+        Gabes,
+        Gafsa,
+        Jendouba,
+        Kairouan,
+        Kasserine,
+        Kebili,
+        Kef,
+        Mahdia,
+        Mannouba,
+        Medenine,
+        Monastir,
+        Nabeul,
+        Sfax,
+        SidiBouzid,
+        Siliana,
+        Sousse,
+        Tataouine,
+        Tozeur,
+        Tunis,
+        Zaighouan
+    }
+}
