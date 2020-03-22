@@ -61,7 +61,7 @@ namespace DeliveryApp.Controllers
 
             // Upload the chosen product pictures
             FileUploader fileUploader = new FileUploader(productImageService);
-            fileUploader.UploadImages(files, product);
+            fileUploader.UploadImages(files, product, "ProductsImages");
 
 
 

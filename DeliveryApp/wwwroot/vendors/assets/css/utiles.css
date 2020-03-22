@@ -1,0 +1,18 @@
+﻿.deliveryMan-card-header {
+    background-image: url('../../images/background.jpg');
+    height: 150px;
+    border-radius: 10px !important;
+}
+
+.img-deliveryMan-card {
+    margin-top: 10%;
+    border: 5px solid white;
+}
+
+.deliveryMan-card {
+    border-radius: 20px!important;
+}
+
+.bt-add {
+    border-radius: 5px;
+}

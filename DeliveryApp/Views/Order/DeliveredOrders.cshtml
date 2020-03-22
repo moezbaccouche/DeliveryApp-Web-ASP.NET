@@ -1,0 +1,46 @@
+﻿@model DeliveryApp.Models.ViewModels.OrdersViewModel
+@{
+    ViewData["Title"] = "DeliveredOrders";
+    ViewBag.CurrentController = "Order";
+    ViewBag.CurrentAction = "DeliveredOrders";
+    ViewBag.CurrentViewTitle = "Commandes livrées";
+}
+
+<h1>Commandes livrées</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Data Table</strong>
+            </div>
+            <div class="card-body">
+                <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Heure estimée</th>
+                            <th>Heure réelle</th>
+                            <th>Prix</th>
+                            <th>Livreur</th>
+                            <th>Client</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.DeliveredOrders)
+                        {
+                        <tr>
+                            <td>@order.Id</td>
+                            <td>@order.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@order.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@order.DeliveryPrice DT</td>
+                            <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
+                            <td>@order.Client.FirstName @order.Client.LastName</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

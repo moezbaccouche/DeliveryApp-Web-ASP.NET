@@ -1,112 +1,171 @@
-﻿@{
+﻿@model DeliveryApp.Models.ViewModels.ProfileViewModel
+@{
     ViewData["Title"] = "Profile";
     ViewBag.CurrentAction = "Profile";
+    ViewBag.CurrentViewTitle = "Profil";
 }
-<div class="container-fluid">
+
+
     <div class="row">
+        <div class="col-md-4">
+            <div class="card card-user">
+                <div class="image">
+                    <img src="../../assets/img/bg/damir-bosnjak.jpg" alt="...">
+                </div>
+                <div class="card-body">
+                    <div class="author">
+                        <a href="#">
+                            <img class="avatar border-gray" src="@Url.Content(Model.Admin.PicturePath)" alt="...">
+                            <h5 class="title">@Model.Admin.FirstName @Model.Admin.LastName</h5>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="button-container">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                                <h5>12<br><small>Files</small></h5>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
+                                <h5>2GB<br><small>Used</small></h5>
+                            </div>
+                            <div class="col-lg-3 mr-auto">
+                                <h5>24,6$<br><small>Spent</small></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Livreurs</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled team-members">
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    DJ Khaled
+                                    <br />
+                                    <span class="text-muted"><small>Offline</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="../../assets/img/faces/joe-gardner-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    Creative Tim
+                                    <br />
+                                    <span class="text-success"><small>Available</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="../../assets/img/faces/clem-onojeghuo-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-ms-7 col-7">
+                                    Flume
+                                    <br />
+                                    <span class="text-danger"><small>Busy</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header card-header-primary">
-                    <h4 class="card-title">Edit Profile</h4>
-                    <p class="card-category">Complete your profile</p>
+                <div class="card-header">
+                    <h5 class="title">Modifier Profil</h5>
                 </div>
                 <div class="card-body">
                     <form>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Company (disabled)</label>
-                                    <input type="text" class="form-control" disabled>
+                                    <label>Entreprise</label>
+                                    <input type="text" class="form-control" disabled="" placeholder="Company" value="Delivery TN">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Username</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="bmd-label-floating">Email address</label>
-                                    <input type="email" class="form-control">
+                                    <label for="exampleInputEmail1">Email</label>
+                                    <input type="email" class="form-control" placeholder="Email" value="@Model.Admin.Email">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Fist Name</label>
-                                    <input type="text" class="form-control">
+                                    <label>Prénom</label>
+                                    <input type="text" class="form-control" placeholder="Company" value="@Model.Admin.FirstName">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Last Name</label>
-                                    <input type="text" class="form-control">
+                                    <label>Nom</label>
+                                    <input type="text" class="form-control" placeholder="Last Name" value="@Model.Admin.LastName">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Adress</label>
-                                    <input type="text" class="form-control">
+                                    <label>Adresse</label>
+                                    <input type="text" class="form-control" placeholder="Home Address" value="@Model.Admin.Location.Address">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-4 pr-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">City</label>
-                                    <input type="text" class="form-control">
+                                    <label>Ville</label>
+                                    <input type="text" class="form-control" placeholder="City" value="@Model.Admin.Location.City">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 px-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Country</label>
-                                    <input type="text" class="form-control">
+                                    <label>Pays</label>
+                                    <input type="text" class="form-control" placeholder="Country" value="Tunisie">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 pl-1">
                                 <div class="form-group">
-                                    <label class="bmd-label-floating">Postal Code</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>About Me</label>
-                                    <div class="form-group">
-                                        <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-                                        <textarea class="form-control" rows="5"></textarea>
-                                    </div>
+                                    <label>Code postal</label>
+                                    <input type="number" class="form-control" placeholder="ZIP Code" value="@Model.Admin.Location.ZipCode">
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
-                        <div class="clearfix"></div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-primary btn-round">Modifier</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card card-profile">
-                <div class="card-avatar">
-                    <a href="#pablo">
-                        <img class="img" src="../assets/img/faces/marc.jpg" />
-                    </a>
-                </div>
-                <div class="card-body">
-                    <h6 class="card-category text-gray">CEO / Co-Founder</h6>
-                    <h4 class="card-title">Alec Thompson</h4>
-                    <p class="card-description">
-                        Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-                    </p>
-                    <a href="#pablo" class="btn btn-primary btn-round">Follow</a>
-                </div>
-            </div>
-        </div>
     </div>
-</div>

@@ -18,7 +18,7 @@ namespace DeliveryApp.Extensions
             this.productImageService = productImageService;
         }
        
-        public static string UploadImage(IFormFile file)
+        public static string UploadImage(IFormFile file, string directoryName)
         {
             string path = "";
             if (file == null || file.Length == 0)
@@ -31,7 +31,7 @@ namespace DeliveryApp.Extensions
             string pathToReturn = "~/Content/CategoriesImages/" + fileName;
 
             path = Path.Combine(
-                    Directory.GetCurrentDirectory(), "wwwroot\\Content\\CategoriesImages\\", fileName);
+                    Directory.GetCurrentDirectory(), "wwwroot\\Content\\" + directoryName + "\\", fileName);
 
             using (var stream = new FileStream(path, FileMode.Create))
             {
@@ -40,7 +40,7 @@ namespace DeliveryApp.Extensions
             return pathToReturn;
         }
 
-        public bool UploadImages(List<IFormFile> files, Product newProduct )
+        public bool UploadImages(List<IFormFile> files, Product newProduct, string directoryName)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace DeliveryApp.Extensions
                         string pathToReturn = "~/Content/CategoriesImages/" + fileName;
 
                         path = Path.Combine(
-                                        Directory.GetCurrentDirectory(), "wwwroot\\Content\\CategoriesImages", fileName);
+                                        Directory.GetCurrentDirectory(), "wwwroot\\Content\\" + directoryName, fileName);
 
                         using (var stream = new FileStream(path, FileMode.Create))
                         {

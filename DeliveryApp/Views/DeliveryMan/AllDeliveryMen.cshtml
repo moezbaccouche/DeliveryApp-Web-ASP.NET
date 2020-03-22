@@ -1,0 +1,32 @@
+﻿@model DeliveryApp.Models.ViewModels.DeliveryMenViewModel
+@{
+    ViewData["Title"] = "AllDeliveryMen";
+    ViewBag.CurrentController = "DeliveryMan";
+    ViewBag.CurrentAction = "AllDeliveryMen";
+    ViewBag.CurrentViewTitle = "Liste des livreurs";
+}
+
+<h1>Liste des livreurs</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach (var man in Model.AllDeliveryMen)
+        {
+            <div class="col-md-4 col-sm-4 col-lg-4">
+                <div class="card deliveryMan-card" style="width: 18rem;">
+                    <div class="text-center deliveryMan-card-header">
+                        <img height="100" width="100" src="@Url.Content(man.PicturePath)" class="img rounded-circle img-deliveryMan-card" alt="Image">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@man.FirstName @man.LastName</h5>
+                        <p class="card-text">Email: @man.Email</p>
+                        <p class="card-text">Téléphone: @man.Phone</p>
+                        <div class="float-right">
+                            <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

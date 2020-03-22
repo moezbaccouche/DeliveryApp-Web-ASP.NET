@@ -1,7 +1,9 @@
 ﻿@model DeliveryApp.Models.ViewModels.ProductViewModel
 @{
     ViewData["Title"] = "Nouveau produit";
-    ViewBag.CurrentView = "Produit";
+    ViewBag.CurrentViewTitle = "Nouveau produit";
+    ViewBag.CurrentController = "Product";
+    ViewBag.CurrentAction = "AddProduct";
 }
 
 <h1>Nouveau produit</h1>
@@ -51,7 +53,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="submit" value="Ajouter" class="btn btn-primary btn-lg" />
+                    <input type="submit" value="Ajouter" class="btn btn-primary btn-lg bt-add" />
                 </div>
             </div>
         </div>

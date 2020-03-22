@@ -4,6 +4,7 @@
     ViewBag.CurrentController = "Category";
     ViewBag.CurrentAction = "AllCategories";
     ViewBag.CurrentView = "Catégories";
+    ViewBag.CurrentViewTitle = "Liste des catégories";
 }
 
 <div class="container-fluid">
@@ -34,19 +35,8 @@
                 </div>
             </div>
         }
-        
+    </div>
 
-    @*@foreach (var category in Model.Categories)
-        {
-            <div class="card" style="width: 18rem;">
-                <img src="@Url.Content(category.ImagePath)" class="card-img-top" alt="Image">
-                <div class="card-body">
-                    <h5 class="card-title">@category.Name</h5>
-                    <p class="card-text">@category.Description</p>
-                    <a href="#" class="btn btn-alert"><i class="fa fa-trash"></i></a>
-                </div>
-            </div>
-        }*@
 
 </div>
 

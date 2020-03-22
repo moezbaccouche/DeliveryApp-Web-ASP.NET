@@ -20,12 +20,12 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Migrations\" />
+    <Folder Include="Server\" />
     <Folder Include="Views\Dashboard\" />
-    <Folder Include="Views\DeliveryMan\" />
     <Folder Include="Views\User\" />
-    <Folder Include="Views\Order\" />
     <Folder Include="wwwroot\Content\CategoriesImages\" />
-    <Folder Include="wwwroot\Content\" />
+    <Folder Include="wwwroot\Content\DeliveryMenPictures\" />
+    <Folder Include="wwwroot\Content\ProductsImages\" />
   </ItemGroup>
 
 

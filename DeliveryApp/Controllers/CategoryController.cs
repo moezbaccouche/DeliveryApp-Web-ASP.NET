@@ -37,7 +37,7 @@ namespace DeliveryApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                string path = FileUploader.UploadImage(file);
+                string path = FileUploader.UploadImage(file, "CategoriesImages");
                 category.ImagePath = path;
                 categoryService.AddCategory(category);
                 TempData["Message"] = "Catégorie ajoutée avec succès !";

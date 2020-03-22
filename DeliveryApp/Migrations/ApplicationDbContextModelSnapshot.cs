@@ -35,10 +35,18 @@ namespace DeliveryApp.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
 
                     b.ToTable("Admin");
                 });
@@ -107,6 +115,9 @@ namespace DeliveryApp.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PicturePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LocationId");
@@ -140,6 +151,9 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PicturePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -224,6 +238,9 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("OrderTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RealDeliveryTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
@@ -528,6 +545,13 @@ namespace DeliveryApp.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.Admin", b =>
+                {
+                    b.HasOne("DeliveryApp.Models.Data.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.Bill", b =>
