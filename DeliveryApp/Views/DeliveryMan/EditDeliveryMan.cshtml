@@ -1,0 +1,77 @@
+﻿@model DeliveryApp.Models.ViewModels.DeliveryMenViewModel
+@{
+    ViewData["Title"] = "Modification Livreur";
+}
+
+<form method="post" asp-controller="DeliveryMan" asp-action="EditDeliveryMan" id="formDeliveryMan">
+
+    <div class="card card-user">
+        <div class="image">
+            <img src="~/assets/img/bg/damir-bosnjak.jpg" alt="...">
+        </div>
+        <div class="card-body">
+            <div class="author">
+                <a href="#">
+                    <img class="avatar border-gray" style="border: solid 2px white" src="@Url.Content(Model.DeliveryMan.PicturePath)" alt="...">
+                    <input type="hidden" asp-for="DeliveryMan.Id" value="@Model.DeliveryMan.Id" />
+                    <input type="hidden" asp-for="DeliveryMan.PicturePath" value="@Model.DeliveryMan.PicturePath" />
+                    <input type="hidden" asp-for="DeliveryMan.Location.Id" value="@Model.DeliveryMan.Location.Id" />
+                </a>
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Nom
+                    *
+                </label>
+                <input class="form-control" asp-for="DeliveryMan.LastName" type="text" required value="@Model.DeliveryMan.LastName">
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Prénom
+                    *
+                </label>
+                <input class="form-control" asp-for="DeliveryMan.FirstName" id="firstName" type="text" required value="@Model.DeliveryMan.FirstName">
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Email
+                    *
+                </label>
+                <input class="form-control" asp-for="DeliveryMan.Email" id="email" type="email" required value="@Model.DeliveryMan.Email">
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Téléphone
+                    *
+                </label>
+                <input class="form-control" asp-for="DeliveryMan.Phone" id="phone" type="text" required value="@Model.DeliveryMan.Phone">
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Disponible
+
+                </label>
+                @if (Model.DeliveryMan.IsAvailable)
+                {
+                    <input class="bootstrap-switch" checked asp-for="DeliveryMan.IsAvailable" type="checkbox" data-toggle="switch" data-on-color="default" data-off-color="default" data-on-label="ON" data-off-label="OFF">
+
+                }
+                else
+                {
+                    <input class="bootstrap-switch" asp-for="DeliveryMan.IsAvailable" type="checkbox" data-toggle="switch" data-on-color="default" data-off-color="default" data-on-label="ON" data-off-label="OFF">
+
+                }
+
+            </div>
+            <div class="category form-category">* Champs requis</div>
+
+        </div>
+        <div class="card-footer text-right">
+            <div class="pull-right">
+                <input type="submit" class="btn btn-fill btn-primary" name="btSend" value="Modifier" id="submitButton" />
+                <input type="button" value="Annuler" class="btn btn-default" id="cancel" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</form>
+

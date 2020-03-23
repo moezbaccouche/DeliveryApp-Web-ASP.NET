@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.Services.Contracts
 {
-    public interface IProductImageService
+    public interface ILocationService
     {
-        ProductImage AddProductImage(ProductImage newProductImage);
-        IEnumerable<ProductImage> GetProductImages(Product product);
+        Location GetLocationById(int id);
     }
 }

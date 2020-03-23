@@ -6,6 +6,16 @@
     ViewBag.CurrentViewTitle = "Liste des livreurs";
 }
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="nc-icon nc-simple-remove"></i>
+        </button>
+        <span>@TempData["Message"]</span>
+    </div>
+}
+
 <h1>Liste des livreurs</h1>
 
 <div class="container-fluid">
@@ -21,8 +31,10 @@
                         <h5 class="card-title">@man.FirstName @man.LastName</h5>
                         <p class="card-text">Email: @man.Email</p>
                         <p class="card-text">Téléphone: @man.Phone</p>
+
                         <div class="float-right">
-                            <a href="#" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                            <a href="#" class="btn btn-simple btn-info btn-icon ajaxBtn" data-link="/DeliveryMan/EditDeliveryMan?id=@man.Id" data-title="Modifier Livreur"><i class="fa fa-pencil" title="Modifier"></i></a>
+                            <a href="#" class="btn btn-simple btn-danger btn-icon"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
                 </div>

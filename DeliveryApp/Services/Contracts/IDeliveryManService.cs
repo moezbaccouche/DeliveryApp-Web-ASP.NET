@@ -12,6 +12,7 @@ namespace DeliveryApp.Services.Contracts
         DeliveryMan ValidateDeliveryMan(DeliveryMan deliveryMan);
         DeliveryMan DeleteDeliveryMan(int id);
         DeliveryMan GetDeliveryManById(int id);
+        DeliveryMan EditDeliveryMan(DeliveryMan editedDeliveryMan);
         IEnumerable<DeliveryMan> GetNotValidatedDeliveryMen();
         IEnumerable<DeliveryMan> GetAllDeliveryMen();
         IEnumerable<DeliveryMan> GetAllAvailableDeliveryMen();

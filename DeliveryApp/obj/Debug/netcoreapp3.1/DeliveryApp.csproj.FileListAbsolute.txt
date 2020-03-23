@@ -191,3 +191,5 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Client\AllClients.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LayoutFinal.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\DeliveryMan\Maps.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\DeliveryMan\EditDeliveryMan.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Product\EditProduct.cshtml.g.cs

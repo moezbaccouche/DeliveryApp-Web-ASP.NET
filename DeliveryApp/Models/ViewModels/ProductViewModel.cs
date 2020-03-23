@@ -14,5 +14,7 @@ namespace DeliveryApp.Models.ViewModels
         public Product Product { get; set; }
         public IEnumerable<Category> Categories { get; set; }
         public IEnumerable<Product> AllProducts { get; set; }
+        public IEnumerable<ProductImage> ProductImages { get; set; }
+        public Category ProductCategory { get; set; }
     }
 }

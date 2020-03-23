@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.Services.Implementations
 {
+
     public class DeliveryManService : IDeliveryManService
     {
         private readonly IRepository<DeliveryMan> repoDeliveryMan;
@@ -31,6 +32,12 @@ namespace DeliveryApp.Services.Implementations
             return deliveryMan;
         }
 
+        public DeliveryMan EditDeliveryMan(DeliveryMan editedDeliveryMan)
+        {
+            repoDeliveryMan.Update(editedDeliveryMan);
+            return editedDeliveryMan;
+        }
+
         public IEnumerable<DeliveryMan> GetAllAvailableDeliveryMen()
         {
             var availableDeliveryMen = repoDeliveryMan.TableNoTracking.Where(d => d.IsAvailable == true).ToList();
@@ -48,7 +55,10 @@ namespace DeliveryApp.Services.Implementations
 
         public DeliveryMan GetDeliveryManById(int id)
         {
-            var deliveryMan = repoDeliveryMan.TableNoTracking.Where(d => d.Id == id).FirstOrDefault();
+            var deliveryMan = repoDeliveryMan.TableNoTracking
+                .Where(d => d.Id == id)
+                .Include(d => d.Location)
+                .FirstOrDefault();
             return deliveryMan;
         }
 

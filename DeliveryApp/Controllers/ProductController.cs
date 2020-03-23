@@ -77,5 +77,28 @@ namespace DeliveryApp.Controllers
 
             return View(pvm);
         }
+
+        [HttpGet]
+        public IActionResult EditProduct(int id)
+        {
+            var allCategories = categoryService.GetAllCategories();
+            var product = productService.GetProductById(id);
+            var productCategory = categoryService.GetCategoryById(product.CategoryId);
+            var units = htmlHelper.GetEnumSelectList<EnumProductUnit>();
+            var productImages = productImageService.GetProductImages(product);
+
+            var model = new ProductViewModel
+            { 
+                Categories = allCategories,
+                Product = product,
+                ProductCategory = productCategory,
+                Units = units,
+                ProductImages = productImages
+
+            };
+
+            return PartialView(model);
+
+        }
     }
 }

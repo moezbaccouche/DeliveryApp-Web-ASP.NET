@@ -46,6 +46,7 @@ namespace DeliveryApp
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IClientService, ClientService>();
             services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<ILocationService, LocationService>();
 
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));

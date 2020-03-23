@@ -22,5 +22,13 @@ namespace DeliveryApp.Services.Implementations
             repoProductImage.Insert(newProductImage);
             return newProductImage;
         }
+
+        public IEnumerable<ProductImage> GetProductImages(Product product)
+        {
+            var images = repoProductImage.TableNoTracking
+                .Where(pi => pi.Product == product)
+                .ToList();
+            return images;
+        }
     }
 }
