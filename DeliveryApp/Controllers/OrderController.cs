@@ -11,10 +11,12 @@ namespace DeliveryApp.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService orderService;
+        private readonly IDeliveryManService deliveryManService;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IDeliveryManService deliveryManService)
         {
             this.orderService = orderService;
+            this.deliveryManService = deliveryManService;
         }
         public IActionResult Index()
         {
@@ -49,6 +51,15 @@ namespace DeliveryApp.Controllers
                 InDeliveryOrders = inDeliveryOrders
             };
             return View(ordersViewModel);
+        }
+
+        [HttpGet]
+        public IActionResult DeliveryManLocation(int id)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(id);
+            var model = new DeliveryMenViewModel { DeliveryMan = deliveryMan };
+
+            return PartialView(model);
         }
     }
 }

@@ -98,7 +98,36 @@ namespace DeliveryApp.Controllers
             };
 
             return PartialView(model);
+        }
 
+        [HttpPost]
+        public IActionResult EditProduct(ProductViewModel model, int id, List<IFormFile> files, int categories)
+        {
+            Product editedProduct = new Product
+            {
+                Id = id,
+                Name = model.Product.Name,
+                Description = model.Product.Description,
+                Price = model.Product.Price,
+                ProductUnit = model.Product.ProductUnit,
+                CategoryId = categories
+            };
+
+            productService.EditProduct(editedProduct);
+            TempData["Message"] = "Produit modifié avec succès";
+
+            //This method uploads the pictures and add them to the Database
+            FileUploader fileUploader = new FileUploader(productImageService);
+            fileUploader.UploadImages(files, editedProduct, "ProductsImages");
+            return RedirectToAction("AllProducts");
+        }
+
+
+        [HttpGet]
+        public void DeleteProductPicture(int id)
+        {
+            var productPic = productImageService.GetProductImageById(id);
+            productImageService.DeleteProductImage(productPic);
         }
     }
 }

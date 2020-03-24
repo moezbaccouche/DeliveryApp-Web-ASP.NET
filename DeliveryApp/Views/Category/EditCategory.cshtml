@@ -1,0 +1,41 @@
+﻿@model DeliveryApp.Models.Data.Category
+@{
+    ViewData["Title"] = "Modification Catégorie";
+}
+
+<form method="post" asp-controller="Category" asp-action="EditCategory" id="formCategory" enctype="multipart/form-data">
+    <div class="card card-user">
+        <div class="card-body">
+            <div>
+                <img class="" id="imgCat" style="border: solid 2px white" src="@Url.Content(Model.ImagePath)" alt="...">
+
+                <span class="btn btn-rose btn-round btn-file">
+                    <span class="fileinput-exists">Changer</span>
+                    <input id="categoryPic" type="file" onchange="pictureChanged(event)" name="file">
+
+                </span>
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                <input type="hidden" asp-for="ImagePath" value="@Model.ImagePath" />
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Nom
+                    *
+                </label>
+                <input class="form-control" asp-for="Name" type="text" required value="@Model.Name">
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Description
+                </label>
+                <input class="form-control" asp-for="Description" type="text" value="@Model.Description">
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <div class="pull-right">
+                <input type="submit" class="btn btn-fill btn-primary" name="btSend" value="Modifier" id="submitButton" />
+                <input type="button" value="Annuler" class="btn btn-default" id="cancel" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</form>

@@ -29,25 +29,25 @@
                     <tbody>
                         @foreach (var product in Model.AllProducts)
                         {
-                        <tr>
-                            <td>@product.Id</td>
-                            <td>@product.Name</td>
-                            <td>@product.Description</td>
-                            <td>@product.Price DT</td>
-                            @* Must be changed, not optimal *@
-                            @foreach (var category in Model.Categories)
-                            {
-                                if (product.CategoryId == category.Id)
+                            <tr>
+                                <td>@product.Id</td>
+                                <td>@product.Name</td>
+                                <td>@product.Description</td>
+                                <td>@product.Price DT</td>
+                                @* Must be changed, not optimal *@
+                                @foreach (var category in Model.Categories)
                                 {
-                                    <td>@category.Name</td>
-                                    break;
+                                    if (product.CategoryId == category.Id)
+                                    {
+                                        <td>@category.Name</td>
+                                        break;
+                                    }
                                 }
-                            }
-                            <td class="text-center">
-                                <a class="editBtn" href="#" data-link="/Product/EditProduct?id=@product.Id" data-title="Modifier Produit"><i style="font-size: 20px;" class="fa fa-pencil text-info "></i></a>
-                                <a href="#"><i style="font-size: 20px; margin-left: 10px" class="fa fa-trash text-danger"></i></a>
-                            </td>
-                        </tr>
+                                <td class="text-center">
+                                    <a class="editBtn" href="#" data-link="/Product/EditProduct?id=@product.Id" data-title="Modifier Produit"><i style="font-size: 20px;" class="fa fa-pencil text-info "></i></a>
+                                    <a href="#"><i style="font-size: 20px; margin-left: 10px" class="fa fa-trash text-danger"></i></a>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -57,3 +57,76 @@
 
 
 </div>
+
+@section scripts {
+
+    <script src="~/assets/js/plugins/bootbox.js"></script>
+
+    <script>
+        var allImages = [];
+
+        function prodPicAdded(e) {
+
+            var files = $("#productPics")[0].files;
+            for (var i = 0; i < files.length; i++) {
+                getBase64(files[i]).then(
+                    data => setPic(data)
+                );
+            }
+        }
+
+        function setPic(str) {
+
+            var count = $('#rowPics .divPic').length;
+
+            var newCol = " <div id='colImg_" + count + "' class='col-sm-3 col-md-3 col-lg-3 divPic'>"
+                + "<input type='hidden' class='valPic' value='' />"
+                + "<a href='#' onclick='deleteImg(" + count + ")'><i style='font-size: 20px' class='fa fa-close text-danger float-right'></i></a>"
+                + "<img id='prodImg_" + count + "' src='' />"
+                + "</div>";
+
+            $("#rowPics").append(newCol);
+
+            $("#prodImg_" + count).attr("src", str);
+            allImages.push(str);
+        }
+
+        function deleteImg(id) {
+            debugger;
+            bootbox.confirm({
+                title: "Confirmation suppression",
+                message: "Etes-vous certain de vouloir supprimer cette image ?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Annuler'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmer'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        var elem = $("#colImg_" + id);
+                        var picVal = elem.find(".valPic");
+                        if (picVal.val() != '') {
+
+                            var idImg = picVal.val();
+                            $.ajax({
+                                url: '@Url.Action("DeleteProductPicture", "Product")',
+                                data: { id: idImg },
+                                type: 'GET',
+                                dataType: 'html',
+                                success: function () {
+                                console.log("Picture deleted");
+                            }
+                        });
+                        }
+                        elem.css("display", 'none');
+                    }
+                }
+            });
+        }
+
+    </script>
+
+}

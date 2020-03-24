@@ -36,8 +36,7 @@ namespace DeliveryApp.Services.Implementations
 
         public Category EditCategory(Category category)
         {
-            var entity = context.Categories.Attach(category);
-            entity.State = EntityState.Modified;
+            repoCategory.Update(category);
             return category;
         }
 

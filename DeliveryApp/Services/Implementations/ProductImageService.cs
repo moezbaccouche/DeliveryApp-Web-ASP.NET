@@ -30,5 +30,17 @@ namespace DeliveryApp.Services.Implementations
                 .ToList();
             return images;
         }
+
+        public ProductImage GetProductImageById(int id)
+        {
+            var image = repoProductImage.TableNoTracking.Where(pi => pi.Id == id).FirstOrDefault();
+            return image;
+        }
+
+        public ProductImage DeleteProductImage(ProductImage image)
+        {
+            repoProductImage.Delete(image);
+            return image;
+        }
     }
 }

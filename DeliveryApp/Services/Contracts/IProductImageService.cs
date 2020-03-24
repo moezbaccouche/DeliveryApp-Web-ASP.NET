@@ -10,5 +10,7 @@ namespace DeliveryApp.Services.Contracts
     {
         ProductImage AddProductImage(ProductImage newProductImage);
         IEnumerable<ProductImage> GetProductImages(Product product);
+        ProductImage GetProductImageById(int id);
+        ProductImage DeleteProductImage(ProductImage image);
     }
 }

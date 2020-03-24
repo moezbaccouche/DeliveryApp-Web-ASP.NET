@@ -64,6 +64,7 @@ namespace DeliveryApp.Services.Implementations
             var deliveredOrders = repoOrder.TableNoTracking
                 .Where(o => o.Status == EnumOrderStatus.InDelivery)
                 .Include(o => o.DeliveryMan)
+                .Include(o => o.DeliveryMan.Location)
                 .Include(o => o.Client)
                 .ToList();
 

@@ -3,6 +3,8 @@ using DeliveryApp.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +30,7 @@ namespace DeliveryApp.Extensions
             string extension = Path.GetExtension(file.FileName);
             fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
 
-            string pathToReturn = "~/Content/CategoriesImages/" + fileName;
+            string pathToReturn = "~/Content/" + directoryName + "/" + fileName;
 
             path = Path.Combine(
                     Directory.GetCurrentDirectory(), "wwwroot\\Content\\" + directoryName + "\\", fileName);
@@ -54,7 +56,7 @@ namespace DeliveryApp.Extensions
                         string fileName = Path.GetFileNameWithoutExtension(file.FileName);
                         string extension = Path.GetExtension(file.FileName);
                         fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        string pathToReturn = "~/Content/CategoriesImages/" + fileName;
+                        string pathToReturn = "~/Content/" + directoryName + "/" + fileName;
 
                         path = Path.Combine(
                                         Directory.GetCurrentDirectory(), "wwwroot\\Content\\" + directoryName, fileName);
@@ -64,7 +66,6 @@ namespace DeliveryApp.Extensions
                             file.CopyTo(stream);
 
                             //Add the image in the table productImage
-                            //AddAttachmentFile(pathToReturn, employee, request);
                             productImageService.AddProductImage(new ProductImage { ImagePath = pathToReturn, Product = newProduct });
                         }
                     }
@@ -77,7 +78,43 @@ namespace DeliveryApp.Extensions
             }
         }
 
+        public static Image Base64ToImage(string base64String)
+        {
+            //string convert = base64String.Replace("data:image/jpeg;base64,", string.Empty);
+            string convert = base64String;
+            if (base64String.Contains(','))
+            {
+                convert = base64String.Substring(base64String.IndexOf(",") + 1, base64String.Length - (base64String.IndexOf(",") + 1));
 
+            }
+            byte[] imageBytes = Convert.FromBase64String(convert);
+            using (var ms = new MemoryStream(imageBytes, 0, imageBytes.Length))
+            {
+                Image image = Image.FromStream(ms, true);
+                return image;
+            }
+        }
+
+        //public static string UploadBase64Image(Image img, string directoryName)
+        //{
+
+        //    string path = "";
+        //    if (img == null)
+        //        return path;
+
+        //    string fileName = "Picture-" + DateTime.Now.ToString("yymmssfff") + ".jpg";
+
+        //    string pathToReturn = "~/Content/" + directoryName + "/" + fileName;
+
+        //    path = Path.Combine(
+        //            Directory.GetCurrentDirectory(), "wwwroot\\Content\\" + directoryName + "\\", fileName);
+
+        //    using (var stream = new FileStream(path, FileMode.Create))
+        //    {
+        //        img.CopyTo(stream);
+        //    }
+        //    return pathToReturn;
+        //}
 
     }
 }

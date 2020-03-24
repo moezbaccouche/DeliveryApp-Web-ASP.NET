@@ -171,8 +171,6 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\runti
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\e_sqlite3.dll
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Category\AddCategory.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Products\Create.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Products\Delete.cshtml.g.cs
@@ -190,6 +188,9 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Order\NotDeliveredOrders.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Client\AllClients.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LayoutFinal.cshtml.g.cs
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\DeliveryMan\Maps.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\DeliveryMan\EditDeliveryMan.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Product\EditProduct.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Order\DeliveryManLocation.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Category\EditCategory.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache

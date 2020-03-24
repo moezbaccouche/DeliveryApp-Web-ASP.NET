@@ -39,8 +39,7 @@ namespace DeliveryApp.Services.Implementations
 
         public Product EditProduct(Product product)
         {
-            var entity = context.Products.Attach(product);
-            entity.State = EntityState.Modified;
+            productRepo.Update(product);
             return product;
         }
 
