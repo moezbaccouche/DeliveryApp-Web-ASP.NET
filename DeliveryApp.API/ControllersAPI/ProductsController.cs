@@ -16,11 +16,16 @@ namespace DeliveryApp.API.ControllersAPI
     {
         private readonly IProductService productService;
         private readonly IMapper _mapper;
+        private readonly IClientService clientService;
+        private readonly IFavoritesService favoritesService;
 
-        public ProductsController(IProductService productService, IMapper mapper)
+        public ProductsController(IProductService productService, IMapper mapper,
+            IClientService clientService, IFavoritesService favoritesService)
         {
             this.productService = productService;
             _mapper = mapper;
+            this.clientService = clientService;
+            this.favoritesService = favoritesService;
         }
 
         [HttpGet]
@@ -31,7 +36,7 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(_mapper.Map<IEnumerable<ProductForHomeDto>>(products));
         }
 
-        [HttpGet("{productId}")]
+        [HttpGet("{productId}", Name = "GetProduct")]
         public ActionResult<ProductDetailsDto> GetProduct(int productId)
         {
             var product = productService.GetProductById(productId);
@@ -57,6 +62,41 @@ namespace DeliveryApp.API.ControllersAPI
 
             
             return Ok(productDetails);
+        }
+
+        [HttpPost("like-product")]
+        public ActionResult<ProductForHomeDto> LikeProduct(FavoriteForCreationDto favoriteDto)
+        {
+            var client = clientService.GetClientById(favoriteDto.ClientId);
+            var product = productService.GetProductById(favoriteDto.ProductId);
+
+            if (client == null || product == null)
+            {
+                return NotFound();
+            }
+
+            var favorite = favoritesService.AddProductToFavorites(new Favorites { ProductId = favoriteDto.ProductId, ClientId = favoriteDto.ClientId });
+
+            return CreatedAtRoute("GetProduct", new { productId = product.Id }, favorite);
+        }
+
+        [HttpPost("dislike-product")]
+        public ActionResult<ProductForHomeDto> DislikeProduct(FavoriteForCreationDto favoriteDto)
+        {
+            var client = clientService.GetClientById(favoriteDto.ClientId);
+            var product = productService.GetProductById(favoriteDto.ProductId);
+            if (client == null || product == null)
+            {
+                return NotFound();
+            }
+
+            var favorite = favoritesService.RemoveProductFromFavorites(new Favorites { ProductId = favoriteDto.ProductId, ClientId = favoriteDto.ClientId });
+            if(favorite == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(favorite);
         }
     }
 }

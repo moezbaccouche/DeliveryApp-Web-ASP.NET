@@ -13,7 +13,8 @@ namespace DeliveryApp.Models.Data
         public string Email { get; set; }
         public string PicturePath { get; set; }
         public Location Location { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; } 
+            = new List<Order>();
         
     }
 }

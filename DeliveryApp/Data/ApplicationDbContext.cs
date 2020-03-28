@@ -21,6 +21,7 @@ namespace DeliveryApp.Data
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<ProductOrder> ProductOrder { get; set; }
+        public DbSet<Favorites> Favorites { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -40,6 +41,7 @@ namespace DeliveryApp.Data
             builder.Entity<ProductImage>().ToTable("ProductImage");
             builder.Entity<ProductOrder>().ToTable("ProductOrder");
             builder.Entity<Rating>().ToTable("Rating");
+            builder.Entity<Favorites>().ToTable("Favorites");
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);

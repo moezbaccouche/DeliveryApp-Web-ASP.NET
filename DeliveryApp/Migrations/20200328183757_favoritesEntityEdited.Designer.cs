@@ -4,14 +4,16 @@ using DeliveryApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200328183757_favoritesEntityEdited")]
+    partial class favoritesEntityEdited
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,13 +175,17 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ClientId")
+                    b.Property<int?>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Favorites");
                 });
@@ -597,6 +603,17 @@ namespace DeliveryApp.Migrations
                     b.HasOne("DeliveryApp.Models.Data.Location", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.Favorites", b =>
+                {
+                    b.HasOne("DeliveryApp.Models.Data.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("DeliveryApp.Models.Data.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.Message", b =>

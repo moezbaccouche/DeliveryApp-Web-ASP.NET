@@ -1,5 +1,6 @@
 ﻿using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using PFEGestionConges.Data.Repo;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,11 @@ namespace DeliveryApp.Services.Implementations
 
         public Client GetClientById(int id)
         {
-            var client = repoClients.TableNoTracking.Where(c => c.Id == id).FirstOrDefault();
+            var client = repoClients.TableNoTracking
+                .Where(c => c.Id == id)
+                .Include(c => c.Location)
+                .Include(c => c.Orders)
+                .FirstOrDefault();
             return client;
         }
     }
