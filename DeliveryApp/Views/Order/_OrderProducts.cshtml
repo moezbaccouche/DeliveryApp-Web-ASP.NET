@@ -1,0 +1,29 @@
+﻿@model DeliveryApp.Models.ViewModels.OrderProductsViewModel
+
+<div class="card card-user">
+    <div class="card-body">
+        @foreach (var op in Model.OrderProducts)
+        {
+            <div style="margin-top: 10px" class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    @foreach (var img in Model.ProductImages)
+                    {
+                        if (img.Product.Id == op.Article.Id)
+                        {
+                            <img src="@Url.Content(img.ImagePath)" alt="Produit" />
+                            break;
+                        }
+                    }
+                </div>
+                <div class="col-sm-8 col-md-8 col-lg-8">
+                    <span><b>@op.Amount</b> @op.Article.Name</span>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="card-footer text-right">
+        <div class="pull-right">
+            <input type="button" value="OK" class="btn btn-default" id="cancel" data-dismiss="modal" />
+        </div>
+    </div>
+</div>

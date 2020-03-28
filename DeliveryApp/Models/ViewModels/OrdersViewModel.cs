@@ -11,5 +11,8 @@ namespace DeliveryApp.Models.ViewModels
         public IEnumerable<Order> DeliveredOrders { get; set; }
         public IEnumerable<Order> InDeliveryOrders { get; set; }
         public IEnumerable<Order> NotDeliveredOrders { get; set; }
+
+        public IEnumerable<DeliveryMan> AvailableDeliveryMen { get; set; }
+
     }
 }

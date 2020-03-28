@@ -39,7 +39,13 @@ namespace DeliveryApp.Controllers
             if (ModelState.IsValid)
             {
                 string path = FileUploader.UploadImage(file, "CategoriesImages");
+
+                //Convert to Base64 
+                byte[] base64 = FileUploader.FileToBase64(path);
+
                 category.ImagePath = path;
+                category.ImageBase64 = base64;
+
                 categoryService.AddCategory(category);
                 TempData["Message"] = "Catégorie ajoutée avec succès !";
                 return RedirectToAction("AllCategories");
@@ -59,6 +65,7 @@ namespace DeliveryApp.Controllers
         public IActionResult EditCategory(int id)
         {
             var category = categoryService.GetCategoryById(id);
+
             return PartialView(category);
         }
 

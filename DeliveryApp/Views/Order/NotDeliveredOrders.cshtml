@@ -31,7 +31,29 @@
                                 <td>@order.Id</td>
                                 <td>@order.OrderTime.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>@order.Client.FirstName @order.Client.LastName</td>
-                                <td class="text-center"><a href="#"><i style="font-size: 20px" class="fa fa-plus-circle text-info"></i></a></td>
+
+                                <td class="float-left">
+                                    <div class="row">
+                                        <div class="col-sm-1 col-md-1 col-lg-1">
+                                            <a href="#" class="ajaxBtn" data-link="/Order/OrderProducts?id=@order.Id" data-title="Produits commandés par @order.Client.FirstName"><i style="font-size: 20px" class="fa fa-info-circle"></i></a>
+
+                                        </div>
+                                        <div class="col-sm-1 col-md-1 col-lg-1">
+                                            <a href="#" onclick="displayDropDrown()"><i style="font-size: 20px" class="fa fa-plus-circle text-success"></i></a>
+
+                                        </div>
+                                        <div id="divDeliveryMen" style="display: none" class="col-sm-2 col-md-2 col-lg-2">
+                                            <select id="availableDelivMen" onchange="bindOrder(@order.Id)" class="selectpicker" data-size="7" data-style="btn btn-primary btn-round" title="Choisissez un livreur">
+                                                <option disabled class="text-muted">Les livreurs disponibles</option>
+                                                @foreach (var man in Model.AvailableDeliveryMen)
+                                                {
+                                                    <option value="@man.Id">@man.FirstName @man.LastName</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @*<a oncli href="#"><i style="font-size: 20px" class="fa fa-plus-circle text-info"></i></a>*@
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -40,3 +62,53 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+
+    <script src="~/assets/js/plugins/bootbox.js"></script>
+
+    <script>
+        function displayDropDrown() {
+            var elem = $("#divDeliveryMen");
+            debugger;
+            var a = elem.css('display');
+            if (elem.css('display') == 'block') {
+                $("#divDeliveryMen").css('display', 'none');
+            } else {
+                $("#divDeliveryMen").css('display', 'block');
+            }
+            
+        }
+
+
+        function bindOrder(orderId) {
+            var delivManId = $("#availableDelivMen").val();
+            bootbox.confirm({
+                title: "Confirmation Affectation",
+                message: "Etes-vous certain de vouloir affecter la commande à cet agent ?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Annuler'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmer'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: '@Url.Action("BindOrder", "Order")',
+                            data: { idOrder: orderId, deliveryManId: delivManId },
+                            type: 'GET',
+                            dataType: 'html',
+                            success: function () {
+                                window.location.replace("/Order/InDeliveryOrders");
+                                console.log("Order bound");
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+}

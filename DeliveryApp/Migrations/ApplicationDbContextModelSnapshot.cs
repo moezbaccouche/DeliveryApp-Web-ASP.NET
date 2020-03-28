@@ -80,6 +80,9 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
+                    b.Property<byte[]>("ImageBase64")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
@@ -288,6 +291,9 @@ namespace DeliveryApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("ImageBase64")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");

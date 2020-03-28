@@ -27,7 +27,12 @@ namespace DeliveryApp.Services.Implementations
         public Order BindOrder(Order order, DeliveryMan deliveryMan)
         {
             var orderToEdit = repoOrder.TableNoTracking.Where(o => o.Id == order.Id).FirstOrDefault();
+
             orderToEdit.DeliveryMan = deliveryMan;
+            orderToEdit.Status = EnumOrderStatus.InDelivery;
+
+            //We Must specify the ETA of the order
+
             repoOrder.Update(orderToEdit);
             return orderToEdit;
         }

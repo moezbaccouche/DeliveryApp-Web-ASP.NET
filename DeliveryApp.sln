@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryApp", "DeliveryApp\DeliveryApp.csproj", "{CC78E603-45B5-4722-867F-286ED173DB31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeliveryApp", "DeliveryApp\DeliveryApp.csproj", "{CC78E603-45B5-4722-867F-286ED173DB31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryApp.API", "DeliveryApp.API\DeliveryApp.API.csproj", "{545D5962-0476-462C-B07D-311D439437D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{CC78E603-45B5-4722-867F-286ED173DB31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC78E603-45B5-4722-867F-286ED173DB31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC78E603-45B5-4722-867F-286ED173DB31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{545D5962-0476-462C-B07D-311D439437D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{545D5962-0476-462C-B07D-311D439437D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{545D5962-0476-462C-B07D-311D439437D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{545D5962-0476-462C-B07D-311D439437D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

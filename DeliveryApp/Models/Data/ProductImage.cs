@@ -9,5 +9,6 @@ namespace DeliveryApp.Models.Data
     {
         public Product Product { get; set; }
         public string ImagePath { get; set; }
+        public byte[] ImageBase64 { get; set; }
     }
 }

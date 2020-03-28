@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DeliveryApp.Models.Data;
 using DeliveryApp.Models.ViewModels;
 using DeliveryApp.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,18 @@ namespace DeliveryApp.Controllers
     {
         private readonly IOrderService orderService;
         private readonly IDeliveryManService deliveryManService;
+        private readonly IProductOrderService productOrderService;
+        private readonly IProductImageService productImageService;
 
-        public OrderController(IOrderService orderService, IDeliveryManService deliveryManService)
+        public OrderController(IOrderService orderService,
+            IDeliveryManService deliveryManService,
+            IProductOrderService productOrderService,
+            IProductImageService productImageService)
         {
             this.orderService = orderService;
             this.deliveryManService = deliveryManService;
+            this.productOrderService = productOrderService;
+            this.productImageService = productImageService;
         }
         public IActionResult Index()
         {
@@ -26,9 +34,11 @@ namespace DeliveryApp.Controllers
         public IActionResult NotDeliveredOrders()
         {
             var notDeliveredOrders = orderService.GetNotDeliveredOrders();
+            var availableDeliveryMen = deliveryManService.GetAllAvailableDeliveryMen();
             OrdersViewModel ordersViewModel = new OrdersViewModel
             {
-                NotDeliveredOrders = notDeliveredOrders
+                NotDeliveredOrders = notDeliveredOrders,
+                AvailableDeliveryMen = availableDeliveryMen
             };
             return View(ordersViewModel);
         }
@@ -61,5 +71,43 @@ namespace DeliveryApp.Controllers
 
             return PartialView(model);
         }
+
+        [HttpGet]
+        public IActionResult OrderProducts(int id)
+        {
+            var order = orderService.GetOrderById(id);
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            List<ProductImage> productsImages = new List<ProductImage>();
+            foreach (var product in orderProducts)
+            {
+                var img = productImageService.GetProductImages(product.Article).FirstOrDefault();
+                productsImages.Add(img);
+            }
+
+
+            var model = new OrderProductsViewModel
+            {
+                OrderProducts = orderProducts,
+                ProductImages = productsImages
+            };
+
+            return PartialView("_OrderProducts", model);
+        }
+
+        [HttpGet]
+        public void BindOrder(int idOrder, int deliveryManId)
+        {
+            var order = orderService.GetOrderById(idOrder);
+            var deliveryMan = deliveryManService.GetDeliveryManById(deliveryManId);
+
+            orderService.BindOrder(order, deliveryMan);
+
+            deliveryMan.IsAvailable = false;
+            deliveryManService.EditDeliveryMan(deliveryMan);
+
+            TempData["Message"] = $"Commande affectée à { deliveryMan.FirstName } { deliveryMan.LastName } !";
+        }
+
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
+using Microsoft.EntityFrameworkCore;
 using PFEGestionConges.Data.Repo;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace DeliveryApp.Services.Implementations
         {
             var images = repoProductImage.TableNoTracking
                 .Where(pi => pi.Product == product)
+                .Include(pi => pi.Product)
                 .ToList();
             return images;
         }

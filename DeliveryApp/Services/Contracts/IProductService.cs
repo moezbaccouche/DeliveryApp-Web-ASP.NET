@@ -15,5 +15,6 @@ namespace DeliveryApp.Services.Contracts
         Product GetProductById(int productId);
         IEnumerable<Product> GetProductsByName(string name);
         IEnumerable<Product> GetAllProducts();
+        IEnumerable<Product> GetAllProducts(string order);
     }
 }

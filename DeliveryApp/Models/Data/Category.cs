@@ -14,5 +14,7 @@ namespace DeliveryApp.Models.Data
         [Required, MaxLength(255)]
         public string Description { get; set; }
         public string ImagePath { get; set; }
+
+        public byte[] ImageBase64 { get; set; }
     }
 }

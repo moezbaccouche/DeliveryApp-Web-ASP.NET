@@ -14,11 +14,14 @@ namespace DeliveryApp.Services.Implementations
     {
         private readonly IRepository<Product> productRepo;
         private readonly ApplicationDbContext context;
+        private readonly IProductImageService productImageService;
 
-        public ProductService(IRepository<Product> productRepo, ApplicationDbContext context)
+        public ProductService(IRepository<Product> productRepo, ApplicationDbContext context,
+            IProductImageService productImageService)
         {
             this.productRepo = productRepo;
             this.context = context;
+            this.productImageService = productImageService;
         }
 
         public Product AddProduct(Product newProduct)
@@ -45,25 +48,76 @@ namespace DeliveryApp.Services.Implementations
 
         public IEnumerable<Product> GetAllProducts()
         {
-            var query = (from p in productRepo.TableNoTracking 
+            var products = (from p in productRepo.TableNoTracking 
                          select p)
                          .ToList();
-            return query;
+
+            foreach (var prod in products)
+            {
+                foreach (var img in productImageService.GetProductImages(prod))
+                {
+                    prod.ProductImages.Add(img);
+                }
+
+            }
+
+            return products;
         }
 
         public Product GetProductById(int productId)
         {
             var product = productRepo.TableNoTracking.Where(p => p.Id == productId).FirstOrDefault();
+            if(product != null)
+            {
+                product.ProductImages = productImageService.GetProductImages(product) as List<ProductImage>;
+            }
+
             return product;
         }
 
         public IEnumerable<Product> GetProductsByName(string name)
         {
-            var query = from p in productRepo.GetAll()
+            var products = from p in productRepo.GetAll()
                         where p.Name.StartsWith(name) || string.IsNullOrEmpty(name)
                         orderby p.Name
                         select p;
-            return query;
+
+           
+            return products;
         }
+
+        public IEnumerable<Product> GetAllProducts(string order)
+        {
+            IEnumerable<Product> products = null;
+            if(string.IsNullOrWhiteSpace(order))
+            {
+                return GetAllProducts();
+            }
+
+            if(order == "desc")
+            {
+                products = from p in productRepo.TableNoTracking
+                           orderby p.Price descending
+                           select p;
+            }
+            else
+            {
+                products = from p in productRepo.TableNoTracking
+                           orderby p.Price ascending
+                           select p;
+            }
+
+            foreach(var prod in products)
+            {
+                foreach(var img in productImageService.GetProductImages(prod))
+                {
+                    prod.ProductImages.Add(img);
+                }
+                
+            }
+
+            return products;
+        }
+
     }
 }

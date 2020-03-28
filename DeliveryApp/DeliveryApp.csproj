@@ -7,6 +7,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
@@ -21,12 +22,10 @@
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Server\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\User\" />
     <Folder Include="wwwroot\Content\CategoriesImages\" />
     <Folder Include="wwwroot\Content\DeliveryMenPictures\" />
-    <Folder Include="wwwroot\Content\ProductsImages\" />
   </ItemGroup>
 
 

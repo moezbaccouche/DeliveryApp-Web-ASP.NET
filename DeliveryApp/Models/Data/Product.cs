@@ -15,5 +15,6 @@ namespace DeliveryApp.Models.Data
         public EnumProductUnit ProductUnit { get; set; }
         public int CategoryId { get; set; }
         public ICollection<ProductImage> ProductImages { get; set; }
+            = new List<ProductImage>();
     }
 }

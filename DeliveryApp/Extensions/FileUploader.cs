@@ -19,7 +19,7 @@ namespace DeliveryApp.Extensions
         {
             this.productImageService = productImageService;
         }
-       
+
         public static string UploadImage(IFormFile file, string directoryName)
         {
             string path = "";
@@ -64,10 +64,13 @@ namespace DeliveryApp.Extensions
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
                             file.CopyTo(stream);
-
-                            //Add the image in the table productImage
-                            productImageService.AddProductImage(new ProductImage { ImagePath = pathToReturn, Product = newProduct });
                         }
+                        //Insert the base64 data
+                        byte[] base64Bytes = FileToBase64(pathToReturn);
+
+                        //Add the image in the table productImage
+                        productImageService.AddProductImage(new ProductImage { ImagePath = pathToReturn, Product = newProduct, ImageBase64 = base64Bytes });
+
                     }
                     return true;
                 }
@@ -93,6 +96,27 @@ namespace DeliveryApp.Extensions
                 Image image = Image.FromStream(ms, true);
                 return image;
             }
+        }
+
+        public static byte[] FileToBase64(string path)
+        {
+            try
+            {
+                string editedPath = path.Remove(0, 2);
+                editedPath = "wwwroot/" + editedPath;
+                byte[] bytes = File.ReadAllBytes(editedPath);
+                return bytes;
+            }
+            catch (FileNotFoundException)
+            {
+                throw;
+            }
+        }
+
+        public static string BytesToBase64String(byte[] base64Bytes)
+        {
+            string base64 = Convert.ToBase64String(base64Bytes);
+            return base64;
         }
 
         //public static string UploadBase64Image(Image img, string directoryName)

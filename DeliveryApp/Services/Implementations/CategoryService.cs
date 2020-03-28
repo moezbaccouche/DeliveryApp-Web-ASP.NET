@@ -50,8 +50,14 @@ namespace DeliveryApp.Services.Implementations
 
         public IEnumerable<Category> GetCategoriesByName(string name)
         {
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                return GetAllCategories();
+            }
+            name = name.Trim();
+
             var query = from c in repoCategory.TableNoTracking
-                        where c.Name.StartsWith(name) || string.IsNullOrEmpty(name)
+                        where c.Name.StartsWith(name)
                         orderby c.Name
                         select c;
             return query;
