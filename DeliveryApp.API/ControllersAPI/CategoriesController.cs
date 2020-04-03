@@ -1,5 +1,8 @@
-﻿using DeliveryApp.Models.Data;
+﻿using AutoMapper;
+using DeliveryApp.API.Models.DTO;
+using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,17 +16,21 @@ namespace DeliveryApp.API.ControllersAPI
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService categoryService;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, IMapper mapper)
         {
             this.categoryService = categoryService;
+            _mapper = mapper;
         }
 
+        [EnableCors("AllowAll")]
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetCategories(string searchQuery)
+        public ActionResult<IEnumerable<CategoryDtoWithBase64>> GetCategories(string searchQuery)
         {
             var allCategories = categoryService.GetCategoriesByName(searchQuery);
-            return Ok(allCategories);
+
+            return Ok(_mapper.Map<IEnumerable<CategoryDtoWithBase64>>(allCategories));
         }
 
 
