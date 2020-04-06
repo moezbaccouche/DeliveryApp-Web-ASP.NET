@@ -34,6 +34,7 @@ namespace DeliveryApp.API.ControllersAPI
         }
 
 
+        [EnableCors("AllowAll")]
         [HttpGet("{categoryId}")]
         public ActionResult<Category> GetCategory(int categoryId)
         {

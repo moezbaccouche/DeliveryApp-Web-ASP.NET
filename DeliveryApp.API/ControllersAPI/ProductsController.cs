@@ -2,6 +2,7 @@
 using DeliveryApp.API.Models.DTO;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,14 +29,16 @@ namespace DeliveryApp.API.ControllersAPI
             this.favoritesService = favoritesService;
         }
 
+        [EnableCors("AllowAll")]
         [HttpGet]
-        public ActionResult<IEnumerable<ProductForHomeDto>> GetProducts(string orderQuery)
+        public ActionResult<IEnumerable<ProductForHomeDto>> GetProducts(string searchQuery)
         {
-            var products = productService.GetAllProducts(orderQuery);
+            var products = productService.GetAllProducts(searchQuery);
 
             return Ok(_mapper.Map<IEnumerable<ProductForHomeDto>>(products));
         }
 
+        [EnableCors("AllowAll")]
         [HttpGet("{productId}", Name = "GetProduct")]
         public ActionResult<ProductDetailsDto> GetProduct(int productId)
         {
@@ -64,6 +67,7 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(productDetails);
         }
 
+        [EnableCors("AllowAll")]
         [HttpPost("like-product")]
         public ActionResult<ProductForHomeDto> LikeProduct(FavoriteForCreationDto favoriteDto)
         {
@@ -80,6 +84,7 @@ namespace DeliveryApp.API.ControllersAPI
             return CreatedAtRoute("GetProduct", new { productId = product.Id }, favorite);
         }
 
+        [EnableCors("AllowAll")]
         [HttpPost("dislike-product")]
         public ActionResult<ProductForHomeDto> DislikeProduct(FavoriteForCreationDto favoriteDto)
         {

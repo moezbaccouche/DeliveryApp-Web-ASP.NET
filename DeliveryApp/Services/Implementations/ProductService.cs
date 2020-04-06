@@ -49,7 +49,8 @@ namespace DeliveryApp.Services.Implementations
         public IEnumerable<Product> GetAllProducts()
         {
             var products = (from p in productRepo.TableNoTracking 
-                         select p)
+                            orderby p.Name 
+                            select p)
                          .ToList();
 
             foreach (var prod in products)
@@ -77,34 +78,60 @@ namespace DeliveryApp.Services.Implementations
 
         public IEnumerable<Product> GetProductsByName(string name)
         {
-            var products = from p in productRepo.GetAll()
-                        where p.Name.StartsWith(name) || string.IsNullOrEmpty(name)
+            var products = (from p in productRepo.GetAll()
+                        where p.Name.ToLower().Contains(name)
                         orderby p.Name
-                        select p;
+                        select p)
+                        .ToList();
 
-           
+
+            foreach (var prod in products)
+            {
+                foreach (var img in productImageService.GetProductImages(prod))
+                {
+                    prod.ProductImages.Add(img);
+                }
+
+            }
+
             return products;
         }
 
-        public IEnumerable<Product> GetAllProducts(string order)
+        public IEnumerable<Product> GetAllProducts(string searchQuery)
         {
             IEnumerable<Product> products = null;
-            if(string.IsNullOrWhiteSpace(order))
+
+            string searchTerm = null;
+            if(searchQuery != null)
+            {
+                searchTerm = searchQuery.Trim().ToLower();
+            }
+
+            if(string.IsNullOrWhiteSpace(searchTerm))
             {
                 return GetAllProducts();
             }
 
-            if(order == "desc")
+            if(searchTerm == "desc")
             {
-                products = from p in productRepo.TableNoTracking
+                products = (from p in productRepo.TableNoTracking
                            orderby p.Price descending
-                           select p;
+                           select p)
+                           .ToList();
             }
             else
             {
-                products = from p in productRepo.TableNoTracking
-                           orderby p.Price ascending
-                           select p;
+                if(searchTerm == "asc")
+                {
+                    products = (from p in productRepo.TableNoTracking
+                                orderby p.Price ascending
+                                select p)
+                           .ToList();
+                }
+                else
+                {
+                    return GetProductsByName(searchTerm);
+                }
             }
 
             foreach(var prod in products)
