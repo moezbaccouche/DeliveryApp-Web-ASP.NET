@@ -146,5 +146,23 @@ namespace DeliveryApp.Services.Implementations
             return products;
         }
 
+        public IEnumerable<Product> GetProductsByCategory(Category category)
+        {
+            var products = (from p in productRepo.TableNoTracking
+                            where p.CategoryId == category.Id
+                            orderby p.Name
+                            select p)
+                            .ToList();
+
+            foreach (var prod in products)
+            {
+                foreach (var img in productImageService.GetProductImages(prod))
+                {
+                    prod.ProductImages.Add(img);
+                }
+            }
+
+            return products;
+        }
     }
 }

@@ -19,14 +19,16 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IMapper _mapper;
         private readonly IClientService clientService;
         private readonly IFavoritesService favoritesService;
+        private readonly ICategoryService categoryService;
 
         public ProductsController(IProductService productService, IMapper mapper,
-            IClientService clientService, IFavoritesService favoritesService)
+            IClientService clientService, IFavoritesService favoritesService, ICategoryService categoryService)
         {
             this.productService = productService;
             _mapper = mapper;
             this.clientService = clientService;
             this.favoritesService = favoritesService;
+            this.categoryService = categoryService;
         }
 
         [EnableCors("AllowAll")]
@@ -34,8 +36,31 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<IEnumerable<ProductForHomeDto>> GetProducts(string searchQuery)
         {
             var products = productService.GetAllProducts(searchQuery);
+            if(products == null)
+            {
+                return NotFound();
+            }
+            return Ok(_mapper.Map<IEnumerable<ProductForHomeDto>>(products));
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("category")]
+        public ActionResult<IEnumerable<ProductForHomeDto>> GetProductsByCategoryId(int id)
+        {
+            var category = categoryService.GetCategoryById(id);
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            var products = productService.GetProductsByCategory(category);
+            if(products == null)
+            {
+                return NotFound();
+            }
 
             return Ok(_mapper.Map<IEnumerable<ProductForHomeDto>>(products));
+
         }
 
         [EnableCors("AllowAll")]
