@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeliveryApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200328162613_productImageColumnBase64Added")]
-    partial class productImageColumnBase64Added
+    [Migration("20200409145636_cartProductEntityEdited")]
+    partial class cartProductEntityEdited
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,29 @@ namespace DeliveryApp.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Bill");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.CartProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Amount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartProducts");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.Category", b =>
@@ -130,6 +153,34 @@ namespace DeliveryApp.Migrations
                     b.ToTable("Client");
                 });
 
+            modelBuilder.Entity("DeliveryApp.Models.Data.DeliveryInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("DeliveryManId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EstimatedDeliveryTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RealDeliveryTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryManId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("DeliveryInfos");
+                });
+
             modelBuilder.Entity("DeliveryApp.Models.Data.DeliveryMan", b =>
                 {
                     b.Property<int>("Id")
@@ -166,6 +217,24 @@ namespace DeliveryApp.Migrations
                     b.HasIndex("LocationId");
 
                     b.ToTable("DeliveryMan");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.Favorites", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.Location", b =>
@@ -267,6 +336,9 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("CartProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -283,6 +355,8 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartProductId");
 
                     b.ToTable("Product");
                 });
@@ -569,11 +643,29 @@ namespace DeliveryApp.Migrations
                         .HasForeignKey("OrderId");
                 });
 
+            modelBuilder.Entity("DeliveryApp.Models.Data.CartProduct", b =>
+                {
+                    b.HasOne("DeliveryApp.Models.Data.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+                });
+
             modelBuilder.Entity("DeliveryApp.Models.Data.Client", b =>
                 {
                     b.HasOne("DeliveryApp.Models.Data.Location", "Location")
                         .WithMany()
                         .HasForeignKey("LocationId");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.DeliveryInfo", b =>
+                {
+                    b.HasOne("DeliveryApp.Models.Data.DeliveryMan", "DeliveryMan")
+                        .WithMany()
+                        .HasForeignKey("DeliveryManId");
+
+                    b.HasOne("DeliveryApp.Models.Data.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.DeliveryMan", b =>
@@ -603,6 +695,13 @@ namespace DeliveryApp.Migrations
                     b.HasOne("DeliveryApp.Models.Data.DeliveryMan", "DeliveryMan")
                         .WithMany("OrdersToDeliver")
                         .HasForeignKey("DeliveryManId");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.Product", b =>
+                {
+                    b.HasOne("DeliveryApp.Models.Data.CartProduct", null)
+                        .WithMany("Products")
+                        .HasForeignKey("CartProductId");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.ProductImage", b =>

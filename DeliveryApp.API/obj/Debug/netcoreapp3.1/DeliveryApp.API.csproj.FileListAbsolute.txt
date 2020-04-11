@@ -163,3 +163,5 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\A
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\appsettings.Production.Development.json
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\appsettings.Production.json
