@@ -8,6 +8,7 @@ namespace DeliveryApp.Services.Contracts
 {
     public interface ILocationService
     {
+        Location AddLocation(Location newLocation);
         Location GetLocationById(int id);
     }
 }

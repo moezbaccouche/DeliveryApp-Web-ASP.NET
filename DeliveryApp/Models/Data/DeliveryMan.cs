@@ -13,6 +13,7 @@ namespace DeliveryApp.Models.Data
         public string Phone { get; set; }
         public string Email { get; set; }
         public string PicturePath { get; set; }
+        public byte[] ImageBase64 { get; set; }
         public Location Location { get; set; }
         public bool IsValidated { get; set; }
         public bool IsAvailable { get; set; }

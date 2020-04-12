@@ -5,7 +5,18 @@
     ViewBag.CurrentController = "Product";
     ViewBag.CurrentAction = "AllProducts";
 }
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="nc-icon nc-simple-remove"></i>
+        </button>
+        <span>@TempData["Message"]</span>
+    </div>
+}
 <h1>Tous les produits</h1>
+
 
 <div class="row">
 

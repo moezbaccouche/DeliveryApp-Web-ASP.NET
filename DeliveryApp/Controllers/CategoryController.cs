@@ -73,12 +73,18 @@ namespace DeliveryApp.Controllers
         public IActionResult EditCategory([Bind("Name, Description")]Category category, int Id, IFormFile file)
         {
             string imagePath = FileUploader.UploadImage(file, "CategoriesImages");
+
+            //Convert to Base64 
+            byte[] base64 = FileUploader.FileToBase64(imagePath);
+
             var editedCategory = new Category
             {
                 Description = category.Description,
                 Id = Id,
                 ImagePath = imagePath,
-                Name = category.Name
+                Name = category.Name,
+                ImageBase64 = base64
+
             };
 
             categoryService.EditCategory(editedCategory);

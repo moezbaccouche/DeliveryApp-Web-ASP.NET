@@ -26,7 +26,9 @@ namespace DeliveryApp.Services.Implementations
 
         public IEnumerable<Client> GetAllClients()
         {
-            var allClients = repoClients.TableNoTracking.ToList();
+            var allClients = repoClients.TableNoTracking
+                .Include(c => c.Location)
+                .ToList();
             return allClients;
         }
 

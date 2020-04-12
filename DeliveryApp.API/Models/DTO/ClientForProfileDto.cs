@@ -1,17 +1,18 @@
-﻿using System;
+﻿using DeliveryApp.Models.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeliveryApp.Models.Data
+namespace DeliveryApp.API.Models.DTO
 {
-    public class Admin : BaseEntity
+    public class ClientForProfileDto
     {
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public string PicturePath { get; set; }
         public byte[] ImageBase64 { get; set; }
         public Location Location { get; set; }
     }

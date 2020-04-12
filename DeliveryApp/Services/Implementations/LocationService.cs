@@ -17,6 +17,15 @@ namespace DeliveryApp.Services.Implementations
             this.repoLocations = repoLocations;
         }
 
+        public Location AddLocation(Location newLocation)
+        {
+            if(newLocation != null)
+            {
+                newLocation = repoLocations.Insert(newLocation);
+            }
+            return newLocation;
+        }
+
         public Location GetLocationById(int id)
         {
             var location = repoLocations.TableNoTracking.Where(l => l.Id == id).FirstOrDefault();
