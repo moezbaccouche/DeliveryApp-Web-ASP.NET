@@ -10,5 +10,6 @@ namespace DeliveryApp.Services.Contracts
     {
         Favorites AddProductToFavorites(Favorites newFavorite);
         Favorites RemoveProductFromFavorites(Favorites newFavorite);
+        IEnumerable<Favorites> GetFavoriteProducts(int clientId);
     }
 }

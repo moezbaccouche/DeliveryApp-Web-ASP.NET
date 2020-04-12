@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.API.Models.DTO
 {
-    public class ProductForHomeDto
+    public class ProductForCheckout
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
         public byte[] ImageBase64 { get; set; }
-        public bool IsFavorite { get; set; }
+        public double TotalProductPrice { get; set; }
+        public string Amount { get; set; }
+        public string Category { get; set; }
     }
 }

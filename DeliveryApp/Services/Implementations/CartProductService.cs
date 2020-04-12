@@ -45,6 +45,21 @@ namespace DeliveryApp.Services.Implementations
             return cartProducts;
         }
 
+        public CartProduct GetProduct(int clientId, int productId)
+        {
+            var product = (from cp in repoCartProduct.TableNoTracking
+                           where cp.ClientId == clientId && cp.ProductId == productId
+                           select cp)
+                           .FirstOrDefault();
+
+            /*  if product != null 
+             *  this will return the object product, which means that the user cart does already have the added product
+             *  else it will return null
+             */
+
+            return product;
+        }
+
         public IEnumerable<CartProduct> RemoveAllProducts(int userId)
         {
             var cartProducts = (from cp in repoCartProduct.TableNoTracking

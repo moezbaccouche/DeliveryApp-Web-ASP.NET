@@ -14,6 +14,8 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<CartProduct> RemoveAllProducts(int userId);
         IEnumerable<CartProduct> GetCartProducts(int userId);
         CartProduct EditProduct(CartProduct newCartProduct);
-        
+
+        CartProduct GetProduct(int clientId, int productId);
+
     }
 }

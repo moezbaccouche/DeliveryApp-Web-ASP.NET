@@ -33,14 +33,39 @@ namespace DeliveryApp.API.ControllersAPI
 
         [EnableCors("AllowAll")]
         [HttpGet]
-        public ActionResult<IEnumerable<ProductForHomeDto>> GetProducts(string searchQuery)
+        public ActionResult<IEnumerable<ProductForHomeDto>> GetProducts(string searchQuery, int clientId)
         {
             var products = productService.GetAllProducts(searchQuery);
-            if(products == null)
+            if (products == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<IEnumerable<ProductForHomeDto>>(products));
+
+            //Must be moved to product details action 
+            var favorites = favoritesService.GetFavoriteProducts(clientId);
+            var productsForHome = new List<ProductForHomeDto>();
+            foreach (var prod in products)
+            {
+                bool isFavorite = false;
+                foreach (var favorite in favorites)
+                {
+                    if (prod.Id == favorite.ProductId)
+                    {
+                        isFavorite = true;
+                    }
+                }
+                productsForHome.Add(new ProductForHomeDto
+                {
+                    Id = prod.Id,
+                    ImageBase64 = prod.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = prod.Name,
+                    Price = prod.Price,
+                    IsFavorite = isFavorite
+                });
+            }
+
+            //return Ok(_mapper.Map<IEnumerable<ProductForHomeDto>>(products));
+            return Ok(productsForHome);
         }
 
         [EnableCors("AllowAll")]
@@ -48,13 +73,13 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<IEnumerable<ProductForHomeDto>> GetProductsByCategoryId(int id)
         {
             var category = categoryService.GetCategoryById(id);
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
             var products = productService.GetProductsByCategory(category);
-            if(products == null)
+            if (products == null)
             {
                 return NotFound();
             }
@@ -74,22 +99,52 @@ namespace DeliveryApp.API.ControllersAPI
             }
 
             ICollection<byte[]> imagesBase64 = new List<byte[]>();
-            foreach(var img in product.ProductImages)
+            foreach (var img in product.ProductImages)
             {
                 imagesBase64.Add(img.ImageBase64);
             }
 
             //Could be optimized with IMapper
-            ProductDetailsDto productDetails = new ProductDetailsDto 
-            { 
+            ProductDetailsDto productDetails = new ProductDetailsDto
+            {
                 Description = product.Description,
                 Id = product.Id, Name = product.Name,
                 Price = product.Price,
                 ProductImagesBase64 = imagesBase64
             };
 
-            
+
             return Ok(productDetails);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("favorites/clients/{clientId}")]
+        public ActionResult<IEnumerable<ProductForHomeDto>> GetFavoriteProducts(int clientId)
+        {
+            var client = clientService.GetClientById(clientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var favorites = favoritesService.GetFavoriteProducts(clientId);
+            var favoriteProducts = new List<ProductForHomeDto>();
+            foreach(var favorite in favorites)
+            {
+                var product = productService.GetProductById(favorite.ProductId);
+                if(product != null)
+                {
+                    favoriteProducts.Add(new ProductForHomeDto
+                    {
+                        Id = product.Id,
+                        ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                        Name = product.Name,
+                        Price = product.Price,
+                        IsFavorite = true
+                    });
+                }
+            }
+            return Ok(favoriteProducts);
         }
 
         [EnableCors("AllowAll")]

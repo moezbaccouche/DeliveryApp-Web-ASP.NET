@@ -17,7 +17,10 @@ namespace DeliveryApp.API.Profiles
                 dest => dest.ImageBase64,
                 opt => opt.MapFrom(src => src.ProductImages.FirstOrDefault().ImageBase64));
 
-               
+            CreateMap<Product, Models.DTO.ProductForCheckout>()
+             .ForMember(
+             dest => dest.ImageBase64,
+             opt => opt.MapFrom(src => src.ProductImages.FirstOrDefault().ImageBase64));
         }
     }
 }

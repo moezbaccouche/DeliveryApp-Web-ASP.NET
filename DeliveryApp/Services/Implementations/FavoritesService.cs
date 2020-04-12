@@ -18,10 +18,19 @@ namespace DeliveryApp.Services.Implementations
             this.repoFavorites = repoFavorites;
         }
 
+
         public Favorites AddProductToFavorites(Favorites newFavorite)
         {
             repoFavorites.Insert(newFavorite);
             return newFavorite;
+        }
+
+        public IEnumerable<Favorites> GetFavoriteProducts(int clientId)
+        {
+            var favorites = repoFavorites.TableNoTracking
+                .Where(f => f.ClientId == clientId)
+                .ToList();
+            return favorites;
         }
 
         public Favorites RemoveProductFromFavorites(Favorites newFavorite)
