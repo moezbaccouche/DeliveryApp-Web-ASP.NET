@@ -14,6 +14,7 @@ namespace DeliveryApp.API.Profiles
         {
             CreateMap<Client, ClientForProfileDto>();
             CreateMap<ClientForCreationDto, Client>();
+            CreateMap<Client, ClientForCartDto>();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DeliveryApp.API.Models.DTO;
 using DeliveryApp.Extensions;
 using DeliveryApp.Models.Data;
@@ -19,14 +20,16 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly ICartProductService cartProductService;
         private readonly IClientService clientService;
         private readonly ICategoryService categoryService;
+        private readonly IMapper _mapper;
 
         public CartController(IProductService productService, ICartProductService cartProductService,
-            IClientService clientService, ICategoryService categoryService)
+            IClientService clientService, ICategoryService categoryService, IMapper mapper)
         {
             this.productService = productService;
             this.cartProductService = cartProductService;
             this.clientService = clientService;
             this.categoryService = categoryService;
+            _mapper = mapper;
         }
 
         [EnableCors("AllowAll")]
@@ -42,12 +45,12 @@ namespace DeliveryApp.API.ControllersAPI
 
             var categories = new List<Category>();
             List<ProductForCheckout> allProducts = new List<ProductForCheckout>();
-            foreach(var prod in cartProducts)
+            foreach (var prod in cartProducts)
             {
                 var product = productService.GetProductById(prod.ProductId);
                 var productCategory = categoryService.GetCategoryById(product.CategoryId);
 
-                if(!categories.CategoryExists(productCategory))
+                if (!categories.CategoryExists(productCategory))
                 {
                     categories.Add(productCategory);
                 }
@@ -59,12 +62,17 @@ namespace DeliveryApp.API.ControllersAPI
                     ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
                     Amount = prod.Amount,
                     //The following code line wont work if the amount can't be converted to int
-                    TotalProductPrice = product.Price * Convert.ToInt32(prod.Amount),
+                    TotalProductPrice = Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000,
                     Category = productCategory.Name
                 });
             }
-
-            CartDto cartDto = new CartDto { Categories = categories, Products = allProducts };
+            ClientForCartDto clientForCart = _mapper.Map<ClientForCartDto>(client);
+            CartDto cartDto = new CartDto
+            {
+                Categories = categories,
+                Products = allProducts,
+                Client = clientForCart
+            };
             return Ok(cartDto);
         }
 
@@ -119,6 +127,27 @@ namespace DeliveryApp.API.ControllersAPI
                 cartProductService.EditProduct(cartProduct);
             }
             return Ok(cartProduct);
+        }
+
+
+        [EnableCors("AllowAll")]
+        [HttpPost("delete")]
+        public ActionResult<CartProduct> DeleteProductFromCart([FromBody] ProductToDeleteFromCartDto productToDelete)
+        {
+            var client = clientService.GetClientById(productToDelete.ClientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var product = productService.GetProductById(productToDelete.ProductId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var deletedProduct = cartProductService.RemoveProduct(client.Id, product.Id);
+            return Ok(deletedProduct);
         }
     }
 }

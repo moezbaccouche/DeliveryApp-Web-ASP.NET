@@ -74,12 +74,16 @@ namespace DeliveryApp.Services.Implementations
             return cartProducts;
         }
 
-        public CartProduct RemoveProduct(CartProduct cartProduct)
+        public CartProduct RemoveProduct(int clientId, int productId)
         {
+            var cartProduct = (from cp in repoCartProduct.TableNoTracking
+                               where cp.ClientId == clientId && cp.ProductId == productId
+                               select cp).FirstOrDefault();
             if(cartProduct != null)
             {
                 repoCartProduct.Delete(cartProduct);
             }
+
             return cartProduct;
         }
     }

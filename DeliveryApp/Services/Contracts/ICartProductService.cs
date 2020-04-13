@@ -9,7 +9,7 @@ namespace DeliveryApp.Services.Contracts
     public interface ICartProductService
     {
         CartProduct AddProduct(CartProduct newCartProduct);
-        CartProduct RemoveProduct(CartProduct newCartProduct);
+        CartProduct RemoveProduct(int clientId, int productId);
         //Removes all the products from the user cart
         IEnumerable<CartProduct> RemoveAllProducts(int userId);
         IEnumerable<CartProduct> GetCartProducts(int userId);
