@@ -9,7 +9,7 @@ namespace DeliveryApp.API.Models.DTO
     public class CartDto
     {
         public IEnumerable<ProductForCheckout> Products { get; set; }
-        public IEnumerable<Category> Categories { get; set; }
+        public IEnumerable<CategoryForCartDto> Categories { get; set; }
         public ClientForCartDto Client { get; set; }
     }
 }

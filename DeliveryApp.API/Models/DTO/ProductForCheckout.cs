@@ -13,5 +13,6 @@ namespace DeliveryApp.API.Models.DTO
         public double TotalProductPrice { get; set; }
         public string Amount { get; set; }
         public string Category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

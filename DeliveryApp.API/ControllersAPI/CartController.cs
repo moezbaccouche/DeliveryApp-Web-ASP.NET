@@ -43,7 +43,7 @@ namespace DeliveryApp.API.ControllersAPI
             }
             var cartProducts = cartProductService.GetCartProducts(client.Id);
 
-            var categories = new List<Category>();
+            var categories = new List<CategoryForCartDto>();
             List<ProductForCheckout> allProducts = new List<ProductForCheckout>();
             foreach (var prod in cartProducts)
             {
@@ -52,7 +52,11 @@ namespace DeliveryApp.API.ControllersAPI
 
                 if (!categories.CategoryExists(productCategory))
                 {
-                    categories.Add(productCategory);
+                    categories.Add(new CategoryForCartDto {Id = productCategory.Id, Name = productCategory.Name, NbProducts = 1 });
+                }
+                else
+                {
+                    categories.Where(c => c.Id == productCategory.Id).FirstOrDefault().NbProducts++;
                 }
 
                 allProducts.Add(new ProductForCheckout
@@ -63,7 +67,8 @@ namespace DeliveryApp.API.ControllersAPI
                     Amount = prod.Amount,
                     //The following code line wont work if the amount can't be converted to int
                     TotalProductPrice = Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000,
-                    Category = productCategory.Name
+                    Category = productCategory.Name,
+                    CategoryId = productCategory.Id
                 });
             }
             ClientForCartDto clientForCart = _mapper.Map<ClientForCartDto>(client);
@@ -148,6 +153,20 @@ namespace DeliveryApp.API.ControllersAPI
 
             var deletedProduct = cartProductService.RemoveProduct(client.Id, product.Id);
             return Ok(deletedProduct);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("deleteAll")]
+        public ActionResult<IEnumerable<CartProduct>> DeleteAllProductsFromCart([FromBody] CartClientDto cartClient)
+        {
+            var client = clientService.GetClientById(cartClient.ClientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var deletedProducts = cartProductService.RemoveAllProducts(client.Id);
+            return Ok(deletedProducts);
         }
     }
 }
