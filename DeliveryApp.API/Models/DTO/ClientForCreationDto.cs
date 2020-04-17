@@ -12,7 +12,7 @@ namespace DeliveryApp.API.Models.DTO
         public string LastName { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        //public byte[] ImageBase64 { get; set; }
+        public string ImageBase64String { get; set; }
         public Location Location { get; set; }
     }
 }

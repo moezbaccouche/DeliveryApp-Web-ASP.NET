@@ -15,16 +15,18 @@ namespace DeliveryApp.Controllers
         private readonly IDeliveryManService deliveryManService;
         private readonly IProductOrderService productOrderService;
         private readonly IProductImageService productImageService;
+        private readonly IDeliveryInfoService deliveryInfoService;
 
         public OrderController(IOrderService orderService,
             IDeliveryManService deliveryManService,
             IProductOrderService productOrderService,
-            IProductImageService productImageService)
+            IProductImageService productImageService, IDeliveryInfoService deliveryInfoService)
         {
             this.orderService = orderService;
             this.deliveryManService = deliveryManService;
             this.productOrderService = productOrderService;
             this.productImageService = productImageService;
+            this.deliveryInfoService = deliveryInfoService;
         }
         public IActionResult Index()
         {
@@ -100,7 +102,22 @@ namespace DeliveryApp.Controllers
             var order = orderService.GetOrderById(idOrder);
             var deliveryMan = deliveryManService.GetDeliveryManById(deliveryManId);
 
-            orderService.BindOrder(order, deliveryMan);
+            //Calculate estimated delivery time
+            var estimatedDeliveryTime = DateTime.Now;
+
+            //Create deliveryInfo entity
+            var orderInfo = deliveryInfoService.AddDeliveryInfo(new DeliveryInfo
+            {
+                DeliveryMan = deliveryMan,
+                EstimatedDeliveryTime = estimatedDeliveryTime,
+                Order = order
+            });
+
+            //Edit the order status
+            order.Status = EnumOrderStatus.InDelivery;
+            orderService.EditOrder(order);
+
+            //orderService.BindOrder(order, deliveryMan);
 
             deliveryMan.IsAvailable = false;
             deliveryManService.EditDeliveryMan(deliveryMan);

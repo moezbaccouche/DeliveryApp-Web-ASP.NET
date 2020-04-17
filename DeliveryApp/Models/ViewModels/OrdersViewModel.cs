@@ -9,6 +9,7 @@ namespace DeliveryApp.Models.ViewModels
     public class OrdersViewModel
     {
         public IEnumerable<Order> DeliveredOrders { get; set; }
+
         public IEnumerable<Order> InDeliveryOrders { get; set; }
         public IEnumerable<Order> NotDeliveredOrders { get; set; }
 

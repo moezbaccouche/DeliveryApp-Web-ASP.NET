@@ -50,6 +50,7 @@ namespace DeliveryApp.API
             services.AddScoped<IDeliveryInfoService, DeliveryInfoService>();
             services.AddScoped<IOrderService, OrderService>(); 
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IProductOrderService, ProductOrderService>();
 
 
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));

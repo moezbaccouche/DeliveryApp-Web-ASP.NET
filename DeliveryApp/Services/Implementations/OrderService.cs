@@ -24,18 +24,6 @@ namespace DeliveryApp.Services.Implementations
             return order;
         }
 
-        public Order BindOrder(Order order, DeliveryMan deliveryMan)
-        {
-            var orderToEdit = repoOrder.TableNoTracking.Where(o => o.Id == order.Id).FirstOrDefault();
-
-            orderToEdit.DeliveryMan = deliveryMan;
-            orderToEdit.Status = EnumOrderStatus.InDelivery;
-
-            //We Must specify the ETA of the order
-
-            repoOrder.Update(orderToEdit);
-            return orderToEdit;
-        }
 
         public Order DeleteOrder(int id)
         {
@@ -51,6 +39,15 @@ namespace DeliveryApp.Services.Implementations
         {
             repoOrder.Update(order);
             return order;
+        }
+
+        public Order GetClientNotDeliveredOrder(int clientId)
+        {
+            var notDeliveredOrder = repoOrder.TableNoTracking
+                .Where(o => o.Status == EnumOrderStatus.NotDelivered && o.IdClient == clientId)
+                .FirstOrDefault();
+
+            return notDeliveredOrder;
         }
 
         public IEnumerable<Order> GetDeliveredOrders()

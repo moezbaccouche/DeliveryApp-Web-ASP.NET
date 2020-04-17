@@ -38,5 +38,14 @@ namespace DeliveryApp.Services.Implementations
 
             return allProductOrders;
         }
+
+        public ProductOrder AddProduct(ProductOrder newProduct)
+        {
+            if(newProduct != null)
+            {
+                repoProductOrder.Insert(newProduct);
+            }
+            return newProduct;
+        }
     }
 }

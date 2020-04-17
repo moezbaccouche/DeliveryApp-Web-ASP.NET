@@ -14,6 +14,7 @@ namespace DeliveryApp.Models.Data
         public DateTime RealDeliveryTime { get; set; }
         public double DeliveryPrice { get; set; }
         public Client Client { get; set; }
+        public int IdClient { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
 
         [NotMapped]

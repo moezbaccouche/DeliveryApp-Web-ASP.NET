@@ -10,7 +10,6 @@ namespace DeliveryApp.Models.Data
         public int ProductId { get; set; }
         public string Amount { get; set; }
         public int ClientId { get; set; }
-        public IEnumerable<Product> Products { get; set; } = new List<Product>();
 
     }
 }

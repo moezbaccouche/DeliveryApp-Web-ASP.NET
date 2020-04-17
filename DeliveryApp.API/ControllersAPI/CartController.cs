@@ -168,5 +168,32 @@ namespace DeliveryApp.API.ControllersAPI
             var deletedProducts = cartProductService.RemoveAllProducts(client.Id);
             return Ok(deletedProducts);
         }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("edit")]
+        public ActionResult<CartProduct> EditProduct([FromBody] ProductForCart productForCart)
+        {
+            var client = clientService.GetClientById(productForCart.ClientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var product = productService.GetProductById(productForCart.ProductId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            var cartProduct = cartProductService.GetProduct(client.Id, product.Id);
+            if (cartProduct != null)
+            {
+                cartProduct.Amount = productForCart.Amount;
+            }
+
+            var productToReturn = cartProductService.EditProduct(cartProduct);
+
+            return Ok(productToReturn);
+        }
     }
 }

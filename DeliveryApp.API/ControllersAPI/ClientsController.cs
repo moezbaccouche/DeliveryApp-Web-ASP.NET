@@ -34,15 +34,16 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(_mapper.Map<IEnumerable<ClientForProfileDto>>(allClients));
         }
 
-        [EnableCors("AllowCors")]
+        [EnableCors("AllowAll")]
         [HttpGet("{clientId}", Name = "GetClient")]
         public ActionResult<ClientForProfileDto> GetClient(int clientId)
         {
             var client = clientService.GetClientById(clientId);
-            if(client == null)
+            if (client == null)
             {
                 return NotFound();
             }
+
             return Ok(_mapper.Map<ClientForProfileDto>(client));
         }
 

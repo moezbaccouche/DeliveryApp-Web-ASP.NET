@@ -15,6 +15,6 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<Order> GetInDeliveryOrders();
         Order DeleteOrder(int id);
         Order EditOrder(Order order);
-        Order BindOrder(Order order, DeliveryMan deliveryMan);
+        Order GetClientNotDeliveredOrder(int clientId);
     }
 }

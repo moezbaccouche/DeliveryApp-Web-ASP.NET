@@ -9,6 +9,8 @@ namespace DeliveryApp.Models.Data
     {
         public Order Order { get; set; }
         public Product Article { get; set; }
+        public int IdProduct { get; set; }
+        public int IdOrder { get; set; }
         public string Amount { get; set; }
     }
 }

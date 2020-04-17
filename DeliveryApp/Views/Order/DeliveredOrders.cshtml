@@ -29,14 +29,14 @@
                     <tbody>
                         @foreach (var order in Model.DeliveredOrders)
                         {
-                        <tr>
-                            <td>@order.Id</td>
-                            <td>@order.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@order.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>@order.DeliveryPrice DT</td>
-                            <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
-                            <td>@order.Client.FirstName @order.Client.LastName</td>
-                        </tr>
+                            <tr>
+                                <td>@order.Id</td>
+                                <td>@order.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@order.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@order.DeliveryPrice DT</td>
+                                <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
+                                <td>@order.Client.FirstName @order.Client.LastName</td>
+                            </tr>
                         }
                     </tbody>
                 </table>

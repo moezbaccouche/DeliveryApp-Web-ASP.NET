@@ -316,6 +316,9 @@ namespace DeliveryApp.Migrations
                     b.Property<DateTime>("EstimatedDeliveryTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("IdClient")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("OrderTime")
                         .HasColumnType("datetime2");
 
@@ -341,9 +344,6 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CartProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -360,8 +360,6 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CartProductId");
 
                     b.ToTable("Product");
                 });
@@ -400,6 +398,12 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
                     b.Property<int?>("OrderId")
@@ -693,13 +697,6 @@ namespace DeliveryApp.Migrations
                     b.HasOne("DeliveryApp.Models.Data.DeliveryMan", "DeliveryMan")
                         .WithMany("OrdersToDeliver")
                         .HasForeignKey("DeliveryManId");
-                });
-
-            modelBuilder.Entity("DeliveryApp.Models.Data.Product", b =>
-                {
-                    b.HasOne("DeliveryApp.Models.Data.CartProduct", null)
-                        .WithMany("Products")
-                        .HasForeignKey("CartProductId");
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.ProductImage", b =>
