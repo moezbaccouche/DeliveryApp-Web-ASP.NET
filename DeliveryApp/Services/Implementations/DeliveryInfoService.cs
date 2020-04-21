@@ -47,7 +47,7 @@ namespace DeliveryApp.Services.Implementations
         public DeliveryInfo GetOrderDeliveryInfo(int orderId)
         {
             var info = (from i in repoDeliveryInfo.TableNoTracking
-                        where i.Order.Id == orderId
+                        where i.IdOrder == orderId
                         select i)
                         .FirstOrDefault();
             return info;

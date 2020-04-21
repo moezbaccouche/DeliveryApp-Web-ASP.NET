@@ -4,14 +4,16 @@ using DeliveryApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200421124409_DeliveryInfosEdited")]
+    partial class DeliveryInfosEdited
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,19 +164,13 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("DeliveryManId")
+                    b.Property<int>("DeliveryManId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("EstimatedDeliveryTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdDeliveryMan")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdOrder")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("RealDeliveryTime")
@@ -672,11 +668,15 @@ namespace DeliveryApp.Migrations
                 {
                     b.HasOne("DeliveryApp.Models.Data.DeliveryMan", "DeliveryMan")
                         .WithMany()
-                        .HasForeignKey("DeliveryManId");
+                        .HasForeignKey("DeliveryManId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DeliveryApp.Models.Data.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeliveryApp.Models.Data.DeliveryMan", b =>

@@ -33,6 +33,17 @@ namespace DeliveryApp.Services.Implementations
             return favorites;
         }
 
+        public bool IsFavoriteProduct(int productId, int clientId)
+        {
+            Favorites favorites = (from f in repoFavorites.TableNoTracking
+                                   where f.ProductId == productId && f.ClientId == clientId
+                                   select f)
+                                   .FirstOrDefault();
+
+            //If favorite is null this will return false
+            return favorites != null;
+        }
+
         public Favorites RemoveProductFromFavorites(Favorites newFavorite)
         {
             Favorites favorite = (from f in repoFavorites.TableNoTracking
@@ -44,6 +55,13 @@ namespace DeliveryApp.Services.Implementations
                 repoFavorites.Delete(favorite);
             }
             return favorite;
+        }
+
+        public int GetClientNbFavoriteProducts(int clientId)
+        {
+            return repoFavorites.TableNoTracking
+                .Where(f => f.ClientId == clientId)
+                .Count();
         }
     }
 }

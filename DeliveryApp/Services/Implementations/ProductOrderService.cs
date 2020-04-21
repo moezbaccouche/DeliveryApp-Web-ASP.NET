@@ -21,7 +21,7 @@ namespace DeliveryApp.Services.Implementations
         public IEnumerable<ProductOrder> GetOrderProducts(Order order)
         {
             var productOrders = repoProductOrder.TableNoTracking
-                .Where(po => po.Order.Id == order.Id)
+                .Where(po => po.IdOrder == order.Id)
                 .Include(po => po.Order)
                 .Include(po => po.Article)
                 .ToList();

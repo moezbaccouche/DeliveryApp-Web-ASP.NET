@@ -12,6 +12,7 @@ namespace DeliveryApp.Models.Data
         public DateTime OrderTime { get; set; }
         public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime RealDeliveryTime { get; set; }
+        public double OrderPrice { get; set; }
         public double DeliveryPrice { get; set; }
         public Client Client { get; set; }
         public int IdClient { get; set; }

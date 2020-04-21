@@ -51,7 +51,7 @@ namespace DeliveryApp.API
             services.AddScoped<IOrderService, OrderService>(); 
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IProductOrderService, ProductOrderService>();
-
+            services.AddScoped<IDeliveryManService, DeliveryManService>();
 
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
 

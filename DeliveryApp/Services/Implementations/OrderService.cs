@@ -50,6 +50,15 @@ namespace DeliveryApp.Services.Implementations
             return notDeliveredOrder;
         }
 
+        public IEnumerable<Order> GetClientTreatedOrders(int clientId)
+        {
+            var treatedOrders = repoOrder.TableNoTracking
+                .Where(o => o.IdClient == clientId && o.Status != EnumOrderStatus.NotDelivered)
+                .ToList();
+
+            return treatedOrders;
+        }
+
         public IEnumerable<Order> GetDeliveredOrders()
         {
             var deliveredOrders = repoOrder.TableNoTracking
@@ -88,6 +97,13 @@ namespace DeliveryApp.Services.Implementations
         {
             var order = repoOrder.TableNoTracking.Where(o => o.Id == id).FirstOrDefault();
             return order;
+        }
+
+        public int GetClientNbDeliveredProducts(int clientId)
+        {
+            return repoOrder.TableNoTracking
+                .Where(o => o.IdClient == clientId && o.Status == EnumOrderStatus.Delivered)
+                .Count();
         }
     }
 }

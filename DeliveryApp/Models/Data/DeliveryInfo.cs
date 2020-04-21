@@ -10,6 +10,8 @@ namespace DeliveryApp.Models.Data
         public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime RealDeliveryTime { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
+        public int IdDeliveryMan { get; set; }
+        public int IdOrder { get; set; }
         public Order Order { get; set; }
     }
 }

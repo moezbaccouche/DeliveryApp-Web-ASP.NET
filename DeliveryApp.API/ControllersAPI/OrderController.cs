@@ -20,16 +20,21 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IProductOrderService productOrderService;
         private readonly IProductService productService;
         private readonly ICartProductService cartProductService;
+        private readonly IDeliveryInfoService deliveryInfoService;
+        private readonly IDeliveryManService deliveryManService;
 
         public OrderController(IClientService clientService, IOrderService orderService,
             IProductOrderService productOrderService, IProductService productService,
-            ICartProductService cartProductService)
+            ICartProductService cartProductService, IDeliveryInfoService deliveryInfoService,
+            IDeliveryManService deliveryManService)
         {
             this.clientService = clientService;
             this.orderService = orderService;
             this.productOrderService = productOrderService;
             this.productService = productService;
             this.cartProductService = cartProductService;
+            this.deliveryInfoService = deliveryInfoService;
+            this.deliveryManService = deliveryManService;
         }
 
         [EnableCors("AllowAll")]
@@ -37,7 +42,7 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<Order> AddNewOrder(OrderForCreationDto orderDto)
         {
             var client = clientService.GetClientById(orderDto.ClientId);
-            if(client == null)
+            if (client == null)
             {
                 return NotFound();
             }
@@ -45,24 +50,24 @@ namespace DeliveryApp.API.ControllersAPI
             //Calculate delivery price
             var deliveryPrice = 5;
 
-            var order = orderService.AddOrder(new Order 
-            { 
-                IdClient = client.Id, 
-                DeliveryPrice = deliveryPrice, 
-                OrderTime = DateTime.Now, 
-                Status = EnumOrderStatus.NotDelivered 
+            var order = orderService.AddOrder(new Order
+            {
+                IdClient = client.Id,
+                DeliveryPrice = deliveryPrice,
+                OrderTime = DateTime.Now,
+                Status = EnumOrderStatus.NotDelivered
             });
 
             var cartProducts = cartProductService.GetCartProducts(orderDto.ClientId);
 
-            foreach(var prod in cartProducts)
+            foreach (var prod in cartProducts)
             {
                 //Add each product that was in the cart to the table ProductOrder
                 var product = productService.GetProductById(prod.ProductId);
-                if(product != null)
+                if (product != null)
                 {
                     var orderProduct = productOrderService.AddProduct(new ProductOrder
-                    { 
+                    {
                         IdProduct = product.Id,
                         Amount = prod.Amount,
                         IdOrder = order.Id
@@ -70,24 +75,108 @@ namespace DeliveryApp.API.ControllersAPI
                 }
             }
             return Ok(order);
-        } 
+        }
 
         [EnableCors("AllowAll")]
         [HttpGet("notDelivered/{clientId}")]
         public ActionResult<Order> GetNotDeliveredOrders(int clientId)
         {
             var client = clientService.GetClientById(clientId);
-            if(client == null)
+            if (client == null)
             {
                 return NotFound();
             }
 
             var order = orderService.GetClientNotDeliveredOrder(clientId);
-            if(order == null)
+            if (order == null)
             {
                 return Ok(new { nbOrders = 0 });
             }
             return Ok(new { order = order, nbOrders = 1 });
         }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("clients/{clientId}")]
+        public ActionResult<IEnumerable<OrderInfosDto>> GetClientTreatedOrders(int clientId)
+        {
+            var client = clientService.GetClientById(clientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var orders = orderService.GetClientTreatedOrders(clientId);
+            var ordersInfos = new List<OrderInfosDto>();
+
+            foreach (var order in orders)
+            {
+                var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
+                var orderDeliveryMan = deliveryManService.GetDeliveryManById(deliveryInfos.IdDeliveryMan);
+
+                // We have to consider the situation where the deliveryMan object is null
+
+                var orderInfo = new OrderInfosDto
+                {
+                    OrderId = order.Id,
+                    OrderTime = order.OrderTime,
+                    OrderPrice = order.OrderPrice,
+                    OrderStatus = order.Status,
+                    DeliveryPrice = order.DeliveryPrice,
+                    DeliveryManId = orderDeliveryMan.Id,
+                    DeliveryManName = $"{orderDeliveryMan.FirstName} {orderDeliveryMan.LastName}",
+                    DeliveryManPicture = orderDeliveryMan.ImageBase64,
+                    RealDeliveryTime = deliveryInfos.RealDeliveryTime
+                };
+                ordersInfos.Add(orderInfo);
+            }
+
+            return Ok(ordersInfos);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("{orderId}")]
+        public ActionResult<OrderDetailsDto> GetOrderDetails(int orderId)
+        {
+            var order = orderService.GetOrderById(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            var products = new List<ProductForCheckout>();
+            foreach (var prod in orderProducts)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+
+                products.Add(new ProductForCheckout 
+                { 
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name 
+                });
+            }
+
+            var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
+            var orderDeliveryMan = deliveryManService.GetDeliveryManById(deliveryInfos.IdDeliveryMan);
+
+            var orderDetails = new OrderDetailsDto
+            {
+                OrderId = order.Id,
+                OrderTime = order.OrderTime,
+                OrderPrice = order.OrderPrice,
+                OrderStatus = order.Status,
+                Products = products,
+                DeliveryPrice = order.DeliveryPrice,
+                DeliveryManId = orderDeliveryMan.Id,
+                DeliveryManName = $"{orderDeliveryMan.FirstName} {orderDeliveryMan.LastName}",
+                DeliveryManPicture = orderDeliveryMan.ImageBase64,
+                RealDeliveryTime = deliveryInfos.RealDeliveryTime
+            };
+
+            return Ok(orderDetails);
+        }
+
     }
 }

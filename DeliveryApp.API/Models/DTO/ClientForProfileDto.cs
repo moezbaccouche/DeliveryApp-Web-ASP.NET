@@ -15,5 +15,7 @@ namespace DeliveryApp.API.Models.DTO
         public string Email { get; set; }
         public byte[] ImageBase64 { get; set; }
         public Location Location { get; set; }
+        public int NbDoneOrders { get; set; }
+        public int NbFavoriteProducts { get; set; }
     }
 }

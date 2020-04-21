@@ -18,12 +18,17 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IMapper _mapper;
         private readonly IClientService clientService;
         private readonly ILocationService locationService;
+        private readonly IFavoritesService favoritesService;
+        private readonly IOrderService orderService;
 
-        public ClientsController(IMapper mapper, IClientService clientService, ILocationService locationService)
+        public ClientsController(IMapper mapper, IClientService clientService, ILocationService locationService,
+            IFavoritesService favoritesService, IOrderService orderService)
         {
             _mapper = mapper;
             this.clientService = clientService;
             this.locationService = locationService;
+            this.favoritesService = favoritesService;
+            this.orderService = orderService;
         }
 
         [EnableCors("AllowAll")]
@@ -44,7 +49,14 @@ namespace DeliveryApp.API.ControllersAPI
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<ClientForProfileDto>(client));
+            var clientForProfile = _mapper.Map<ClientForProfileDto>(client);
+            var nbDoneOrders = orderService.GetClientNbDeliveredProducts(clientId);
+            var nbFavoriteProducts = favoritesService.GetClientNbFavoriteProducts(clientId);
+
+            clientForProfile.NbDoneOrders = nbDoneOrders;
+            clientForProfile.NbFavoriteProducts = nbFavoriteProducts;
+
+            return Ok(clientForProfile);
         }
 
         [EnableCors("AllowAll")]
