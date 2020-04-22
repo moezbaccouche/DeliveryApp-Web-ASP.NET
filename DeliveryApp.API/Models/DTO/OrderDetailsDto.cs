@@ -17,6 +17,7 @@ namespace DeliveryApp.API.Models.DTO
         public int DeliveryManId { get; set; }
         public string DeliveryManName { get; set; }
         public byte[] DeliveryManPicture { get; set; }
+        public int DeliveryManClientRating { get; set; }
         public EnumOrderStatus OrderStatus { get; set; }
     }
 }

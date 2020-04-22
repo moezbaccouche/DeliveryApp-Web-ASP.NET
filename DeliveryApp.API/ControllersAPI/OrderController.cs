@@ -22,11 +22,12 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly ICartProductService cartProductService;
         private readonly IDeliveryInfoService deliveryInfoService;
         private readonly IDeliveryManService deliveryManService;
+        private readonly IRatingService ratingService;
 
         public OrderController(IClientService clientService, IOrderService orderService,
             IProductOrderService productOrderService, IProductService productService,
             ICartProductService cartProductService, IDeliveryInfoService deliveryInfoService,
-            IDeliveryManService deliveryManService)
+            IDeliveryManService deliveryManService, IRatingService ratingService)
         {
             this.clientService = clientService;
             this.orderService = orderService;
@@ -35,6 +36,7 @@ namespace DeliveryApp.API.ControllersAPI
             this.cartProductService = cartProductService;
             this.deliveryInfoService = deliveryInfoService;
             this.deliveryManService = deliveryManService;
+            this.ratingService = ratingService;
         }
 
         [EnableCors("AllowAll")]
@@ -161,6 +163,13 @@ namespace DeliveryApp.API.ControllersAPI
             var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
             var orderDeliveryMan = deliveryManService.GetDeliveryManById(deliveryInfos.IdDeliveryMan);
 
+            var deliveryManClientRating = ratingService.GetClientRatingForDeliveryMan(order.IdClient, orderDeliveryMan.Id);
+            var rating = 0;
+            if(deliveryManClientRating != null)
+            {
+                rating = deliveryManClientRating.Rate;
+            }
+
             var orderDetails = new OrderDetailsDto
             {
                 OrderId = order.Id,
@@ -172,6 +181,7 @@ namespace DeliveryApp.API.ControllersAPI
                 DeliveryManId = orderDeliveryMan.Id,
                 DeliveryManName = $"{orderDeliveryMan.FirstName} {orderDeliveryMan.LastName}",
                 DeliveryManPicture = orderDeliveryMan.ImageBase64,
+                DeliveryManClientRating = rating,
                 RealDeliveryTime = deliveryInfos.RealDeliveryTime
             };
 

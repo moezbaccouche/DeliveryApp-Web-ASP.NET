@@ -53,6 +53,7 @@ namespace DeliveryApp
             services.AddTransient<IFavoritesService, FavoritesService>();
             services.AddTransient<ICartProductService, CartProductService>();
             services.AddTransient<IDeliveryInfoService, DeliveryInfoService>();
+            services.AddTransient<IRatingService, RatingService>();
 
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));

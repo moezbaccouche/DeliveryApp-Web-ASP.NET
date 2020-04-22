@@ -2,7 +2,8 @@
 {
     public class Rating : BaseEntity
     {
-        public EnumRate Rate { get; set; }
-        public DeliveryMan DeliveryMan { get; set; }
+        public int IdClient { get; set; }
+        public int IdDeliveryMan { get; set; }
+        public int Rate { get; set; }
     }
 }
