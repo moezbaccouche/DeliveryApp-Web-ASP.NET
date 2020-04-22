@@ -17,6 +17,7 @@ namespace DeliveryApp.Models.Data
         public Client Client { get; set; }
         public int IdClient { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
+        public bool WithBill { get; set; }
 
         [NotMapped]
         public ICollection<Product> Products { get; set; }

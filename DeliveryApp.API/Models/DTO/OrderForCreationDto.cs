@@ -10,5 +10,6 @@ namespace DeliveryApp.API.Models.DTO
     {
         //public IEnumerable<ProductForOrderCreationDto> Products { get; set; }
         public int ClientId { get; set; }
+        public bool WithBill { get; set; }
     }
 }

@@ -57,7 +57,8 @@ namespace DeliveryApp.API.ControllersAPI
                 IdClient = client.Id,
                 DeliveryPrice = deliveryPrice,
                 OrderTime = DateTime.Now,
-                Status = EnumOrderStatus.NotDelivered
+                Status = EnumOrderStatus.NotDelivered,
+                WithBill = orderDto.WithBill
             });
 
             var cartProducts = cartProductService.GetCartProducts(orderDto.ClientId);
