@@ -7,6 +7,7 @@ namespace DeliveryApp.Models.Data
 {
     public class DeliveryInfo : BaseEntity
     {
+        public DateTime AcceptingOrderTime { get; set; }
         public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime RealDeliveryTime { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
