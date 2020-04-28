@@ -19,14 +19,16 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IOrderService orderService;
         private readonly IMapper _mapper;
         private readonly IDeliveryManService deliveryManService;
+        private readonly ICurrentLocationService currentLocationService;
 
         public DeliveryInfosController(IDeliveryInfoService deliveryInfosService, IOrderService orderService,
-            IMapper mapper, IDeliveryManService deliveryManService)
+            IMapper mapper, IDeliveryManService deliveryManService, ICurrentLocationService currentLocationService)
         {
             this.deliveryInfosService = deliveryInfosService;
             this.orderService = orderService;
             _mapper = mapper;
             this.deliveryManService = deliveryManService;
+            this.currentLocationService = currentLocationService;
         }
 
         [EnableCors("AllowAll")]
@@ -61,6 +63,84 @@ namespace DeliveryApp.API.ControllersAPI
             };
 
             return Ok(deliveryInfos);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("location/{deliveryManId}")]
+        public ActionResult<DeliveryManCurrentLocationDto> GetDeliveryManCurrentLocation(int deliveryManId)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(deliveryManId);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryManCurrentLocation = currentLocationService.GetDeliveryManCurrentLocation(deliveryManId);
+            if (deliveryManCurrentLocation == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<DeliveryManCurrentLocationDto>(deliveryManCurrentLocation));
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("location/add")]
+        public ActionResult<DeliveryManCurrentLocationDto> AddDeliveryManCurrentLocation([FromBody]DeliveryManCurrentLocationDto location)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(location.DeliveryManId);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var newlocation = _mapper.Map<CurrentLocation>(location);
+            var locationToReturn = currentLocationService.AddDeliveryManCurrentLocation(newlocation);
+
+            return Ok(_mapper.Map<DeliveryManCurrentLocationDto>(locationToReturn));
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("location/update")]
+        public ActionResult<DeliveryManCurrentLocationDto> UpdateDeliveryManCurrentLocation([FromBody]DeliveryManCurrentLocationDto location)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(location.DeliveryManId);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryManCurrentLocation = currentLocationService.GetDeliveryManCurrentLocation(location.DeliveryManId);
+            if (deliveryManCurrentLocation == null)
+            {
+                return NotFound();
+            }
+
+            deliveryManCurrentLocation.Lat = location.Lat;
+            deliveryManCurrentLocation.Long = location.Long;
+
+            var newLocation = currentLocationService.UpdateDeliveryManCurrentLocation(deliveryManCurrentLocation);
+            return Ok(_mapper.Map<DeliveryManCurrentLocationDto>(newLocation));
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("location/delete")]
+        public ActionResult<DeliveryManCurrentLocationDto> DeleteDeliveryManCurrentLocation([FromBody]CurrentLocationToDeleteDto location)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(location.DeliveryManId);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryManCurrentLocation = currentLocationService.GetDeliveryManCurrentLocation(location.DeliveryManId);
+            if (deliveryManCurrentLocation == null)
+            {
+                return NotFound();
+            }
+
+            var deletedLocation = currentLocationService.DeleteDeliveryManCurrentLocation(deliveryManCurrentLocation);
+            return Ok(_mapper.Map<DeliveryManCurrentLocationDto>(deletedLocation));
         }
     }
 }
