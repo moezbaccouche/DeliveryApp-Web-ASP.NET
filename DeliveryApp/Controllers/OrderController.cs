@@ -35,7 +35,7 @@ namespace DeliveryApp.Controllers
 
         public IActionResult NotDeliveredOrders()
         {
-            var notDeliveredOrders = orderService.GetNotDeliveredOrders();
+            var notDeliveredOrders = orderService.GetPendingOrders();
             var availableDeliveryMen = deliveryManService.GetAllAvailableDeliveryMen();
             OrdersViewModel ordersViewModel = new OrdersViewModel
             {

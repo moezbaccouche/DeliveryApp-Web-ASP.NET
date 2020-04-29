@@ -41,10 +41,10 @@ namespace DeliveryApp.Services.Implementations
             return order;
         }
 
-        public Order GetClientNotDeliveredOrder(int clientId)
+        public Order GetClientPendingOrder(int clientId)
         {
             var notDeliveredOrder = repoOrder.TableNoTracking
-                .Where(o => o.Status == EnumOrderStatus.NotDelivered && o.IdClient == clientId)
+                .Where(o => o.Status == EnumOrderStatus.Pending && o.IdClient == clientId)
                 .FirstOrDefault();
 
             return notDeliveredOrder;
@@ -53,7 +53,7 @@ namespace DeliveryApp.Services.Implementations
         public IEnumerable<Order> GetClientTreatedOrders(int clientId)
         {
             var treatedOrders = repoOrder.TableNoTracking
-                .Where(o => o.IdClient == clientId && o.Status != EnumOrderStatus.NotDelivered)
+                .Where(o => o.IdClient == clientId && o.Status != EnumOrderStatus.Pending)
                 .ToList();
 
             return treatedOrders;
@@ -82,10 +82,10 @@ namespace DeliveryApp.Services.Implementations
             return deliveredOrders;
         }
 
-        public IEnumerable<Order> GetNotDeliveredOrders()
+        public IEnumerable<Order> GetPendingOrders()
         {
             var deliveredOrders = repoOrder.TableNoTracking
-                .Where(o => o.Status == EnumOrderStatus.NotDelivered)
+                .Where(o => o.Status == EnumOrderStatus.Pending)
                 .Include(o => o.DeliveryMan)
                 .Include(o => o.Client)
                 .ToList();
@@ -104,6 +104,15 @@ namespace DeliveryApp.Services.Implementations
             return repoOrder.TableNoTracking
                 .Where(o => o.IdClient == clientId && o.Status == EnumOrderStatus.Delivered)
                 .Count();
+        }
+
+        public IEnumerable<Order> GetClientOrders(int clientId)
+        {
+            var orders = repoOrder.TableNoTracking
+                .Where(o => o.IdClient == clientId)
+                .ToList();
+
+            return orders;
         }
     }
 }

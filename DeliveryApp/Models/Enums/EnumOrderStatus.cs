@@ -2,7 +2,8 @@
 {
     public enum EnumOrderStatus
     {
-        NotDelivered,
+        Pending,
+        Processing,
         InDelivery,
         Delivered
     }

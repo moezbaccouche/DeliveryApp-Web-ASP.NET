@@ -10,6 +10,7 @@ namespace DeliveryApp.API.Models.DTO
     {
         public int OrderId { get; set; }
         public DateTime OrderTime { get; set; }
+        public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime RealDeliveryTime { get; set; }
         public double OrderPrice { get; set; }
         public IEnumerable<ProductForCheckout> Products { get; set; }

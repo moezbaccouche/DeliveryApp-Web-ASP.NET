@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DeliveryApp.API.Models.DTO;
+using DeliveryApp.API.Models.DTO.OrdersDTOs;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
 using Microsoft.AspNetCore.Cors;
@@ -23,11 +25,12 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IDeliveryInfoService deliveryInfoService;
         private readonly IDeliveryManService deliveryManService;
         private readonly IRatingService ratingService;
+        private readonly IMapper _mapper;
 
         public OrderController(IClientService clientService, IOrderService orderService,
             IProductOrderService productOrderService, IProductService productService,
             ICartProductService cartProductService, IDeliveryInfoService deliveryInfoService,
-            IDeliveryManService deliveryManService, IRatingService ratingService)
+            IDeliveryManService deliveryManService, IRatingService ratingService, IMapper mapper)
         {
             this.clientService = clientService;
             this.orderService = orderService;
@@ -37,6 +40,7 @@ namespace DeliveryApp.API.ControllersAPI
             this.deliveryInfoService = deliveryInfoService;
             this.deliveryManService = deliveryManService;
             this.ratingService = ratingService;
+            _mapper = mapper;
         }
 
         [EnableCors("AllowAll")]
@@ -57,7 +61,7 @@ namespace DeliveryApp.API.ControllersAPI
                 IdClient = client.Id,
                 DeliveryPrice = deliveryPrice,
                 OrderTime = DateTime.Now,
-                Status = EnumOrderStatus.NotDelivered,
+                Status = EnumOrderStatus.Pending,
                 WithBill = orderDto.WithBill
             });
 
@@ -90,7 +94,7 @@ namespace DeliveryApp.API.ControllersAPI
                 return NotFound();
             }
 
-            var order = orderService.GetClientNotDeliveredOrder(clientId);
+            var order = orderService.GetClientPendingOrder(clientId);
             if (order == null)
             {
                 return Ok(new { nbOrders = 0 });
@@ -136,6 +140,64 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(ordersInfos);
         }
 
+        // -------------------------------------- Edited 29/04/2020 16:37 ------------------------------------
+
+        [EnableCors("AllowAll")]
+        [HttpGet("all/clients/{clientId}")]
+        public ActionResult<IEnumerable<OrderInfosDto>> GetClientOrders(int clientId)
+        {
+
+            var client = clientService.GetClientById(clientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            var orders = orderService.GetClientOrders(clientId);
+            var ordersInfos = new List<OrderInfosDto>();
+
+            foreach (var order in orders)
+            {
+                OrderInfosDto orderInfo;
+                if (order.Status == EnumOrderStatus.Pending)
+                {
+                    orderInfo = new OrderInfosDto
+                    {
+                        OrderId = order.Id,
+                        OrderTime = order.OrderTime,
+                        OrderPrice = order.OrderPrice,
+                        OrderStatus = order.Status,
+                        DeliveryPrice = order.DeliveryPrice
+                    };
+                }
+                else
+                {
+                    var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
+                    var orderDeliveryMan = deliveryManService.GetDeliveryManById(deliveryInfos.IdDeliveryMan);
+
+                    orderInfo = new OrderInfosDto
+                    {
+                        OrderId = order.Id,
+                        OrderTime = order.OrderTime,
+                        OrderPrice = order.OrderPrice,
+                        OrderStatus = order.Status,
+                        EstimatedDeliveryTime = order.EstimatedDeliveryTime,
+                        DeliveryPrice = order.DeliveryPrice,
+                        DeliveryManId = orderDeliveryMan.Id,
+                        DeliveryManName = $"{orderDeliveryMan.FirstName} {orderDeliveryMan.LastName}",
+                        DeliveryManPicture = orderDeliveryMan.ImageBase64,
+                        RealDeliveryTime = deliveryInfos.RealDeliveryTime
+                    };
+                }
+                ordersInfos.Add(orderInfo);
+
+            }
+            return Ok(ordersInfos);
+        }
+
+
+        //-----------------------------------------------------------------------------------------------------
+
         [EnableCors("AllowAll")]
         [HttpGet("{orderId}")]
         public ActionResult<OrderDetailsDto> GetOrderDetails(int orderId)
@@ -152,41 +214,59 @@ namespace DeliveryApp.API.ControllersAPI
             {
                 var product = productService.GetProductById(prod.IdProduct);
 
-                products.Add(new ProductForCheckout 
-                { 
+                products.Add(new ProductForCheckout
+                {
                     Id = product.Id,
                     Amount = prod.Amount,
                     ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
-                    Name = product.Name 
+                    Name = product.Name
                 });
             }
 
-            var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
-            var orderDeliveryMan = deliveryManService.GetDeliveryManById(deliveryInfos.IdDeliveryMan);
+            OrderDetailsDto orderDetails;
 
-            var deliveryManClientRating = ratingService.GetClientRatingForDeliveryMan(order.IdClient, orderDeliveryMan.Id);
-            var rating = 0;
-            if(deliveryManClientRating != null)
+            if (order.Status == EnumOrderStatus.Pending)
             {
-                rating = deliveryManClientRating.Rate;
+                orderDetails = new OrderDetailsDto
+                {
+                    OrderId = order.Id,
+                    OrderTime = order.OrderTime,
+                    OrderPrice = order.OrderPrice,
+                    OrderStatus = order.Status,
+                    Products = products,
+                    DeliveryPrice = order.DeliveryPrice
+                };
             }
-
-            var orderDetails = new OrderDetailsDto
+            else
             {
-                OrderId = order.Id,
-                OrderTime = order.OrderTime,
-                OrderPrice = order.OrderPrice,
-                OrderStatus = order.Status,
-                Products = products,
-                DeliveryPrice = order.DeliveryPrice,
-                DeliveryManId = orderDeliveryMan.Id,
-                DeliveryManName = $"{orderDeliveryMan.FirstName} {orderDeliveryMan.LastName}",
-                DeliveryManPicture = orderDeliveryMan.ImageBase64,
-                DeliveryManClientRating = rating,
-                RealDeliveryTime = deliveryInfos.RealDeliveryTime
-            };
+                var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
+                var orderDeliveryMan = deliveryManService.GetDeliveryManById(deliveryInfos.IdDeliveryMan);
 
+                var deliveryManClientRating = ratingService.GetClientRatingForDeliveryMan(order.IdClient, orderDeliveryMan.Id);
+                var rating = 0;
+                if (deliveryManClientRating != null)
+                {
+                    rating = deliveryManClientRating.Rate;
+                }
+
+                orderDetails = new OrderDetailsDto
+                {
+                    OrderId = order.Id,
+                    OrderTime = order.OrderTime,
+                    OrderPrice = order.OrderPrice,
+                    OrderStatus = order.Status,
+                    Products = products,
+                    EstimatedDeliveryTime = order.EstimatedDeliveryTime,
+                    DeliveryPrice = order.DeliveryPrice,
+                    DeliveryManId = orderDeliveryMan.Id,
+                    DeliveryManName = $"{orderDeliveryMan.FirstName} {orderDeliveryMan.LastName}",
+                    DeliveryManPicture = orderDeliveryMan.ImageBase64,
+                    DeliveryManClientRating = rating,
+                    RealDeliveryTime = deliveryInfos.RealDeliveryTime
+                };
+            }
             return Ok(orderDetails);
+
         }
 
     }

@@ -55,7 +55,9 @@ namespace DeliveryApp.API.ControllersAPI
             {
                 OrderId = orderId,
                 OrderTime = order.OrderTime,
-                EstimatedDeliveryTime = infos.EstimatedDeliveryTime,
+                OrderStatus = order.Status,
+                //EstimatedDeliveryTime = infos.EstimatedDeliveryTime,
+                EstimatedDeliveryTime = order.EstimatedDeliveryTime,
                 AcceptingDeliveryTime = infos.AcceptingOrderTime,
                 Distance = 0,
                 DeliveryMan = deliveryManToReturn,
