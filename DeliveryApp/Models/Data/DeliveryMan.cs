@@ -8,6 +8,7 @@ namespace DeliveryApp.Models.Data
 {
     public class DeliveryMan : BaseEntity
     {
+        public string IdentityId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
@@ -17,6 +18,7 @@ namespace DeliveryApp.Models.Data
         public Location Location { get; set; }
         public bool IsValidated { get; set; }
         public bool IsAvailable { get; set; }
+        public bool HasValidatedEmail { get; set; }
         public ICollection<Order> OrdersToDeliver { get; set; }
     }
 }

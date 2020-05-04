@@ -81,7 +81,7 @@ namespace DeliveryApp.Extensions
             }
         }
 
-        public static Image Base64ToImage(string base64String)
+        public static ImageModel Base64ToImage(string base64String, string directoryName)
         {
             //string convert = base64String.Replace("data:image/jpeg;base64,", string.Empty);
             string convert = base64String;
@@ -91,11 +91,19 @@ namespace DeliveryApp.Extensions
 
             }
             byte[] imageBytes = Convert.FromBase64String(convert);
+            string pathToReturn;
+            string uniqueName = "Picture-" + DateTime.Now.ToString("yymmssfff") + ".jpg";
+            string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+            string path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Content\\" + directoryName, uniqueName);
+
             using (var ms = new MemoryStream(imageBytes, 0, imageBytes.Length))
             {
+                
                 Image image = Image.FromStream(ms, true);
-                return image;
+                image.Save(path, ImageFormat.Jpeg);
             }
+            pathToReturn = "~/Content/ClientsPictures/" + uniqueName;
+            return new ImageModel { ImageBytes = imageBytes, Path = pathToReturn };
         }
 
         public static byte[] FileToBase64(string path)
@@ -118,6 +126,7 @@ namespace DeliveryApp.Extensions
             string base64 = Convert.ToBase64String(base64Bytes);
             return base64;
         }
+
 
         //public static string UploadBase64Image(Image img, string directoryName)
         //{
