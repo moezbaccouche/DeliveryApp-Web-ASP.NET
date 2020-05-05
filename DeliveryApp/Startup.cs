@@ -47,6 +47,7 @@ namespace DeliveryApp
                 options.Password.RequiredLength = 4;
             });
 
+            
             services.AddControllersWithViews();
             services.AddRazorPages();
 

@@ -77,10 +77,6 @@
               "target": "Package",
               "version": "[3.1.2, )"
             },
-            "MvcMailer": {
-              "target": "Package",
-              "version": "[4.5.0, )"
-            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[4.7.0, )"

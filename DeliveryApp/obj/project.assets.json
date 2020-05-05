@@ -1015,18 +1015,6 @@
           "lib/netstandard2.0/MimeKit.dll": {}
         }
       },
-      "MvcMailer/4.5.0": {
-        "type": "package",
-        "dependencies": {
-          "T4Scaffolding.Core": "1.0.0"
-        },
-        "compile": {
-          "lib/45/Mvc.Mailer.dll": {}
-        },
-        "runtime": {
-          "lib/45/Mvc.Mailer.dll": {}
-        }
-      },
       "NETStandard.Library/1.6.1": {
         "type": "package",
         "dependencies": {
@@ -3054,9 +3042,6 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
-      },
-      "T4Scaffolding.Core/1.0.0": {
-        "type": "package"
       }
     }
   },
@@ -4743,36 +4728,6 @@
         "lib/xamarinios/MimeKit.xml",
         "mimekit.2.6.0.nupkg.sha512",
         "mimekit.nuspec"
-      ]
-    },
-    "MvcMailer/4.5.0": {
-      "sha512": "8X3U/yFtHJHhn/gh/RmAFUW0jF/HnUrkhQ/HJeBk9bDx76O/LGfxwMQGpZ799ZLfmtxomb8mnA7YyWzUvt5p+Q==",
-      "type": "package",
-      "path": "mvcmailer/4.5.0",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "content/web.config.transform",
-        "lib/45/Mvc.Mailer.dll",
-        "mvcmailer.4.5.0.nupkg.sha512",
-        "mvcmailer.nuspec",
-        "tools/Install.ps1",
-        "tools/Mailer.Aspx.ps1",
-        "tools/Mailer.Razor.ps1",
-        "tools/MailerFunctions.ps1",
-        "tools/cs/IMailerMethodTemplate.cs.t4",
-        "tools/cs/IMailerTemplate.cs.t4",
-        "tools/cs/MailerMethodTemplate.cs.t4",
-        "tools/cs/MailerTemplate.cs.t4",
-        "tools/view/aspx/Layout.Master.cs.t4",
-        "tools/view/aspx/Layout.text.Master.cs.t4",
-        "tools/view/aspx/Mail.aspx.cs.t4",
-        "tools/view/aspx/Mail.text.aspx.cs.t4",
-        "tools/view/razor/Layout.cshtml.cs.t4",
-        "tools/view/razor/Layout.text.cshtml.cs.t4",
-        "tools/view/razor/Mail.cshtml.cs.t4",
-        "tools/view/razor/Mail.text.cshtml.cs.t4"
       ]
     },
     "NETStandard.Library/1.6.1": {
@@ -9542,31 +9497,6 @@
         "system.xml.xmlserializer.4.3.0.nupkg.sha512",
         "system.xml.xmlserializer.nuspec"
       ]
-    },
-    "T4Scaffolding.Core/1.0.0": {
-      "sha512": "nKm6FfCEeMVAptdIsrKa8kXEZ9bSGvJot2y93OscMxFSwDlChLr/euDCBkljU7ui4pmln2vVkbZPCjjKSGRnqg==",
-      "type": "package",
-      "path": "t4scaffolding.core/1.0.0",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "content/InstallationDummyFile.txt",
-        "t4scaffolding.core.1.0.0.nupkg.sha512",
-        "t4scaffolding.core.nuspec",
-        "tools/CustomScaffolder/DefaultPs1Script.ps1.t4",
-        "tools/CustomScaffolder/DefaultT4Template.cs.t4",
-        "tools/CustomScaffolder/DefaultT4Template.vb.t4",
-        "tools/CustomScaffolder/T4Scaffolding.CustomScaffolder.ps1",
-        "tools/CustomTemplate/T4Scaffolding.CustomTemplate.ps1",
-        "tools/T4Scaffolding.Format.ps1xml",
-        "tools/T4Scaffolding.NuGetServices.dll",
-        "tools/T4Scaffolding.dll",
-        "tools/init.ps1",
-        "tools/install.ps1",
-        "tools/scaffoldingTabExpansion.psm1",
-        "tools/uninstall.ps1"
-      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -9580,7 +9510,6 @@
       "Microsoft.EntityFrameworkCore.Sqlite >= 3.1.1",
       "Microsoft.EntityFrameworkCore.Tools >= 3.1.2",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.2",
-      "MvcMailer >= 4.5.0",
       "System.Drawing.Common >= 4.7.0"
     ]
   },
@@ -9661,10 +9590,6 @@
             "target": "Package",
             "version": "[3.1.2, )"
           },
-          "MvcMailer": {
-            "target": "Package",
-            "version": "[4.5.0, )"
-          },
           "System.Drawing.Common": {
             "target": "Package",
             "version": "[4.7.0, )"
@@ -9691,17 +9616,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'MvcMailer 4.5.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "MvcMailer",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  }
 }

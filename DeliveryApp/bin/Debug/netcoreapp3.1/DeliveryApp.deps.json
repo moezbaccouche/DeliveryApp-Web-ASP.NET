@@ -33,7 +33,6 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "3.1.1",
           "Microsoft.EntityFrameworkCore.Tools": "3.1.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "3.1.2",
-          "MvcMailer": "4.5.0",
           "System.Drawing.Common": "4.7.0",
           "Microsoft.AspNetCore.Antiforgery": "3.1.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions": "3.1.0.0",
@@ -1290,20 +1289,6 @@
         },
         "compile": {
           "lib/netstandard2.0/MimeKit.dll": {}
-        }
-      },
-      "MvcMailer/4.5.0": {
-        "dependencies": {
-          "T4Scaffolding.Core": "1.0.0"
-        },
-        "runtime": {
-          "lib/45/Mvc.Mailer.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        },
-        "compile": {
-          "lib/45/Mvc.Mailer.dll": {}
         }
       },
       "NETStandard.Library/1.6.1": {
@@ -2603,7 +2588,6 @@
           "System.Xml.XmlDocument": "4.3.0"
         }
       },
-      "T4Scaffolding.Core/1.0.0": {},
       "Microsoft.AspNetCore.Antiforgery/3.1.0.0": {
         "compile": {
           "Microsoft.AspNetCore.Antiforgery.dll": {}
@@ -4596,13 +4580,6 @@
       "path": "mimekit/2.6.0",
       "hashPath": "mimekit.2.6.0.nupkg.sha512"
     },
-    "MvcMailer/4.5.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-8X3U/yFtHJHhn/gh/RmAFUW0jF/HnUrkhQ/HJeBk9bDx76O/LGfxwMQGpZ799ZLfmtxomb8mnA7YyWzUvt5p+Q==",
-      "path": "mvcmailer/4.5.0",
-      "hashPath": "mvcmailer.4.5.0.nupkg.sha512"
-    },
     "NETStandard.Library/1.6.1": {
       "type": "package",
       "serviceable": true,
@@ -5449,13 +5426,6 @@
       "sha512": "sha512-MYoTCP7EZ98RrANESW05J5ZwskKDoN0AuZ06ZflnowE50LTpbR5yRg3tHckTVm5j/m47stuGgCrCHWePyHS70Q==",
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
-    },
-    "T4Scaffolding.Core/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-nKm6FfCEeMVAptdIsrKa8kXEZ9bSGvJot2y93OscMxFSwDlChLr/euDCBkljU7ui4pmln2vVkbZPCjjKSGRnqg==",
-      "path": "t4scaffolding.core/1.0.0",
-      "hashPath": "t4scaffolding.core.1.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Antiforgery/3.1.0.0": {
       "type": "referenceassembly",

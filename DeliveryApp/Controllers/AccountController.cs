@@ -20,10 +20,14 @@ namespace DeliveryApp.Controllers
         public IActionResult ConfirmClientEmail(string userId, string code)
         {
             var client = clientService.GetClientByIdentityId(userId);
-            client.HasValidatedEmail = true;
-            clientService.UpdateClient(client);
+            if(!client.HasValidatedEmail)
+            {
+                client.HasValidatedEmail = true;
+                clientService.UpdateClient(client);
 
-            return View();
+                return View();
+            }
+            return View("NotFound");
         }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DeliveryApp.API.Models;
 using DeliveryApp.API.Models.DTO;
-using DeliveryApp.Controllers;
 using DeliveryApp.Extensions;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
@@ -17,6 +20,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 
 namespace DeliveryApp.API.ControllersAPI
@@ -33,6 +38,8 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IWebHostEnvironment _env;
         private readonly IEmailSender _emailSender;
         private readonly IEmailSenderService emailSenderService;
+        private readonly ApplicationSettings _appSettings;
+        
         private UserManager<IdentityUser> _userManager;
         private SignInManager<IdentityUser> _signInManager;
 
@@ -40,7 +47,8 @@ namespace DeliveryApp.API.ControllersAPI
         public ClientsController(IMapper mapper, IClientService clientService, ILocationService locationService,
             IFavoritesService favoritesService, IOrderService orderService,
             UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
-            IWebHostEnvironment env, IEmailSender emailSender, IEmailSenderService emailSenderService)
+            IWebHostEnvironment env, IEmailSender emailSender, IEmailSenderService emailSenderService,
+            IOptions<ApplicationSettings> appSettings)
         {
             _mapper = mapper;
             this.clientService = clientService;
@@ -52,6 +60,7 @@ namespace DeliveryApp.API.ControllersAPI
             _env = env;
             _emailSender = emailSender;
             this.emailSenderService = emailSenderService;
+            _appSettings = appSettings.Value;
         }
 
         [EnableCors("AllowAll")]
@@ -126,25 +135,13 @@ namespace DeliveryApp.API.ControllersAPI
                     //Send the verification email
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    AccountController accountController = new AccountController(clientService);
-
                     var callBackUrl = "https://localhost:44352/Account/ConfirmClientEmail?userId=" + user.Id + "&code=" + code;
-
-                    var webRoot = _env.WebRootPath;
-
-                    //var pathToEmailTemp = _env.WebRootPath
-                    //    + Path.DirectorySeparatorChar.ToString()
-                    //    + "Templates"
-                    //    + Path.DirectorySeparatorChar.ToString()
-                    //    + "EmailTemplates"
-                    //    + Path.DirectorySeparatorChar.ToString()
-                    //    + "ConfirmRegistration.html";
 
                     string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
                     string path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ConfirmRegistration.html");
 
                     var builder = new BodyBuilder();
-                    using(StreamReader SourceReader = System.IO.File.OpenText(path))
+                    using (StreamReader SourceReader = System.IO.File.OpenText(path))
                     {
                         builder.HtmlBody = SourceReader.ReadToEnd();
                     }
@@ -160,8 +157,6 @@ namespace DeliveryApp.API.ControllersAPI
                         newClient.FirstName + " " + newClient.LastName,
                         messageBody
                         );
-                    
-                    //await _emailSender.SendEmailAsync(newClient.Email, subject, messageBody);
 
                 }
                 return Ok(result);
@@ -169,6 +164,42 @@ namespace DeliveryApp.API.ControllersAPI
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("loginClient")]
+        public async Task<ActionResult> LoginClient(ClientCredentialsForLoginDto credentials)
+        {
+            var user = await _userManager.FindByNameAsync(credentials.Email);
+            if (user != null && await _userManager.CheckPasswordAsync(user, credentials.Password))
+            {
+                var client = clientService.GetClientByIdentityId(user.Id);
+                if(!client.HasValidatedEmail)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Votre compte n'a pas encore été activé ! Vérifiez votre boite Emails."
+                    });
+                }
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim("UserID", user.Id.ToString())
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(365),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.WriteToken(securityToken);
+                return Ok(new { token });
+            }
+            else
+            {
+                return BadRequest(new { message = "Email ou mot de passe incorrects" });
             }
         }
     }
