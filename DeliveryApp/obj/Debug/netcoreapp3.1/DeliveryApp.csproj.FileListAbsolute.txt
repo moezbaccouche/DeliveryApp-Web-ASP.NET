@@ -195,7 +195,12 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Order\_OrderProducts.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\AutoMapper.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\appsettings.Production.Development.json
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\appsettings.Production.json
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\Mvc.Mailer.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\MailKit.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\MimeKit.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Account\ConfirmClientEmail.cshtml.g.cs

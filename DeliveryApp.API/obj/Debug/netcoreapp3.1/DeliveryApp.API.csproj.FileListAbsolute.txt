@@ -165,3 +165,7 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\D
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\appsettings.Production.Development.json
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\appsettings.Production.json
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\MailKit.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\MimeKit.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\Mvc.Mailer.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll

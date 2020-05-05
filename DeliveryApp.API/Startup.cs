@@ -67,6 +67,7 @@ namespace DeliveryApp.API
             services.AddScoped<IDeliveryManService, DeliveryManService>();
             services.AddTransient<IRatingService, RatingService>();
             services.AddTransient<ICurrentLocationService, CurrentLocationService>();
+            services.AddTransient<IEmailSenderService, EmailSenderService>();
 
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
 

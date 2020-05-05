@@ -9,7 +9,9 @@ namespace DeliveryApp.Services.Contracts
     public interface IClientService
     {
         Client GetClientById(int id);
+        Client GetClientByIdentityId(string identityId);
         Client AddClient(Client newClient);
+        Client UpdateClient(Client newClient);
         IEnumerable<Client> GetAllClients();
     }
 }

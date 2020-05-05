@@ -41,5 +41,20 @@ namespace DeliveryApp.Services.Implementations
                 .FirstOrDefault();
             return client;
         }
+
+        public Client GetClientByIdentityId(string identityId)
+        {
+            var client = repoClients.TableNoTracking
+                .Where(c => c.IdentityId == identityId)
+                .FirstOrDefault();
+
+            return client;
+        }
+
+        public Client UpdateClient(Client newClient)
+        {
+            var client = repoClients.Update(newClient);
+            return client;
+        }
     }
 }

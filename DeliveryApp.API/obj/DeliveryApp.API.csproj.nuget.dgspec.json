@@ -127,6 +127,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[2.6.0, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.1.2, )"
@@ -153,7 +157,11 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[3.1.1, )"
+              "version": "[3.1.2, )"
+            },
+            "MvcMailer": {
+              "target": "Package",
+              "version": "[4.5.0, )"
             },
             "System.Drawing.Common": {
               "target": "Package",
