@@ -39,7 +39,7 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IEmailSender _emailSender;
         private readonly IEmailSenderService emailSenderService;
         private readonly ApplicationSettings _appSettings;
-        
+
         private UserManager<IdentityUser> _userManager;
         private SignInManager<IdentityUser> _signInManager;
 
@@ -91,6 +91,88 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(clientForProfile);
         }
 
+
+        [EnableCors("AllowAll")]
+        [HttpPost("edit")]
+        public async Task<ActionResult<ClientForProfileDto>> UpdateClient(ClientForProfileDto editedClient)
+        {
+            var client = clientService.GetClientById(editedClient.Id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+
+            //Consider the case where the image has been updated
+            var imagePath = client.PicturePath;
+            var imageBase64 = client.ImageBase64;
+            if (editedClient.ImageBase64.ToString() != client.ImageBase64.ToString())
+            {
+                //Transform the image base64 String
+                ImageModel uploadedImage = FileUploader.Base64ToImage(editedClient.ImageBase64String, "ClientsPictures");
+                imagePath = uploadedImage.Path;
+                imageBase64 = uploadedImage.ImageBytes;
+            }
+
+            //Update the location
+            var location = locationService.GetLocationById(editedClient.Location.Id);
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            var newLocation = locationService.UpdateLocation(new Location
+            {
+                Id = location.Id,
+                Address = editedClient.Location.Address,
+                City = editedClient.Location.City,
+                ZipCode = editedClient.Location.ZipCode,
+                Lat = editedClient.Location.Lat,
+                Long = editedClient.Location.Long
+            });
+
+
+
+            var hasValidatedEmail = client.HasValidatedEmail;
+            //Consider the case where the email has been updated
+            if (client.Email != editedClient.Email)
+            {
+                //Update the email in asp identity
+                var user = await _userManager.FindByIdAsync(client.IdentityId);
+                user.Email = editedClient.Email;
+                user.UserName = editedClient.Email;
+                await _userManager.UpdateAsync(user);
+
+                client.Email = editedClient.Email;
+
+                //Set the column HasValidatedEmail to False
+                hasValidatedEmail = false;
+
+                //Send verification email
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                SendVerificationEmail(client, user.Id, code, true);
+            }
+
+            var newClient = clientService.UpdateClient(new Client
+            {
+                Id = editedClient.Id,
+                FirstName = editedClient.FirstName,
+                LastName = editedClient.LastName,
+                DateOfBirth = editedClient.DateOfBirth,
+                Email = editedClient.Email,
+                IdentityId = client.IdentityId,
+                ImageBase64 = imageBase64,
+                Location = newLocation,
+                Phone = editedClient.Phone,
+                PicturePath = imagePath,
+                HasValidatedEmail = hasValidatedEmail
+            });
+
+            return Ok(_mapper.Map<ClientForProfileDto>(newClient));
+        }
+
+
         [EnableCors("AllowAll")]
         [HttpPost("register")]
         public async Task<Object> NewClient([FromBody] ClientForCreationDto newClient)
@@ -112,7 +194,7 @@ namespace DeliveryApp.API.ControllersAPI
                     //Insert in the table location
                     var location = locationService.AddLocation(newClient.Location);
 
-                    //Transform the base64String in a file
+                    //Transform the image base64 String
                     ImageModel uploadedImage = FileUploader.Base64ToImage(newClient.ImageBase64String, "ClientsPictures");
 
                     //Create the client entity
@@ -123,6 +205,7 @@ namespace DeliveryApp.API.ControllersAPI
                         FirstName = newClient.FirstName,
                         LastName = newClient.LastName,
                         Phone = newClient.Phone,
+                        DateOfBirth = newClient.DateOfBirth,
                         ImageBase64 = uploadedImage.ImageBytes,
                         PicturePath = uploadedImage.Path,
                         Location = location,
@@ -135,29 +218,7 @@ namespace DeliveryApp.API.ControllersAPI
                     //Send the verification email
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    var callBackUrl = "https://localhost:44352/Account/ConfirmClientEmail?userId=" + user.Id + "&code=" + code;
-
-                    string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-                    string path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ConfirmRegistration.html");
-
-                    var builder = new BodyBuilder();
-                    using (StreamReader SourceReader = System.IO.File.OpenText(path))
-                    {
-                        builder.HtmlBody = SourceReader.ReadToEnd();
-                    }
-
-                    string messageBody = string.Format(
-                        builder.HtmlBody,
-                        newClient.FirstName + " " + newClient.LastName,
-                        callBackUrl
-                        );
-
-                    await emailSenderService.SendClientConfirmationEmail(
-                        newClient.Email,
-                        newClient.FirstName + " " + newClient.LastName,
-                        messageBody
-                        );
-
+                    SendVerificationEmail(addedClient, user.Id, code, false);
                 }
                 return Ok(result);
             }
@@ -175,7 +236,7 @@ namespace DeliveryApp.API.ControllersAPI
             if (user != null && await _userManager.CheckPasswordAsync(user, credentials.Password))
             {
                 var client = clientService.GetClientByIdentityId(user.Id);
-                if(!client.HasValidatedEmail)
+                if (!client.HasValidatedEmail)
                 {
                     return BadRequest(new
                     {
@@ -201,6 +262,40 @@ namespace DeliveryApp.API.ControllersAPI
             {
                 return BadRequest(new { message = "Email ou mot de passe incorrects" });
             }
+        }
+
+        private async void SendVerificationEmail(Client newClient, string userId, string code, bool editedEmail)
+        {
+            var callBackUrl = "https://localhost:44352/Account/ConfirmClientEmail?userId=" + userId + "&code=" + code;
+
+            string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+            string path;
+            if (editedEmail)
+            {
+                path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\EditedEmailAddress.html");
+            }
+            else
+            {
+                path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ConfirmRegistration.html");
+            }
+
+            var builder = new BodyBuilder();
+            using (StreamReader SourceReader = System.IO.File.OpenText(path))
+            {
+                builder.HtmlBody = SourceReader.ReadToEnd();
+            }
+
+            string messageBody = string.Format(
+                builder.HtmlBody,
+                newClient.FirstName + " " + newClient.LastName,
+                callBackUrl
+                );
+
+            await emailSenderService.SendClientConfirmationEmail(
+                newClient.Email,
+                newClient.FirstName + " " + newClient.LastName,
+                messageBody
+                );
         }
     }
 }

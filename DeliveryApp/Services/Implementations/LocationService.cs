@@ -31,5 +31,15 @@ namespace DeliveryApp.Services.Implementations
             var location = repoLocations.TableNoTracking.Where(l => l.Id == id).FirstOrDefault();
             return location;
         }
+
+        public Location UpdateLocation(Location newLocation)
+        {
+            if(newLocation != null)
+            {
+                repoLocations.Update(newLocation);
+            }
+
+            return newLocation;
+        }
     }
 }

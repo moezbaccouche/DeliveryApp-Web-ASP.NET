@@ -10,5 +10,6 @@ namespace DeliveryApp.Services.Contracts
     {
         Location AddLocation(Location newLocation);
         Location GetLocationById(int id);
+        Location UpdateLocation(Location newLocation);
     }
 }
