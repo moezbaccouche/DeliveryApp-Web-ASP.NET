@@ -53,7 +53,7 @@ namespace DeliveryApp.Services.Implementations
         public IEnumerable<Order> GetClientTreatedOrders(int clientId)
         {
             var treatedOrders = repoOrder.TableNoTracking
-                .Where(o => o.IdClient == clientId && o.Status != EnumOrderStatus.Pending)
+                .Where(o => o.IdClient == clientId && o.Status == EnumOrderStatus.Delivered)
                 .ToList();
 
             return treatedOrders;

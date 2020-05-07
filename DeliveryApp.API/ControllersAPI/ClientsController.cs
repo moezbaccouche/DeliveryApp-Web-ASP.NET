@@ -75,6 +75,8 @@ namespace DeliveryApp.API.ControllersAPI
         [HttpGet("{clientId}", Name = "GetClient")]
         public ActionResult<ClientForProfileDto> GetClient(int clientId)
         {
+
+
             var client = clientService.GetClientById(clientId);
             if (client == null)
             {
@@ -256,11 +258,11 @@ namespace DeliveryApp.API.ControllersAPI
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var securityToken = tokenHandler.CreateToken(tokenDescriptor);
                 var token = tokenHandler.WriteToken(securityToken);
-                return Ok(new { token });
+                return Ok(new { Token = token, Id = client.Id });
             }
             else
             {
-                return BadRequest(new { message = "Email ou mot de passe incorrects" });
+                return BadRequest(new { message = "Email ou mot de passe incorrect" });
             }
         }
 
