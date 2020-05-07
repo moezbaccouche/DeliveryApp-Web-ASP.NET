@@ -110,9 +110,11 @@ namespace DeliveryApp.Services.Implementations
         {
             var orders = repoOrder.TableNoTracking
                 .Where(o => o.IdClient == clientId)
+                .OrderByDescending(o => o.OrderTime)
                 .ToList();
 
             return orders;
         }
+
     }
 }

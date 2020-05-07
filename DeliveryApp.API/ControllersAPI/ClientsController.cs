@@ -264,6 +264,39 @@ namespace DeliveryApp.API.ControllersAPI
             }
         }
 
+        [EnableCors("AllowAll")]
+        [HttpPost("resetPassword")]
+        public async Task<Object> ForgotPassword(EmailForForgotPasswordDto emailDto)
+        {
+            var user = await _userManager.FindByEmailAsync(emailDto.Email);
+            if(user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var callBackUrl = "http://192.168.1.4:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
+
+                string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+                string path;
+                
+                path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ResetPasswordEmail.html");
+                
+
+                var builder = new BodyBuilder();
+                using (StreamReader SourceReader = System.IO.File.OpenText(path))
+                {
+                    builder.HtmlBody = SourceReader.ReadToEnd();
+                }
+
+                string messageBody = string.Format(
+                    builder.HtmlBody,
+                    callBackUrl
+                    );
+
+                await emailSenderService.SendResetPasswordEmail(emailDto.Email, messageBody);
+            }
+            return Ok(new { message = "Email envoyé." });
+        }
+
         private async void SendVerificationEmail(Client newClient, string userId, string code, bool editedEmail)
         {
             var callBackUrl = "https://localhost:44352/Account/ConfirmClientEmail?userId=" + userId + "&code=" + code;

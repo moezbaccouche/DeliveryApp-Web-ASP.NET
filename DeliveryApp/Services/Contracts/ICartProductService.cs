@@ -17,5 +17,6 @@ namespace DeliveryApp.Services.Contracts
 
         CartProduct GetProduct(int clientId, int productId);
 
+
     }
 }

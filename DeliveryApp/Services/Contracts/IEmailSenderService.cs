@@ -8,5 +8,6 @@ namespace DeliveryApp.Services.Contracts
     public interface IEmailSenderService
     {
         Task SendClientConfirmationEmail(string receiverEmail, string receiverFullName, string message);
+        Task SendResetPasswordEmail(string receiverEmail, string message);
     }
 }

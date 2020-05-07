@@ -56,16 +56,28 @@ namespace DeliveryApp.API.ControllersAPI
             //Calculate delivery price
             var deliveryPrice = 5;
 
+            var cartProducts = cartProductService.GetCartProducts(orderDto.ClientId);
+
+            double totalPrice = 0;
+            foreach(var prod in cartProducts)
+            {
+                var product = productService.GetProductById(prod.ProductId);
+                if(product != null)
+                {
+                    //The following code line wont work if the amount can't be converted to int
+                    totalPrice += Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000;
+                }
+            }
+
             var order = orderService.AddOrder(new Order
             {
                 IdClient = client.Id,
                 DeliveryPrice = deliveryPrice,
+                OrderPrice = totalPrice,
                 OrderTime = DateTime.Now,
                 Status = EnumOrderStatus.Pending,
                 WithBill = orderDto.WithBill
             });
-
-            var cartProducts = cartProductService.GetCartProducts(orderDto.ClientId);
 
             foreach (var prod in cartProducts)
             {
@@ -81,6 +93,10 @@ namespace DeliveryApp.API.ControllersAPI
                     });
                 }
             }
+
+            //Empty the client cart
+            cartProductService.RemoveAllProducts(client.Id);
+
             return Ok(order);
         }
 

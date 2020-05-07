@@ -175,3 +175,15 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\M
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.RazorAssemblyInfo.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.RazorAssemblyInfo.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.TagHelpers.input.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.TagHelpers.output.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.RazorCoreGenerate.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.RazorTargetAssemblyInfo.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.Views.pdb
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\DeliveryApp.API.Views.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\DeliveryApp.API.Views.pdb
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ConfirmClientEmail.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ApiResetPassword.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ApiSuccessfulPasswordReset.cshtml.g.cs
