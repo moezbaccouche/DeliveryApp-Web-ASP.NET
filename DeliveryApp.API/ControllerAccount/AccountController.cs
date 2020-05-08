@@ -20,7 +20,8 @@ namespace DeliveryApp.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
+        
+        [HttpGet("api/ConfirmClientEmail")]
         public IActionResult ConfirmClientEmail(string userId, string code)
         {
             var client = clientService.GetClientByIdentityId(userId);

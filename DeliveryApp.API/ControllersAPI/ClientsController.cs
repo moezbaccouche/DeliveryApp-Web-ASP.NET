@@ -96,7 +96,7 @@ namespace DeliveryApp.API.ControllersAPI
 
         [EnableCors("AllowAll")]
         [HttpPost("edit")]
-        public async Task<ActionResult<ClientForProfileDto>> UpdateClient(ClientForProfileDto editedClient)
+        public async Task<ActionResult<ClientForProfileDto>> UpdateClient([FromBody]ClientForEditDto editedClient)
         {
             var client = clientService.GetClientById(editedClient.Id);
             if (client == null)
@@ -104,14 +104,24 @@ namespace DeliveryApp.API.ControllersAPI
                 return NotFound();
             }
 
+            if(client.Email != editedClient.Email)
+            {
+                var emailExists = await _userManager.FindByEmailAsync(editedClient.Email);
+                if (emailExists != null)
+                {
+                    return BadRequest(new { code = "DuplicatedEmail", message = "Cette adresse email est déjà utilisée." });
+                }
+            }
 
             //Consider the case where the image has been updated
             var imagePath = client.PicturePath;
             var imageBase64 = client.ImageBase64;
-            if (editedClient.ImageBase64.ToString() != client.ImageBase64.ToString())
+
+            //If the edited client image is different from the old one we have to upload it
+            if (!UsefulMethods.ByteArrayCompare(editedClient.ImageBase64, client.ImageBase64))
             {
                 //Transform the image base64 String
-                ImageModel uploadedImage = FileUploader.Base64ToImage(editedClient.ImageBase64String, "ClientsPictures");
+                ImageModel uploadedImage = FileUploader.Base64ToImage(FileUploader.BytesToBase64String(editedClient.ImageBase64), "ClientsPictures");
                 imagePath = uploadedImage.Path;
                 imageBase64 = uploadedImage.ImageBytes;
             }
@@ -139,6 +149,7 @@ namespace DeliveryApp.API.ControllersAPI
             //Consider the case where the email has been updated
             if (client.Email != editedClient.Email)
             {
+                
                 //Update the email in asp identity
                 var user = await _userManager.FindByIdAsync(client.IdentityId);
                 user.Email = editedClient.Email;
@@ -271,7 +282,7 @@ namespace DeliveryApp.API.ControllersAPI
         public async Task<Object> ForgotPassword(EmailForForgotPasswordDto emailDto)
         {
             var user = await _userManager.FindByEmailAsync(emailDto.Email);
-            if(user != null)
+            if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -279,9 +290,9 @@ namespace DeliveryApp.API.ControllersAPI
 
                 string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
                 string path;
-                
+
                 path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ResetPasswordEmail.html");
-                
+
 
                 var builder = new BodyBuilder();
                 using (StreamReader SourceReader = System.IO.File.OpenText(path))
@@ -301,7 +312,7 @@ namespace DeliveryApp.API.ControllersAPI
 
         private async void SendVerificationEmail(Client newClient, string userId, string code, bool editedEmail)
         {
-            var callBackUrl = "https://localhost:44352/Account/ConfirmClientEmail?userId=" + userId + "&code=" + code;
+            var callBackUrl = "http://192.168.1.4:51044/api/ConfirmClientEmail?userId=" + userId + "&code=" + code;
 
             string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             string path;
