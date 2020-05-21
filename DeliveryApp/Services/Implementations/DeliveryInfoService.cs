@@ -44,6 +44,15 @@ namespace DeliveryApp.Services.Implementations
             return infos;
         }
 
+        public IEnumerable<DeliveryInfo> GetDeliveryManOrderHistory(int deliveryManId)
+        {
+            var ordersInfos = repoDeliveryInfo.TableNoTracking
+                .Where(i => i.IdDeliveryMan == deliveryManId)
+                .ToList();
+
+            return ordersInfos;
+        }
+
         public DeliveryInfo GetOrderDeliveryInfo(int orderId)
         {
             var info = (from i in repoDeliveryInfo.TableNoTracking

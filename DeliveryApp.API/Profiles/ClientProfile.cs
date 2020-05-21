@@ -15,6 +15,12 @@ namespace DeliveryApp.API.Profiles
             CreateMap<Client, ClientForProfileDto>();
             CreateMap<ClientForCreationDto, Client>();
             CreateMap<Client, ClientForCartDto>();
+            CreateMap<Client, ClientForPendingOrdersDto>()
+                .ForMember(
+                dest => dest.FullName,
+                opt => opt.MapFrom(
+                    src => src.FirstName + " " + src.LastName
+                    ));
         }
     }
 }

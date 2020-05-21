@@ -59,10 +59,10 @@ namespace DeliveryApp.API.ControllersAPI
             var cartProducts = cartProductService.GetCartProducts(orderDto.ClientId);
 
             double totalPrice = 0;
-            foreach(var prod in cartProducts)
+            foreach (var prod in cartProducts)
             {
                 var product = productService.GetProductById(prod.ProductId);
-                if(product != null)
+                if (product != null)
                 {
                     //The following code line wont work if the amount can't be converted to int
                     totalPrice += Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000;
@@ -285,5 +285,152 @@ namespace DeliveryApp.API.ControllersAPI
 
         }
 
+        [EnableCors("AllowAll")]
+        [HttpGet("deliveryMan/{idDeliveryMan}")]
+        public ActionResult<IEnumerable<OrdersHistoryForDeliveryManDto>> GetOrdersHistory(int idDeliveryMan)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(idDeliveryMan);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var ordersInfos = deliveryInfoService.GetDeliveryManOrderHistory(idDeliveryMan);
+            var list = new List<OrdersHistoryForDeliveryManDto>();
+
+            foreach (var info in ordersInfos)
+            {
+                var order = orderService.GetOrderById(info.IdOrder);
+
+                if (order.Status == EnumOrderStatus.Delivered)
+                {
+                    var orderClient = clientService.GetClientById(order.IdClient);
+
+                    list.Add(new OrdersHistoryForDeliveryManDto
+                    {
+                        OrderId = order.Id,
+                        OrderTime = order.OrderTime,
+                        RealDeliveryTime = info.RealDeliveryTime,
+                        EstimatedDeliveryTime = info.EstimatedDeliveryTime,
+                        OrderPrice = order.OrderPrice,
+                        DeliveryPrice = order.DeliveryPrice,
+                        ClientId = orderClient.Id,
+                        ClientName = $"{orderClient.FirstName} {orderClient.LastName}",
+                        ClientPicture = orderClient.ImageBase64
+                    });
+                }
+            }
+
+            return Ok(list);
+        }
+
+
+        [EnableCors("AllowAll")]
+        [HttpGet("history/{orderId}")]
+        public ActionResult<HistoryOrderDetailsForDeliveryManDto> GetHistoryOrderDetails(int orderId)
+        {
+            var order = orderService.GetOrderById(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            var products = new List<ProductForCheckout>();
+            foreach (var prod in orderProducts)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+
+                products.Add(new ProductForCheckout
+                {
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name
+                });
+            }
+
+
+            var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
+            var client = clientService.GetClientById(order.IdClient);
+
+
+            var orderDetails = new HistoryOrderDetailsForDeliveryManDto
+            {
+                OrderId = order.Id,
+                OrderTime = order.OrderTime,
+                OrderPrice = order.OrderPrice,
+                Products = products,
+                EstimatedDeliveryTime = order.EstimatedDeliveryTime,
+                DeliveryPrice = order.DeliveryPrice,
+                ClientId = client.Id,
+                ClientName = $"{client.FirstName} {client.LastName}",
+                ClientPicture = client.ImageBase64,
+                RealDeliveryTime = deliveryInfos.RealDeliveryTime
+            };
+
+            return Ok(orderDetails);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("details/{orderId}")]
+        public ActionResult<HistoryOrderDetailsForDeliveryManDto> GetPendingOrderDetails(int orderId)
+        {
+            var order = orderService.GetOrderById(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            var products = new List<ProductForCheckout>();
+            foreach (var prod in orderProducts)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+
+                products.Add(new ProductForCheckout
+                {
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name
+                });
+            }
+
+
+            var client = clientService.GetClientById(order.IdClient);
+            var orderDetails = new PendingOrderDetailsDto
+            {
+                OrderId = order.Id,
+                OrderTime = order.OrderTime,
+                OrderPrice = order.OrderPrice,
+                Products = products,
+                DeliveryPrice = order.DeliveryPrice,
+                Client = _mapper.Map<ClientForPendingOrdersDto>(client)
+            };
+
+            return Ok(orderDetails);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("pending")]
+        public ActionResult<IEnumerable<PendingOrdersForDeliveryManDto>> GetPendingOrders()
+        {
+            var pendingOrders = orderService.GetAllPendingOrders();
+
+            var ordersToReturn = new List<PendingOrdersForDeliveryManDto>();
+            foreach(var order in pendingOrders)
+            {
+                var client = _mapper.Map<ClientForPendingOrdersDto>(clientService.GetClientById(order.IdClient));
+                ordersToReturn.Add(new PendingOrdersForDeliveryManDto
+                {
+                    Client = client, 
+                    OrderId = order.Id, 
+                    OrderTime = order.OrderTime
+                });
+            }
+
+            return Ok(ordersToReturn);
+        }
     }
 }

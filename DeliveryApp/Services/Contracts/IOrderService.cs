@@ -19,5 +19,6 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<Order> GetClientTreatedOrders(int clientId);
         IEnumerable<Order> GetClientOrders(int clientId);
         int GetClientNbDeliveredProducts(int clientId);
+        IEnumerable<Order> GetAllPendingOrders();
     }
 }

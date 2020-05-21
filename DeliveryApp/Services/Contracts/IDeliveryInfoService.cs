@@ -13,6 +13,6 @@ namespace DeliveryApp.Services.Contracts
         DeliveryInfo RemoveDeliveryInfo(DeliveryInfo deliveryInfo);
         DeliveryInfo GetOrderDeliveryInfo(int orderId);
         IEnumerable<DeliveryInfo> GetAllDeliveryInfos();
-
+        IEnumerable<DeliveryInfo> GetDeliveryManOrderHistory(int deliveryManId);
     }
 }

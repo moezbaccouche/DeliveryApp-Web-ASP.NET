@@ -116,5 +116,13 @@ namespace DeliveryApp.Services.Implementations
             return orders;
         }
 
+        public IEnumerable<Order> GetAllPendingOrders()
+        {
+            var orders = repoOrder.TableNoTracking
+                .Where(o => o.Status == EnumOrderStatus.Pending)
+                .ToList();
+
+            return orders;
+        }
     }
 }
