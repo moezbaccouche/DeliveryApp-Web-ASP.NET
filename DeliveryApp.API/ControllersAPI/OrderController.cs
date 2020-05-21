@@ -419,18 +419,214 @@ namespace DeliveryApp.API.ControllersAPI
             var pendingOrders = orderService.GetAllPendingOrders();
 
             var ordersToReturn = new List<PendingOrdersForDeliveryManDto>();
-            foreach(var order in pendingOrders)
+            foreach (var order in pendingOrders)
             {
                 var client = _mapper.Map<ClientForPendingOrdersDto>(clientService.GetClientById(order.IdClient));
                 ordersToReturn.Add(new PendingOrdersForDeliveryManDto
                 {
-                    Client = client, 
-                    OrderId = order.Id, 
+                    Client = client,
+                    OrderId = order.Id,
                     OrderTime = order.OrderTime
                 });
             }
 
             return Ok(ordersToReturn);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("processing/deliveryMan/{idDeliveryMan}")]
+        public ActionResult<IEnumerable<ProcessingOrderForDeliveryManDto>> GetDeliveryManProcessingOrders(int idDeliveryMan)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(idDeliveryMan);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var ordersInfos = deliveryInfoService.GetDeliveryManOrderHistory(idDeliveryMan);
+            var processingOrders = new List<ProcessingOrderForDeliveryManDto>();
+            foreach (var info in ordersInfos)
+            {
+                var order = orderService.GetOrderById(info.IdOrder);
+
+
+                if (order.Status == EnumOrderStatus.Processing || order.Status == EnumOrderStatus.InDelivery)
+                {
+                    var client = _mapper.Map<ClientForPendingOrdersDto>(clientService.GetClientById(order.IdClient));
+
+                    string statusString;
+                    if (order.Status == EnumOrderStatus.Processing)
+                    {
+                        statusString = "En cours de traitement";
+                    }
+                    else
+                    {
+                        statusString = "En cours de livraison";
+                    }
+
+                    processingOrders.Add(new ProcessingOrderForDeliveryManDto
+                    {
+                        Id = order.Id,
+                        Status = statusString,
+                        OrderTime = order.OrderTime,
+                        EstimatedDeliveryTime = info.EstimatedDeliveryTime,
+                        Client = client
+                    });
+                }
+            }
+            return Ok(processingOrders);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("processing/details/{idOrder}", Name = "ProcessingOrderDetails")]
+        public ActionResult<ProcessingOrderDetailsDto> GetProcessingOrderDetails(int idOrder)
+        {
+            var order = orderService.GetOrderById(idOrder);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            var products = new List<ProductForCheckout>();
+            foreach (var prod in orderProducts)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+
+                products.Add(new ProductForCheckout
+                {
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name
+                });
+            }
+
+            string statusString;
+            if (order.Status == EnumOrderStatus.Processing)
+            {
+                statusString = "En cours de traitement";
+            }
+            else
+            {
+                statusString = "En cours de livraison";
+            }
+
+            var orderDetails = new ProcessingOrderDetailsDto
+            {
+                Id = idOrder,
+                StatusString = statusString,
+                Status = order.Status,
+                OrderPrice = order.OrderPrice,
+                Products = products,
+                Client = _mapper.Map<ClientForPendingOrdersDto>(clientService.GetClientById(order.IdClient))
+            };
+
+            return Ok(orderDetails);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("completeDelivery")]
+        public ActionResult<OrdersHistoryForDeliveryManDto> CompleteDelivery([FromBody] OrderToUpdateStatusDto orderToUpdate)
+        {
+            var order = orderService.GetOrderById(orderToUpdate.IdOrder);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(orderToUpdate.IdOrder);
+
+            order.Status = EnumOrderStatus.Delivered;
+            deliveryInfos.RealDeliveryTime = DateTime.Now;
+
+            deliveryInfoService.EditDeliveryInfo(deliveryInfos);
+
+            orderService.EditOrder(order);
+
+            var client = clientService.GetClientById(order.IdClient);
+
+            var orderToReturn = new OrdersHistoryForDeliveryManDto
+            {
+                OrderId = order.Id,
+                OrderTime = order.OrderTime,
+                ClientId = order.IdClient,
+                ClientName = $"{client.FirstName} {client.LastName}",
+                ClientPicture = client.ImageBase64,
+                OrderPrice = order.OrderPrice,
+                DeliveryPrice = order.DeliveryPrice,
+                EstimatedDeliveryTime = deliveryInfos.EstimatedDeliveryTime,
+                RealDeliveryTime = deliveryInfos.RealDeliveryTime
+            };
+
+            return Ok(orderToReturn);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("deliverOrder")]
+        public ActionResult<ProcessingOrderDetailsDto> DeliverOrder([FromBody] OrderToUpdateStatusDto orderToUpdate)
+        {
+            var order = orderService.GetOrderById(orderToUpdate.IdOrder);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(orderToUpdate.IdOrder);
+
+            order.Status = EnumOrderStatus.InDelivery;
+
+            orderService.EditOrder(order);
+
+            var statusString = "En cours de livraison";
+
+
+            var client = clientService.GetClientById(order.IdClient);
+
+            var orderToReturn = new ProcessingOrderForDeliveryManDto
+            {
+                Id = order.Id,
+                OrderTime = order.OrderTime,
+                Status = statusString,
+                EstimatedDeliveryTime = deliveryInfos.EstimatedDeliveryTime,
+                Client = _mapper.Map<ClientForPendingOrdersDto>(client)
+            };
+
+            return Ok(orderToReturn);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("acceptOrder")]
+        public ActionResult<DeliveryInfo> AcceptOrderDelivery([FromBody] OrderToAcceptDto orderToAccept)
+        {
+            var order = orderService.GetOrderById(orderToAccept.OrderId);
+            if(order == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryMan = deliveryManService.GetDeliveryManById(orderToAccept.DeliveryManId);
+            if(deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var deliveryInfo = deliveryInfoService.AddDeliveryInfo(new DeliveryInfo
+            {
+                IdOrder = orderToAccept.OrderId,
+                IdDeliveryMan = orderToAccept.DeliveryManId,
+                AcceptingOrderTime = DateTime.Now,
+                /*  EstimatedDeliveryTime = AcceptingOrderTime
+                        + 20 minutes(approximatly sufficient time for buying articles)
+                        + time to reach the destination
+                */
+                EstimatedDeliveryTime = DateTime.Now.AddMinutes(20 + orderToAccept.DurationToDestination)
+            });
+
+            order.Status = EnumOrderStatus.Processing;
+            orderService.EditOrder(order);
+
+            return Ok(deliveryInfo);
         }
     }
 }
