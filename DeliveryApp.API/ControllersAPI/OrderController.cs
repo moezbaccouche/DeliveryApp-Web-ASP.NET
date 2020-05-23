@@ -383,17 +383,18 @@ namespace DeliveryApp.API.ControllersAPI
             }
 
             var orderProducts = productOrderService.GetOrderProducts(order);
-            var products = new List<ProductForCheckout>();
+            var products = new List<ProductForProcessingOrderDetailsDto>();
             foreach (var prod in orderProducts)
             {
                 var product = productService.GetProductById(prod.IdProduct);
 
-                products.Add(new ProductForCheckout
+                products.Add(new ProductForProcessingOrderDetailsDto
                 {
                     Id = product.Id,
                     Amount = prod.Amount,
                     ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
-                    Name = product.Name
+                    Name = product.Name,
+                    NotBought = prod.NotBought
                 });
             }
 
@@ -488,17 +489,18 @@ namespace DeliveryApp.API.ControllersAPI
             }
 
             var orderProducts = productOrderService.GetOrderProducts(order);
-            var products = new List<ProductForCheckout>();
+            var products = new List<ProductForProcessingOrderDetailsDto>();
             foreach (var prod in orderProducts)
             {
                 var product = productService.GetProductById(prod.IdProduct);
 
-                products.Add(new ProductForCheckout
+                products.Add(new ProductForProcessingOrderDetailsDto
                 {
                     Id = product.Id,
                     Amount = prod.Amount,
                     ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
-                    Name = product.Name
+                    Name = product.Name,
+                    NotBought = prod.NotBought
                 });
             }
 
@@ -572,9 +574,54 @@ namespace DeliveryApp.API.ControllersAPI
                 return NotFound();
             }
 
-            var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(orderToUpdate.IdOrder);
+            double totalPrice = order.OrderPrice;
+            /*
+             * If there are missing products we have to delete them from orderProducts table 
+             * and update the orderPrice
+            */
+            if (orderToUpdate.MissingProducts.Length != 0)
+            {
+                totalPrice = 0;
+                foreach (int id in orderToUpdate.MissingProducts)
+                {
+                    var orderProduct = productOrderService.GetOrderProduct(orderToUpdate.IdOrder, id);
+                    orderProduct.NotBought = true;
+                    productOrderService.EditOrderProduct(orderProduct);
+                }
+            }
+
+            var products = productOrderService.GetOrderProducts(orderService.GetOrderById(orderToUpdate.IdOrder));
+
+            var productsToReturn = new List<ProductForProcessingOrderDetailsDto>();
+
+
+            foreach (var prod in products)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+                var notBought = true;
+
+                if (!prod.NotBought)
+                {
+                    //The following code line wont work if the amount can't be converted to int
+                    totalPrice += Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000;
+                    notBought = false;
+                }
+
+                productsToReturn.Add(new ProductForProcessingOrderDetailsDto
+                {
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name,
+                    NotBought = notBought
+                });
+
+            }
+
+            //var deliveryInfos = deliveryInfoService.GetOrderDeliveryInfo(orderToUpdate.IdOrder);
 
             order.Status = EnumOrderStatus.InDelivery;
+            order.OrderPrice = totalPrice;
 
             orderService.EditOrder(order);
 
@@ -583,12 +630,13 @@ namespace DeliveryApp.API.ControllersAPI
 
             var client = clientService.GetClientById(order.IdClient);
 
-            var orderToReturn = new ProcessingOrderForDeliveryManDto
+            var orderToReturn = new ProcessingOrderDetailsDto
             {
                 Id = order.Id,
-                OrderTime = order.OrderTime,
-                Status = statusString,
-                EstimatedDeliveryTime = deliveryInfos.EstimatedDeliveryTime,
+                OrderPrice = totalPrice,
+                Products = productsToReturn,
+                Status = EnumOrderStatus.InDelivery,
+                StatusString = statusString,
                 Client = _mapper.Map<ClientForPendingOrdersDto>(client)
             };
 
@@ -600,13 +648,13 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<DeliveryInfo> AcceptOrderDelivery([FromBody] OrderToAcceptDto orderToAccept)
         {
             var order = orderService.GetOrderById(orderToAccept.OrderId);
-            if(order == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
             var deliveryMan = deliveryManService.GetDeliveryManById(orderToAccept.DeliveryManId);
-            if(deliveryMan == null)
+            if (deliveryMan == null)
             {
                 return NotFound();
             }
@@ -627,6 +675,138 @@ namespace DeliveryApp.API.ControllersAPI
             orderService.EditOrder(order);
 
             return Ok(deliveryInfo);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("buyProduct")]
+        public ActionResult<ProcessingOrderDetailsDto> BuyProduct([FromBody] BoughtProductDto boughtProduct)
+        {
+            var orderProduct = productOrderService.GetOrderProduct(boughtProduct.IdOrder, boughtProduct.IdProduct);
+            if(orderProduct == null)
+            {
+                return NotFound();
+            }
+
+            orderProduct.Amount = boughtProduct.BoughtAmount.ToString();
+            orderProduct.NotBought = false;
+            productOrderService.EditOrderProduct(orderProduct);
+
+
+            var order = orderService.GetOrderById(boughtProduct.IdOrder);
+            var products = productOrderService.GetOrderProducts(order);
+
+            var productsToReturn = new List<ProductForProcessingOrderDetailsDto>();
+
+
+            double totalPrice = 0;
+            foreach (var prod in products)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+                var notBought = true;
+
+                if (!prod.NotBought)
+                {
+                    //The following code line wont work if the amount can't be converted to int
+                    totalPrice += Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000;
+                    notBought = false;
+                }
+
+                productsToReturn.Add(new ProductForProcessingOrderDetailsDto
+                {
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name,
+                    NotBought = notBought
+                });
+
+            }
+
+            order.OrderPrice = totalPrice;
+            orderService.EditOrder(order);
+
+            var statusString = "En cours de livraison";
+
+
+            var client = clientService.GetClientById(order.IdClient);
+
+            var orderToReturn = new ProcessingOrderDetailsDto
+            {
+                Id = order.Id,
+                OrderPrice = totalPrice,
+                Products = productsToReturn,
+                Status = EnumOrderStatus.InDelivery,
+                StatusString = statusString,
+                Client = _mapper.Map<ClientForPendingOrdersDto>(client)
+            };
+
+            return Ok(orderToReturn);
+        }
+
+
+        [EnableCors("AllowAll")]
+        [HttpPost("abortBuyingProduct")]
+        public ActionResult<ProcessingOrderDetailsDto> AbortBuyingProduct([FromBody] ProductToAbortBuyingDto boughtProduct)
+        {
+            var orderProduct = productOrderService.GetOrderProduct(boughtProduct.IdOrder, boughtProduct.IdProduct);
+            if (orderProduct == null)
+            {
+                return NotFound();
+            }
+
+            orderProduct.NotBought = true;
+            productOrderService.EditOrderProduct(orderProduct);
+
+
+            var order = orderService.GetOrderById(boughtProduct.IdOrder);
+            var products = productOrderService.GetOrderProducts(order);
+
+            var productsToReturn = new List<ProductForProcessingOrderDetailsDto>();
+
+
+            double totalPrice = 0;
+            foreach (var prod in products)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+                var notBought = true;
+
+                if (!prod.NotBought)
+                {
+                    //The following code line wont work if the amount can't be converted to int
+                    totalPrice += Math.Floor(1000 * (product.Price * Convert.ToInt32(prod.Amount))) / 1000;
+                    notBought = false;
+                }
+
+                productsToReturn.Add(new ProductForProcessingOrderDetailsDto
+                {
+                    Id = product.Id,
+                    Amount = prod.Amount,
+                    ImageBase64 = product.ProductImages.FirstOrDefault().ImageBase64,
+                    Name = product.Name,
+                    NotBought = notBought
+                });
+
+            }
+
+            order.OrderPrice = totalPrice;
+            orderService.EditOrder(order);
+
+            var statusString = "En cours de livraison";
+
+
+            var client = clientService.GetClientById(order.IdClient);
+
+            var orderToReturn = new ProcessingOrderDetailsDto
+            {
+                Id = order.Id,
+                OrderPrice = totalPrice,
+                Products = productsToReturn,
+                Status = EnumOrderStatus.InDelivery,
+                StatusString = statusString,
+                Client = _mapper.Map<ClientForPendingOrdersDto>(client)
+            };
+
+            return Ok(orderToReturn);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace DeliveryApp.API.Models.DTO
         public string StatusString { get; set; }
         public EnumOrderStatus Status { get; set; }
         public double OrderPrice { get; set; }
-        public IEnumerable<ProductForCheckout> Products { get; set; }
+        public IEnumerable<ProductForProcessingOrderDetailsDto> Products { get; set; }
         public ClientForPendingOrdersDto Client { get; set; }
     }
 }

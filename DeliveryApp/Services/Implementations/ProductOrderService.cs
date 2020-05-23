@@ -47,5 +47,31 @@ namespace DeliveryApp.Services.Implementations
             }
             return newProduct;
         }
+
+        public ProductOrder DeleteProduct(int orderId, int productId)
+        {
+            var product = repoProductOrder.TableNoTracking
+                .Where(p => p.IdOrder == orderId && p.IdProduct == productId)
+                .FirstOrDefault();
+
+            repoProductOrder.Delete(product);
+
+            return product;
+        }
+
+        public ProductOrder GetOrderProduct(int orderId, int productId)
+        {
+            var product = repoProductOrder.TableNoTracking
+               .Where(p => p.IdOrder == orderId && p.IdProduct == productId)
+               .FirstOrDefault();
+
+            return product;
+        }
+
+        public ProductOrder EditOrderProduct(ProductOrder product)
+        {
+            repoProductOrder.Update(product);
+            return product;
+        }
     }
 }

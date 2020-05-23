@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.API.Models.DTO
 {
-    public class OrderToUpdateStatusDto
+    public class BoughtProductDto
     {
+        public int IdProduct { get; set; }
         public int IdOrder { get; set; }
-        public int[] MissingProducts { get; set; }
+        public int BoughtAmount { get; set; }
     }
 }

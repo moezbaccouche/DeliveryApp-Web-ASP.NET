@@ -4,14 +4,16 @@ using DeliveryApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200523152234_BoughtColumnAdded")]
+    partial class BoughtColumnAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -460,14 +462,14 @@ namespace DeliveryApp.Migrations
                     b.Property<int?>("ArticleId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Bought")
+                        .HasColumnType("bit");
+
                     b.Property<int>("IdOrder")
                         .HasColumnType("int");
 
                     b.Property<int>("IdProduct")
                         .HasColumnType("int");
-
-                    b.Property<bool>("NotBought")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");

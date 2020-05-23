@@ -11,5 +11,8 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<ProductOrder> GetOrderProducts(Order order);
         IEnumerable<ProductOrder> GetAllOrderProducts();
         ProductOrder AddProduct(ProductOrder newProduct);
+        ProductOrder DeleteProduct(int orderId, int productId);
+        ProductOrder GetOrderProduct(int orderId, int productId);
+        ProductOrder EditOrderProduct(ProductOrder product);
     }
 }

@@ -17,13 +17,15 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IDeliveryManService deliveryMenService;
         private readonly IRatingService ratingService;
         private readonly IClientService clientService;
+        private readonly ILocationService locationService;
 
         public DeliveryMenController(IDeliveryManService deliveryMenService, IRatingService ratingService,
-            IClientService clientService)
+            IClientService clientService, ILocationService locationService)
         {
             this.deliveryMenService = deliveryMenService;
             this.ratingService = ratingService;
             this.clientService = clientService;
+            this.locationService = locationService;
         }
 
         [EnableCors("AllowAll")]
@@ -56,6 +58,43 @@ namespace DeliveryApp.API.ControllersAPI
             };
 
             return Ok(deliveryManProfile);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("details/{deliveryManId}")]
+        public ActionResult<DeliveryManForProfileDto> GetDeliveryManDetails(int deliveryManId)
+        {
+            var deliveryMan = deliveryMenService.GetDeliveryManById(deliveryManId);
+            if(deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var ratings = ratingService.GetDeliveryManRatings(deliveryManId);
+            int sum = 0;
+            foreach (var rating in ratings)
+            {
+                sum += rating.Rate;
+            }
+
+            double overall = (double)sum / ratings.Count();
+
+            var location = locationService.GetLocationById(deliveryMan.Location.Id);
+
+            var deliveryManDetails = new DeliveryManForProfileDto
+            {
+                Id = deliveryMan.Id,
+                FirstName = deliveryMan.FirstName,
+                LastName = deliveryMan.LastName,
+                DateOfBirth = deliveryMan.DateOfBirth,
+                Email = deliveryMan.Email,
+                ImageBase64 = deliveryMan.ImageBase64,
+                Phone = deliveryMan.Phone,
+                Location = location,
+                Rating = Math.Round(overall, 2)
+            };
+
+            return Ok(deliveryManDetails);
         }
 
         [EnableCors("AllowAll")]
