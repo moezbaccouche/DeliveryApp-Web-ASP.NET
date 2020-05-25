@@ -62,6 +62,15 @@ namespace DeliveryApp.Services.Implementations
             return deliveryMan;
         }
 
+        public DeliveryMan GetDeliveryManByIdentityId(string identityId)
+        {
+            var deliveryMan = repoDeliveryMan.TableNoTracking
+                .Where(d => d.IdentityId == identityId)
+                .FirstOrDefault();
+
+            return deliveryMan;
+        }
+
         public IEnumerable<DeliveryMan> GetNotValidatedDeliveryMen()
         {
             var allDeliveryMen = repoDeliveryMan.TableNoTracking

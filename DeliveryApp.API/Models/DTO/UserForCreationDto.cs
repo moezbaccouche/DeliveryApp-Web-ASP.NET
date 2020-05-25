@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.API.Models.DTO
 {
-    public class ClientForCreationDto
+    public class UserForCreationDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

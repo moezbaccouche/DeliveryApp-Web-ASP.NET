@@ -48,6 +48,7 @@ namespace DeliveryApp.Services.Implementations
         {
             var ordersInfos = repoDeliveryInfo.TableNoTracking
                 .Where(i => i.IdDeliveryMan == deliveryManId)
+                .OrderByDescending(i => i.RealDeliveryTime)
                 .ToList();
 
             return ordersInfos;

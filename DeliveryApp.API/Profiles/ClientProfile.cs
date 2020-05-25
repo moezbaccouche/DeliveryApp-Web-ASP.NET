@@ -13,7 +13,7 @@ namespace DeliveryApp.API.Profiles
         public ClientProfile()
         {
             CreateMap<Client, ClientForProfileDto>();
-            CreateMap<ClientForCreationDto, Client>();
+            CreateMap<UserForCreationDto, Client>();
             CreateMap<Client, ClientForCartDto>();
             CreateMap<Client, ClientForPendingOrdersDto>()
                 .ForMember(

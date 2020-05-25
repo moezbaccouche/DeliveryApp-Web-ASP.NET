@@ -13,11 +13,14 @@ namespace DeliveryApp.Controllers
     {
         private readonly IClientService clientService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IDeliveryManService deliveryManService;
 
-        public AccountController(IClientService clientService, UserManager<IdentityUser> userManager)
+        public AccountController(IClientService clientService, UserManager<IdentityUser> userManager,
+            IDeliveryManService deliveryManService)
         {
             this.clientService = clientService;
             _userManager = userManager;
+            this.deliveryManService = deliveryManService;
         }
 
         
@@ -30,7 +33,21 @@ namespace DeliveryApp.Controllers
                 client.HasValidatedEmail = true;
                 clientService.UpdateClient(client);
 
-                return View();
+                return View("ConfirmUserEmail");
+            }
+            return View("NotFound");
+        }
+
+        [HttpGet("api/ConfirmDeliveryManEmail")]
+        public IActionResult ConfirmDeliveryManEmail(string userId, string code)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManByIdentityId(userId);
+            if (!deliveryMan.HasValidatedEmail)
+            {
+                deliveryMan.HasValidatedEmail = true;
+                deliveryManService.EditDeliveryMan(deliveryMan);
+
+                return View("ConfirmUserEmail");
             }
             return View("NotFound");
         }
@@ -59,5 +76,7 @@ namespace DeliveryApp.Controllers
             }
             return View(model);
         }
+
+
     }
 }

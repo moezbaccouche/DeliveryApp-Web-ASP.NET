@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DeliveryApp.API.Models.DTO
 {
-    public class ClientCredentialsForLoginDto
+    public class UserCredentialsForLoginDto
     {
         public string Email { get; set; }
         public string Password { get; set; }

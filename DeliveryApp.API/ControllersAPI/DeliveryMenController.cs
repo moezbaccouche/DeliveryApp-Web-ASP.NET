@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using DeliveryApp.API.Models;
 using DeliveryApp.API.Models.DTO;
+using DeliveryApp.Extensions;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using MimeKit;
 
 namespace DeliveryApp.API.ControllersAPI
 {
@@ -18,14 +28,21 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IRatingService ratingService;
         private readonly IClientService clientService;
         private readonly ILocationService locationService;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ApplicationSettings _appSettings;
+        private readonly IEmailSenderService emailSenderService;
 
         public DeliveryMenController(IDeliveryManService deliveryMenService, IRatingService ratingService,
-            IClientService clientService, ILocationService locationService)
+            IClientService clientService, ILocationService locationService, UserManager<IdentityUser> userManager,
+            IOptions<ApplicationSettings> appSettings, IEmailSenderService emailSenderService)
         {
             this.deliveryMenService = deliveryMenService;
             this.ratingService = ratingService;
             this.clientService = clientService;
             this.locationService = locationService;
+            _userManager = userManager;
+            _appSettings = appSettings.Value;
+            this.emailSenderService = emailSenderService;
         }
 
         [EnableCors("AllowAll")]
@@ -142,6 +159,171 @@ namespace DeliveryApp.API.ControllersAPI
 
             var editedRating = ratingService.EditRating(rating);
             return Ok(editedRating);
+        }
+
+
+
+        [EnableCors("AllowAll")]
+        [HttpPost("register")]
+        public async Task<Object> NewDeliveryMan([FromBody] UserForCreationDto newDeliveryMan)
+        {
+            var identityUser = new IdentityUser
+            {
+                Email = newDeliveryMan.Email,
+                UserName = newDeliveryMan.Email
+            };
+
+            try
+            {
+                var result = await _userManager.CreateAsync(identityUser, newDeliveryMan.Password);
+                if (result.Succeeded)
+                {
+                    IdentityUser user = _userManager.Users.Where(u => u.Email == newDeliveryMan.Email).FirstOrDefault();
+
+
+                    //Insert in the table location
+                    var location = locationService.AddLocation(newDeliveryMan.Location);
+
+                    //Transform the image base64 String
+                    ImageModel uploadedImage = FileUploader.Base64ToImage(newDeliveryMan.ImageBase64String, "DeliveryMenPictures");
+
+                    //Create the client entity
+                    var entityDeliveryMan = new DeliveryMan
+                    {
+                        IdentityId = user.Id,
+                        Email = newDeliveryMan.Email,
+                        FirstName = newDeliveryMan.FirstName,
+                        LastName = newDeliveryMan.LastName,
+                        Phone = newDeliveryMan.Phone,
+                        DateOfBirth = newDeliveryMan.DateOfBirth,
+                        ImageBase64 = uploadedImage.ImageBytes,
+                        PicturePath = uploadedImage.Path,
+                        Location = location,
+                        HasValidatedEmail = false,
+                        IsValidated = false
+                    };
+
+                    //Insert the new user in the DB
+                    var addedDeliveryMan = deliveryMenService.AddDeliveryMan(entityDeliveryMan);
+
+                    //Send the verification email
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    SendVerificationEmail(addedDeliveryMan, user.Id, code);
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("loginDeliveryMan")]
+        public async Task<ActionResult> LoginDeliveryMan(UserCredentialsForLoginDto credentials)
+        {
+            var user = await _userManager.FindByNameAsync(credentials.Email);
+            if (user != null && await _userManager.CheckPasswordAsync(user, credentials.Password))
+            {
+                var deliveryMan = deliveryMenService.GetDeliveryManByIdentityId(user.Id);
+                if (!deliveryMan.HasValidatedEmail)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Votre compte n'a pas encore été activé ! Vérifiez votre boite Emails."
+                    });
+                }
+
+                if(!deliveryMan.IsValidated)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Vous n'avez pas encore été accepté par l'administrateur !"
+                    });
+                }
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim("UserID", user.Id.ToString())
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(365),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.WriteToken(securityToken);
+                return Ok(new { Token = token, Id = deliveryMan.Id });
+            }
+            else
+            {
+                return BadRequest(new { message = "Email ou mot de passe incorrect" });
+            }
+        }
+
+
+        [EnableCors("AllowAll")]
+        [HttpPost("resetPassword")]
+        public async Task<Object> ForgotPassword(EmailForForgotPasswordDto emailDto)
+        {
+            var user = await _userManager.FindByEmailAsync(emailDto.Email);
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var callBackUrl = "http://192.168.1.3:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
+
+                string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+                string path;
+
+                path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ResetPasswordEmail.html");
+
+
+                var builder = new BodyBuilder();
+                using (StreamReader SourceReader = System.IO.File.OpenText(path))
+                {
+                    builder.HtmlBody = SourceReader.ReadToEnd();
+                }
+
+                string messageBody = string.Format(
+                    builder.HtmlBody,
+                    callBackUrl
+                    );
+
+                await emailSenderService.SendResetPasswordEmail(emailDto.Email, messageBody);
+            }
+            return Ok(new { message = "Email envoyé." });
+        }
+
+        private async void SendVerificationEmail(DeliveryMan newDeliveryMan, string userId, string code)
+        {
+            var callBackUrl = "http://192.168.1.3:51044/api/ConfirmDeliveryManEmail?userId=" + userId + "&code=" + code;
+
+            string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+            string path;
+            
+            path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ConfirmRegistration.html");
+            
+
+            var builder = new BodyBuilder();
+            using (StreamReader SourceReader = System.IO.File.OpenText(path))
+            {
+                builder.HtmlBody = SourceReader.ReadToEnd();
+            }
+
+            string messageBody = string.Format(
+                builder.HtmlBody,
+                newDeliveryMan.FirstName + " " + newDeliveryMan.LastName,
+                callBackUrl
+                );
+
+            await emailSenderService.SendClientConfirmationEmail(
+                newDeliveryMan.Email,
+                newDeliveryMan.FirstName + " " + newDeliveryMan.LastName,
+                messageBody
+                );
         }
     }
 }

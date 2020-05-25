@@ -120,6 +120,7 @@ namespace DeliveryApp.Services.Implementations
         {
             var orders = repoOrder.TableNoTracking
                 .Where(o => o.Status == EnumOrderStatus.Pending)
+                .OrderByDescending(o => o.OrderTime)
                 .ToList();
 
             return orders;

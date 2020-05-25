@@ -184,6 +184,6 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\D
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\DeliveryApp.API.Views.pdb
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\DeliveryApp.API.Views.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\DeliveryApp.API.Views.pdb
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ConfirmClientEmail.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ApiResetPassword.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ApiSuccessfulPasswordReset.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ConfirmUserEmail.cshtml.g.cs

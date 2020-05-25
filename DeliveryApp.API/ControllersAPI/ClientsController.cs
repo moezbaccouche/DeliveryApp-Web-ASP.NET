@@ -188,7 +188,7 @@ namespace DeliveryApp.API.ControllersAPI
 
         [EnableCors("AllowAll")]
         [HttpPost("register")]
-        public async Task<Object> NewClient([FromBody] ClientForCreationDto newClient)
+        public async Task<Object> NewClient([FromBody] UserForCreationDto newClient)
         {
             var identityUser = new IdentityUser
             {
@@ -243,7 +243,7 @@ namespace DeliveryApp.API.ControllersAPI
 
         [EnableCors("AllowAll")]
         [HttpPost("loginClient")]
-        public async Task<ActionResult> LoginClient(ClientCredentialsForLoginDto credentials)
+        public async Task<ActionResult> LoginClient(UserCredentialsForLoginDto credentials)
         {
             var user = await _userManager.FindByNameAsync(credentials.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, credentials.Password))
