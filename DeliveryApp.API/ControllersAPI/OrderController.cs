@@ -527,6 +527,45 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(orderDetails);
         }
 
+
+
+        [EnableCors("AllowAll")]
+        [HttpGet("inDelivery/deliveryMan/{idDeliveryMan}")]
+        public ActionResult<IEnumerable<ProcessingOrderForDeliveryManDto>> GetDeliveryManInDeliveryOrders(int idDeliveryMan)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(idDeliveryMan);
+            if (deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            var ordersInfos = deliveryInfoService.GetDeliveryManOrderHistory(idDeliveryMan);
+            var inDeliveryOrders = new List<ProcessingOrderForDeliveryManDto>();
+            foreach (var info in ordersInfos)
+            {
+                var order = orderService.GetOrderById(info.IdOrder);
+
+
+                if (order.Status == EnumOrderStatus.InDelivery)
+                {
+                    var client = _mapper.Map<ClientForPendingOrdersDto>(clientService.GetClientById(order.IdClient));
+
+                    string statusString = statusString = "En cours de livraison";
+
+
+                    inDeliveryOrders.Add(new ProcessingOrderForDeliveryManDto
+                    {
+                        Id = order.Id,
+                        Status = statusString,
+                        OrderTime = order.OrderTime,
+                        EstimatedDeliveryTime = info.EstimatedDeliveryTime,
+                        Client = client
+                    });
+                }
+            }
+            return Ok(inDeliveryOrders);
+        }
+
         [EnableCors("AllowAll")]
         [HttpPost("completeDelivery")]
         public ActionResult<OrdersHistoryForDeliveryManDto> CompleteDelivery([FromBody] OrderToUpdateStatusDto orderToUpdate)
@@ -682,7 +721,7 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<ProcessingOrderDetailsDto> BuyProduct([FromBody] BoughtProductDto boughtProduct)
         {
             var orderProduct = productOrderService.GetOrderProduct(boughtProduct.IdOrder, boughtProduct.IdProduct);
-            if(orderProduct == null)
+            if (orderProduct == null)
             {
                 return NotFound();
             }
