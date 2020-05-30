@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DeliveryApp.API.Models.DTO;
 using DeliveryApp.API.Models.DTO.OrdersDTOs;
+using DeliveryApp.Extensions;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Services.Contracts;
 using Microsoft.AspNetCore.Cors;
@@ -568,7 +569,7 @@ namespace DeliveryApp.API.ControllersAPI
 
         [EnableCors("AllowAll")]
         [HttpPost("completeDelivery")]
-        public ActionResult<OrdersHistoryForDeliveryManDto> CompleteDelivery([FromBody] OrderToUpdateStatusDto orderToUpdate)
+        public ActionResult<OrdersHistoryForDeliveryManDto> CompleteDelivery([FromBody] OrderToCompleteDeliveryDto orderToUpdate)
         {
             var order = orderService.GetOrderById(orderToUpdate.IdOrder);
             if (order == null)
@@ -580,6 +581,13 @@ namespace DeliveryApp.API.ControllersAPI
 
             order.Status = EnumOrderStatus.Delivered;
             deliveryInfos.RealDeliveryTime = DateTime.Now;
+
+            //Upload signature Image
+            //Signatures
+            ImageModel uploadedImage = FileUploader.Base64ToImage(orderToUpdate.SignatureImageBase64String, "Signatures");
+
+            deliveryInfos.SignatureImageBase64 = uploadedImage.ImageBytes;
+            deliveryInfos.SignatureImagePath = uploadedImage.Path;
 
             deliveryInfoService.EditDeliveryInfo(deliveryInfos);
 

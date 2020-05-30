@@ -50,18 +50,24 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<DeliveryManProfileForPopoverDto> GetDeliveryMan(int deliveryManId)
         {
             var deliveryMan = deliveryMenService.GetDeliveryManById(deliveryManId);
-            if(deliveryMan == null)
+            if (deliveryMan == null)
             {
                 return NotFound();
             }
+            double deliveryManRating = 0;
 
             var ratings = ratingService.GetDeliveryManRatings(deliveryManId);
-            int sum = 0;
-            foreach(var rating in ratings)
+           
+            if(ratings.Count() != 0)
             {
-                sum += rating.Rate;
+                int sum = 0;
+                foreach (var rating in ratings)
+                {
+                    sum += rating.Rate;
+                }
+                deliveryManRating = Math.Round(((double)sum / ratings.Count()), 2);
             }
-            double overall = (double)sum / ratings.Count();
+            
 
             var deliveryManProfile = new DeliveryManProfileForPopoverDto
             {
@@ -70,7 +76,7 @@ namespace DeliveryApp.API.ControllersAPI
                 ImageBase64 = deliveryMan.ImageBase64,
                 Email = deliveryMan.Email,
                 Phone = deliveryMan.Phone,
-                Rating = Math.Round(overall, 2),
+                Rating = deliveryManRating,
                 NbRatings = ratings.Count()
             };
 
@@ -82,19 +88,23 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<DeliveryManForProfileDto> GetDeliveryManDetails(int deliveryManId)
         {
             var deliveryMan = deliveryMenService.GetDeliveryManById(deliveryManId);
-            if(deliveryMan == null)
+            if (deliveryMan == null)
             {
                 return NotFound();
             }
 
+            double deliveryManRating = 0;
             var ratings = ratingService.GetDeliveryManRatings(deliveryManId);
-            int sum = 0;
-            foreach (var rating in ratings)
+            if (ratings.Count() != 0)
             {
-                sum += rating.Rate;
-            }
+                int sum = 0;
+                foreach (var rating in ratings)
+                {
+                    sum += rating.Rate;
+                }
 
-            double overall = (double)sum / ratings.Count();
+                deliveryManRating = Math.Round(((double)sum / ratings.Count()), 2);
+            }
 
             var location = locationService.GetLocationById(deliveryMan.Location.Id);
 
@@ -108,7 +118,7 @@ namespace DeliveryApp.API.ControllersAPI
                 ImageBase64 = deliveryMan.ImageBase64,
                 Phone = deliveryMan.Phone,
                 Location = location,
-                Rating = Math.Round(overall, 2)
+                Rating = deliveryManRating
             };
 
             return Ok(deliveryManDetails);
@@ -119,13 +129,13 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<Rating> AddNewRate(Rating newRating)
         {
             var client = clientService.GetClientById(newRating.IdClient);
-            if(client == null)
+            if (client == null)
             {
                 return NotFound();
             }
 
             var deliveryMan = deliveryMenService.GetDeliveryManById(newRating.IdDeliveryMan);
-            if(deliveryMan == null)
+            if (deliveryMan == null)
             {
                 return NotFound();
             }
@@ -151,7 +161,7 @@ namespace DeliveryApp.API.ControllersAPI
             }
 
             var rating = ratingService.GetClientRatingForDeliveryMan(newRating.IdClient, newRating.IdDeliveryMan);
-            if(rating == null)
+            if (rating == null)
             {
                 return NotFound();
             }
@@ -172,6 +182,11 @@ namespace DeliveryApp.API.ControllersAPI
                 Email = newDeliveryMan.Email,
                 UserName = newDeliveryMan.Email
             };
+
+            if (await _userManager.FindByEmailAsync(newDeliveryMan.Email) != null)
+            {
+                return BadRequest(new { code = "DuplicatedEmail", message = "Cette adresse email est déjà utilisée." });
+            }
 
             try
             {
@@ -235,7 +250,7 @@ namespace DeliveryApp.API.ControllersAPI
                     });
                 }
 
-                if(!deliveryMan.IsValidated)
+                if (!deliveryMan.IsValidated)
                 {
                     return BadRequest(new
                     {
@@ -297,15 +312,32 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(new { message = "Email envoyé." });
         }
 
+
+        [EnableCors("AllowAll")]
+        [HttpPost("resendEmail")]
+        public async Task<Object> ResendVerificationEmail(EmailToResendDto emailToResend)
+        {
+            var user = await _userManager.FindByEmailAsync(emailToResend.Email);
+            if (user != null)
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var deliveryMan = deliveryMenService.GetDeliveryManByIdentityId(user.Id);
+                this.SendVerificationEmail(deliveryMan, user.Id, code);
+            }
+            return Ok(new { message = "Email envoyé." });
+        }
+
+
         private async void SendVerificationEmail(DeliveryMan newDeliveryMan, string userId, string code)
         {
             var callBackUrl = "http://192.168.1.3:51044/api/ConfirmDeliveryManEmail?userId=" + userId + "&code=" + code;
 
             string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             string path;
-            
+
             path = Path.Combine(parent, "DeliveryApp\\wwwroot\\Templates\\EmailTemplates\\ConfirmRegistration.html");
-            
+
 
             var builder = new BodyBuilder();
             using (StreamReader SourceReader = System.IO.File.OpenText(path))
@@ -325,5 +357,7 @@ namespace DeliveryApp.API.ControllersAPI
                 messageBody
                 );
         }
+
+
     }
 }

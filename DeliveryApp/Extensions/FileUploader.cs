@@ -100,9 +100,9 @@ namespace DeliveryApp.Extensions
             {
                 
                 Image image = Image.FromStream(ms, true);
-                image.Save(path, ImageFormat.Jpeg);
+                image.Save(path, ImageFormat.Png);
             }
-            pathToReturn = "~/Content/ClientsPictures/" + uniqueName;
+            pathToReturn = "~/Content/" + directoryName  + "/" + uniqueName;
             return new ImageModel { ImageBytes = imageBytes, Path = pathToReturn };
         }
 

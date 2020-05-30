@@ -104,7 +104,7 @@ namespace DeliveryApp.API.ControllersAPI
                 return NotFound();
             }
 
-            if(client.Email != editedClient.Email)
+            if (client.Email != editedClient.Email)
             {
                 var emailExists = await _userManager.FindByEmailAsync(editedClient.Email);
                 if (emailExists != null)
@@ -149,7 +149,7 @@ namespace DeliveryApp.API.ControllersAPI
             //Consider the case where the email has been updated
             if (client.Email != editedClient.Email)
             {
-                
+
                 //Update the email in asp identity
                 var user = await _userManager.FindByIdAsync(client.IdentityId);
                 user.Email = editedClient.Email;
@@ -195,6 +195,11 @@ namespace DeliveryApp.API.ControllersAPI
                 Email = newClient.Email,
                 UserName = newClient.Email
             };
+
+            if (await _userManager.FindByEmailAsync(newClient.Email) != null)
+            {
+                return BadRequest(new { code = "DuplicatedEmail", message = "Cette adresse email est déjà utilisée." });
+            }
 
             try
             {

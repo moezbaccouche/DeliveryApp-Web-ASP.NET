@@ -27,6 +27,7 @@
     <Folder Include="Views\User\" />
     <Folder Include="wwwroot\Content\CategoriesImages\" />
     <Folder Include="wwwroot\Content\DeliveryMenPictures\" />
+    <Folder Include="wwwroot\Content\Signatures\" />
   </ItemGroup>
 
 
