@@ -291,7 +291,7 @@ namespace DeliveryApp.API.ControllersAPI
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                var callBackUrl = "http://192.168.1.4:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
+                var callBackUrl = "http://192.168.1.5:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
 
                 string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
                 string path;
@@ -315,9 +315,43 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(new { message = "Email envoyé." });
         }
 
+        [EnableCors("AllowAll")]
+        [HttpPost("setPlayerId")]
+        public ActionResult<Client> SetClientPlayerId(ClientForSettingPlayerIdDto clientDto)
+        {
+            var client = clientService.GetClientById(clientDto.ClientId);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            if (client.PlayerId == null || client.PlayerId != clientDto.PlayerId)
+            {
+                client.PlayerId = clientDto.PlayerId;
+                clientService.UpdateClient(client);
+            }
+
+            return Ok(client);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("resendEmail")]
+        public async Task<Object> ResendVerificationEmail(EmailToResendDto emailToResend)
+        {
+            var user = await _userManager.FindByEmailAsync(emailToResend.Email);
+            if (user != null)
+            {
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                var client = clientService.GetClientByIdentityId(user.Id);
+                this.SendVerificationEmail(client, user.Id, code, false);
+            }
+            return Ok(new { message = "Email envoyé." });
+        }
+
         private async void SendVerificationEmail(Client newClient, string userId, string code, bool editedEmail)
         {
-            var callBackUrl = "http://192.168.1.4:51044/api/ConfirmClientEmail?userId=" + userId + "&code=" + code;
+            var callBackUrl = "http://192.168.1.5:51044/api/ConfirmClientEmail?userId=" + userId + "&code=" + code;
 
             string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             string path;

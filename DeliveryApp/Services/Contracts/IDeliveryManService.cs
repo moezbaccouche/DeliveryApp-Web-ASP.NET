@@ -17,5 +17,6 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<DeliveryMan> GetNotValidatedDeliveryMen();
         IEnumerable<DeliveryMan> GetAllDeliveryMen();
         IEnumerable<DeliveryMan> GetAllAvailableDeliveryMen();
+        IEnumerable<string> GetAllDeliveryMenPlayerIds();
     }
 }

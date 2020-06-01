@@ -288,7 +288,7 @@ namespace DeliveryApp.API.ControllersAPI
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                var callBackUrl = "http://192.168.1.3:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
+                var callBackUrl = "http://192.168.1.5:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
 
                 string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
                 string path;
@@ -328,10 +328,38 @@ namespace DeliveryApp.API.ControllersAPI
             return Ok(new { message = "Email envoyé." });
         }
 
+        [EnableCors("AllowAll")]
+        [HttpPost("setPlayerId")]
+        public ActionResult<DeliveryMan> SetDeliveryManPlayerId(DeliveryManForSettingPlayerIdDto deliveryManDto)
+        {
+            var deliveryMan = deliveryMenService.GetDeliveryManById(deliveryManDto.DeliveryManId);
+            if(deliveryMan == null)
+            {
+                return NotFound();
+            }
+
+            if(deliveryMan.PlayerId == null || deliveryMan.PlayerId != deliveryManDto.PlayerId)
+            {
+                deliveryMan.PlayerId = deliveryManDto.PlayerId;
+                deliveryMenService.EditDeliveryMan(deliveryMan);
+            }
+
+            return Ok(deliveryMan);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpGet("playersIds")]
+        public ActionResult<IEnumerable<string>> GetDeliveryMenPlayerIds()
+        {
+            var deliveryMenPlayerIds = deliveryMenService.GetAllDeliveryMenPlayerIds();
+
+            return Ok(deliveryMenPlayerIds);
+        }
+
 
         private async void SendVerificationEmail(DeliveryMan newDeliveryMan, string userId, string code)
         {
-            var callBackUrl = "http://192.168.1.3:51044/api/ConfirmDeliveryManEmail?userId=" + userId + "&code=" + code;
+            var callBackUrl = "http://192.168.1.5:51044/api/ConfirmDeliveryManEmail?userId=" + userId + "&code=" + code;
 
             string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             string path;

@@ -19,6 +19,7 @@ namespace DeliveryApp.Models.Data
         public Location Location { get; set; }
         public ICollection<Order> Orders { get; set; } 
             = new List<Order>();
-        
+
+        public string PlayerId { get; set; }
     }
 }

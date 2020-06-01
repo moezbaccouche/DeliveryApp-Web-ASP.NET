@@ -97,7 +97,23 @@ namespace DeliveryApp.API.ControllersAPI
             }
 
             var newlocation = _mapper.Map<CurrentLocation>(location);
-            var locationToReturn = currentLocationService.AddDeliveryManCurrentLocation(newlocation);
+
+            var currentLocation = currentLocationService.GetDeliveryManCurrentLocation(location.DeliveryManId);
+            CurrentLocation locationToReturn = null;
+            if (currentLocation == null)
+            {
+                //This is the first time that the current location will be inserted
+                locationToReturn = currentLocationService.AddDeliveryManCurrentLocation(newlocation);
+            }
+            else
+            {
+                //The deliveryMan currentLocation will be updated
+                currentLocation.Lat = location.Lat;
+                currentLocation.Long = location.Long;
+
+                locationToReturn = currentLocationService.UpdateDeliveryManCurrentLocation(currentLocation);
+            }
+
 
             return Ok(_mapper.Map<DeliveryManCurrentLocationDto>(locationToReturn));
         }

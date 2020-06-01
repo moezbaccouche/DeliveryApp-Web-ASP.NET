@@ -53,6 +53,15 @@ namespace DeliveryApp.Services.Implementations
             return allDeliveryMen;
         }
 
+        public IEnumerable<string> GetAllDeliveryMenPlayerIds()
+        {
+            var playersIds = repoDeliveryMan.TableNoTracking
+                .Select(d => d.PlayerId)
+                .ToList();
+
+            return playersIds;
+        }
+
         public DeliveryMan GetDeliveryManById(int id)
         {
             var deliveryMan = repoDeliveryMan.TableNoTracking
