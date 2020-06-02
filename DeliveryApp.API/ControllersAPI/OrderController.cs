@@ -55,7 +55,22 @@ namespace DeliveryApp.API.ControllersAPI
             }
 
             //Calculate delivery price
-            var deliveryPrice = 5;
+            double deliveryPrice;
+            if(orderDto.Distance >= 0 && orderDto.Distance <= 10)
+            {
+                deliveryPrice = 2;
+            }
+            else
+            {
+                if (orderDto.Distance > 10 && orderDto.Distance <= 25)
+                {
+                    deliveryPrice = 5;
+                }
+                else
+                {
+                    deliveryPrice = 10;
+                }
+            }
 
             var cartProducts = cartProductService.GetCartProducts(orderDto.ClientId);
 
@@ -854,6 +869,27 @@ namespace DeliveryApp.API.ControllersAPI
             };
 
             return Ok(orderToReturn);
+        }
+
+        [EnableCors("AllowAll")]
+        [HttpPost("cancelOrder")]
+        public ActionResult<int> CancelPendingOrder([FromBody] OrderToCancel orderToCancel)
+        {
+            var order = orderService.GetOrderById(orderToCancel.OrderId);
+            if(order == null)
+            {
+                return NotFound();
+            }
+
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            foreach(var product in orderProducts)
+            {
+                productOrderService.DeleteProduct(orderToCancel.OrderId, product.IdProduct);
+            }
+
+            orderService.DeleteOrder(orderToCancel.OrderId);
+
+            return Ok(new { OrderId = orderToCancel.OrderId });
         }
     }
 }
