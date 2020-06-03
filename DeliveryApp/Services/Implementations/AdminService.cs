@@ -18,6 +18,16 @@ namespace DeliveryApp.Services.Implementations
             this.repoAdmins = repoAdmins;
         }
 
+        public Admin EditAdmin(Admin admin)
+        {
+            if(admin != null)
+            {
+                repoAdmins.Update(admin);
+            }
+
+            return admin;
+        }
+
         public Admin GetAdminByEmail(string email)
         {
             var admin = repoAdmins.TableNoTracking

@@ -1,171 +1,163 @@
 ﻿@model DeliveryApp.Models.ViewModels.ProfileViewModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Profil";
     ViewBag.CurrentAction = "Profile";
     ViewBag.CurrentViewTitle = "Profil";
 }
 
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card card-user">
-                <div class="image">
-                    <img src="../../assets/img/bg/damir-bosnjak.jpg" alt="...">
+<div class="row">
+    <div class="col-md-4">
+        <div class="card card-user">
+            <div class="image">
+                <img src="../../assets/img/bg/damir-bosnjak.jpg" alt="...">
+            </div>
+            <div class="card-body">
+                <div class="author">
+                    <img class="avatar border-gray" id="adminPic" src="@Url.Content(Model.Admin.PicturePath)" alt="...">
+                    <h5 class="title">@Model.Admin.FirstName @Model.Admin.LastName</h5>
+                    <h6 style="text-transform:none; color:black" class="mt-4 text-muted">@Model.Admin.Email</h6>
+                    <h6 style="text-transform:none; color:black" class="mt-2 text-muted">@Model.Admin.Phone</h6>
+
                 </div>
-                <div class="card-body">
-                    <div class="author">
-                        <a href="#">
-                            <img class="avatar border-gray" src="@Url.Content(Model.Admin.PicturePath)" alt="...">
-                            <h5 class="title">@Model.Admin.FirstName @Model.Admin.LastName</h5>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <hr>
-                    <div class="button-container">
-                        <div class="row">
-                            <div class="col-lg-3 col-md-6 col-6 ml-auto">
-                                <h5>12<br><small>Files</small></h5>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
-                                <h5>2GB<br><small>Used</small></h5>
-                            </div>
-                            <div class="col-lg-3 mr-auto">
-                                <h5>24,6$<br><small>Spent</small></h5>
-                            </div>
+
+            </div>
+            <div class="card-footer">
+                <hr>
+                <div class="button-container">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                            <span style="font-size: 14px">@Model.NbClients<br><small>Clients</small></span>
+                        </div>
+                        <div class="col-lg-4 col-md-7 col-7 ml-auto mr-auto">
+                            <span style="font-size: 14px">@Model.NbDeliveredOrders<br><small>Commandes livrées</small></span>
+                        </div>
+                        <div class="col-lg-3 mr-auto">
+                            <span style="font-size: 14px">@Model.DeliveryMen.Count()<br><small>Livreurs</small></span>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Livreurs</h4>
-                </div>
-                <div class="card-body">
-                    <ul class="list-unstyled team-members">
-                        <li>
-                            <div class="row">
-                                <div class="col-md-2 col-2">
-                                    <div class="avatar">
-                                        <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                    </div>
-                                </div>
-                                <div class="col-md-7 col-7">
-                                    DJ Khaled
-                                    <br />
-                                    <span class="text-muted"><small>Offline</small></span>
-                                </div>
-                                <div class="col-md-3 col-3 text-right">
-                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="row">
-                                <div class="col-md-2 col-2">
-                                    <div class="avatar">
-                                        <img src="../../assets/img/faces/joe-gardner-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                    </div>
-                                </div>
-                                <div class="col-md-7 col-7">
-                                    Creative Tim
-                                    <br />
-                                    <span class="text-success"><small>Available</small></span>
-                                </div>
-                                <div class="col-md-3 col-3 text-right">
-                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="row">
-                                <div class="col-md-2 col-2">
-                                    <div class="avatar">
-                                        <img src="../../assets/img/faces/clem-onojeghuo-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                    </div>
-                                </div>
-                                <div class="col-ms-7 col-7">
-                                    Flume
-                                    <br />
-                                    <span class="text-danger"><small>Busy</small></span>
-                                </div>
-                                <div class="col-md-3 col-3 text-right">
-                                    <btn class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></btn>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="title">Modifier Profil</h5>
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6 pr-1">
-                                <div class="form-group">
-                                    <label>Entreprise</label>
-                                    <input type="text" class="form-control" disabled="" placeholder="Company" value="Delivery TN">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Livreurs</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled team-members">
+                    @foreach (var man in Model.DeliveryMen)
+                    {
+                        <li>
+                            <div class="row">
+                                <div class="col-md-2 col-2">
+                                    <div class="avatar">
+                                        <img src="@Url.Content(man.PicturePath)" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-7">
+                                    @man.FirstName @man.LastName
+                                    <br />
+                                    <span class="text-muted"><small>@man.Phone</small></span>
+                                </div>
+                                <div class="col-md-3 col-3 text-right">
+                                    <a href="mailto:@man.Email" class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></a>
                                 </div>
                             </div>
-                            <div class="col-md-6 pl-1">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Email</label>
-                                    <input type="email" class="form-control" placeholder="Email" value="@Model.Admin.Email">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 pr-1">
-                                <div class="form-group">
-                                    <label>Prénom</label>
-                                    <input type="text" class="form-control" placeholder="Company" value="@Model.Admin.FirstName">
-                                </div>
-                            </div>
-                            <div class="col-md-6 pl-1">
-                                <div class="form-group">
-                                    <label>Nom</label>
-                                    <input type="text" class="form-control" placeholder="Last Name" value="@Model.Admin.LastName">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Adresse</label>
-                                    <input type="text" class="form-control" placeholder="Home Address" value="@Model.Admin.Location.Address">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 pr-1">
-                                <div class="form-group">
-                                    <label>Ville</label>
-                                    <input type="text" class="form-control" placeholder="City" value="@Model.Admin.Location.City">
-                                </div>
-                            </div>
-                            <div class="col-md-4 px-1">
-                                <div class="form-group">
-                                    <label>Pays</label>
-                                    <input type="text" class="form-control" placeholder="Country" value="Tunisie">
-                                </div>
-                            </div>
-                            <div class="col-md-4 pl-1">
-                                <div class="form-group">
-                                    <label>Code postal</label>
-                                    <input type="number" class="form-control" placeholder="ZIP Code" value="@Model.Admin.Location.ZipCode">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-outline-primary btn-round">Modifier</button>
-                        </div>
-                    </form>
-                </div>
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="title">Modifier Profil</h5>
+                @if (TempData["Message"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                            <i class="nc-icon nc-simple-remove"></i>
+                        </button>
+                        <span>@TempData["Message"]</span>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                            <i class="nc-icon nc-simple-remove"></i>
+                        </button>
+                        <span>@TempData["ErrorMessage"]</span>
+                    </div>
+                }
+            </div>
+            <div class="card-body">
+                <form method="post" asp-action="EditProfile" asp-controller="Admin">
+                    <div class="row">
+                        <input type="hidden" asp-for="@Model.Admin.Id" />
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <label>Entreprise</label>
+                                <input type="text" class="form-control" disabled placeholder="Company" value="Delivery TN">
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl-1">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input asp-for="@Model.Admin.Email" type="email" class="form-control" placeholder="Email" value="@Model.Admin.Email" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <label>Prénom</label>
+                                <input asp-for="@Model.Admin.FirstName" type="text" class="form-control" placeholder="Prénom" value="@Model.Admin.FirstName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl-1">
+                            <div class="form-group">
+                                <label>Nom</label>
+                                <input asp-for="@Model.Admin.LastName" type="text" class="form-control" placeholder="Nom" value="@Model.Admin.LastName" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Téléphone</label>
+                                <input asp-for="@Model.Admin.Phone" type="text" class="form-control" placeholder="Téléphone" value="@Model.Admin.Phone" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Adresse</label>
+                                <input asp-for="@Model.Admin.Location.Address" type="text" class="form-control" placeholder="Adresse" value="@Model.Admin.Location.Address" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pr-1">
+                            <div class="form-group">
+                                <label>Ville</label>
+                                <input asp-for="@Model.Admin.Location.City" type="text" class="form-control" placeholder="Ville" value="@Model.Admin.Location.City" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl-1">
+                            <div class="form-group">
+                                <label>Code postal</label>
+                                <input asp-for="@Model.Admin.Location.ZipCode" type="number" class="form-control" placeholder="Code postal" value="@Model.Admin.Location.ZipCode" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-primary btn-round">Modifier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

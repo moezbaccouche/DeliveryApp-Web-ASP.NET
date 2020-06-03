@@ -9,5 +9,8 @@ namespace DeliveryApp.Models.ViewModels
     public class ProfileViewModel
     {
         public Admin Admin { get; set; }
+        public int NbDeliveredOrders { get; set; }
+        public int NbClients { get; set; }
+        public IEnumerable<DeliveryMan> DeliveryMen { get; set; }
     }
 }

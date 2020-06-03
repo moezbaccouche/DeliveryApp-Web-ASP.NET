@@ -18,5 +18,6 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<DeliveryMan> GetAllDeliveryMen();
         IEnumerable<DeliveryMan> GetAllAvailableDeliveryMen();
         IEnumerable<string> GetAllDeliveryMenPlayerIds();
+        DeliveryMan AcceptDeliveryMan(DeliveryMan deliveryMan);
     }
 }

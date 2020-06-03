@@ -26,6 +26,20 @@ namespace DeliveryApp.Services.Implementations
             return newLocation;
         }
 
+        public Location DeleteLocation(int id)
+        {
+            var location = repoLocations.TableNoTracking
+                .Where(l => l.Id == id)
+                .FirstOrDefault();
+
+            if(location != null)
+            {
+                repoLocations.Delete(location);
+            }
+
+            return location;
+        }
+
         public Location GetLocationById(int id)
         {
             var location = repoLocations.TableNoTracking.Where(l => l.Id == id).FirstOrDefault();

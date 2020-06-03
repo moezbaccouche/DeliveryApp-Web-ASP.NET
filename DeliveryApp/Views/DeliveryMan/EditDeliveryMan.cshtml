@@ -3,7 +3,7 @@
     ViewData["Title"] = "Modification Livreur";
 }
 
-<form method="post" asp-controller="DeliveryMan" asp-action="EditDeliveryMan" id="formDeliveryMan">
+<form method="post" asp-controller="DeliveryMan" enctype="multipart/form-data" asp-action="EditDeliveryMan" id="formDeliveryMan">
 
     <div class="card card-user">
         <div class="image">
@@ -12,11 +12,17 @@
         <div class="card-body">
             <div class="author">
                 <a href="#">
-                    <img class="avatar border-gray" style="border: solid 2px white" src="@Url.Content(Model.DeliveryMan.PicturePath)" alt="...">
+                    <img class="avatar border-gray" style="border: solid 2px white" id="deliveryManPic" src="@Url.Content(Model.DeliveryMan.PicturePath)" alt="...">
                     <input type="hidden" asp-for="DeliveryMan.Id" value="@Model.DeliveryMan.Id" />
                     <input type="hidden" asp-for="DeliveryMan.PicturePath" value="@Model.DeliveryMan.PicturePath" />
                     <input type="hidden" asp-for="DeliveryMan.Location.Id" value="@Model.DeliveryMan.Location.Id" />
                 </a>
+            </div>
+            <div class="text-center">
+                <span class="btn btn-info btn-round btn-file">
+                    <span class="fileinput-exists">Changer</span>
+                    <input id="file" type="file" onchange="deliveryManPicChanged(event)" name="file">
+                </span>
             </div>
             <div class="form-group has-label">
                 <label>
@@ -48,21 +54,26 @@
             </div>
             <div class="form-group has-label">
                 <label>
-                    Disponible
-
+                    Adresse
+                    *
                 </label>
-                @if (Model.DeliveryMan.IsAvailable)
-                {
-                    <input class="bootstrap-switch" checked asp-for="DeliveryMan.IsAvailable" type="checkbox" data-toggle="switch" data-on-color="default" data-off-color="default" data-on-label="ON" data-off-label="OFF">
-
-                }
-                else
-                {
-                    <input class="bootstrap-switch" asp-for="DeliveryMan.IsAvailable" type="checkbox" data-toggle="switch" data-on-color="default" data-off-color="default" data-on-label="ON" data-off-label="OFF">
-
-                }
-
+                <input class="form-control" asp-for="DeliveryMan.Location.Address" id="address" type="text" required value="@Model.DeliveryMan.Location.Address">
             </div>
+            <div class="form-group has-label">
+                <label>
+                    Ville
+                    *
+                </label>
+                <input class="form-control" asp-for="DeliveryMan.Location.City" id="city" type="text" required value="@Model.DeliveryMan.Location.City">
+            </div>
+            <div class="form-group has-label">
+                <label>
+                    Code postal
+                    *
+                </label>
+                <input class="form-control" asp-for="DeliveryMan.Location.ZipCode" id="zipCode" type="number" required value="@Model.DeliveryMan.Location.ZipCode">
+            </div>
+
             <div class="category form-category">* Champs requis</div>
 
         </div>

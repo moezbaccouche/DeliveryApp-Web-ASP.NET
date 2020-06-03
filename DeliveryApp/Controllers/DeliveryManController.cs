@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DeliveryApp.Extensions;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Models.ViewModels;
 using DeliveryApp.Services.Contracts;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryApp.Controllers
@@ -13,11 +16,19 @@ namespace DeliveryApp.Controllers
     {
         private readonly IDeliveryManService deliveryManService;
         private readonly ILocationService locationService;
+        private readonly IDeliveryInfoService deliveryInfoService;
+        private readonly ICurrentLocationService currentLocationService;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public DeliveryManController(IDeliveryManService deliveryManService, ILocationService locationService)
+        public DeliveryManController(IDeliveryManService deliveryManService, ILocationService locationService,
+            IDeliveryInfoService deliveryInfoService, ICurrentLocationService currentLocationService,
+            UserManager<IdentityUser> userManager)
         {
             this.deliveryManService = deliveryManService;
             this.locationService = locationService;
+            this.deliveryInfoService = deliveryInfoService;
+            this.currentLocationService = currentLocationService;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -28,7 +39,7 @@ namespace DeliveryApp.Controllers
         {
             var allDeliveryMen = deliveryManService.GetAllDeliveryMen();
             DeliveryMenViewModel deliveryMenViewModel = new DeliveryMenViewModel
-            { 
+            {
                 AllDeliveryMen = allDeliveryMen
             };
             return View(deliveryMenViewModel);
@@ -59,28 +70,115 @@ namespace DeliveryApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditDeliveryMan(DeliveryMenViewModel dvm)
+        public async Task<IActionResult> EditDeliveryMan(DeliveryMenViewModel dvm, IFormFile file)
         {
+            var deliveryMan = deliveryManService.GetDeliveryManById(dvm.DeliveryMan.Id);
             var deliveryManLocation = locationService.GetLocationById(dvm.DeliveryMan.Location.Id);
-            var editedEntity = new DeliveryMan
+
+            deliveryMan.FirstName = dvm.DeliveryMan.FirstName;
+            deliveryMan.LastName = dvm.DeliveryMan.LastName;
+            deliveryMan.Phone = dvm.DeliveryMan.Phone;
+            deliveryManLocation.Address = dvm.DeliveryMan.Location.Address;
+            deliveryManLocation.City = dvm.DeliveryMan.Location.City;
+            deliveryManLocation.ZipCode = dvm.DeliveryMan.Location.ZipCode;
+
+            if(file != null)
             {
-                Id = dvm.DeliveryMan.Id,
-                FirstName = dvm.DeliveryMan.FirstName,
-                LastName = dvm.DeliveryMan.LastName,
-                Location = deliveryManLocation,
-                Phone = dvm.DeliveryMan.Phone,
-                Email = dvm.DeliveryMan.Email,
-                IsAvailable = dvm.DeliveryMan.IsAvailable,
-                IsValidated = true,
-                PicturePath = dvm.DeliveryMan.PicturePath
-            };
-            deliveryManService.EditDeliveryMan(editedEntity);
+                //The picture has been changed
+                //Upload the new picture
+                var picturePath = FileUploader.UploadImage(file, "DeliveryMenPictures");
+                var pictureBytes = FileUploader.FileToBase64(picturePath);
+
+                deliveryMan.PicturePath = picturePath;
+                deliveryMan.ImageBase64 = pictureBytes;
+            }
+
+            if(deliveryMan.Email != dvm.DeliveryMan.Email)
+            {
+                //Email has been updated
+                var user = await _userManager.FindByIdAsync(deliveryMan.IdentityId);
+                if(user != null)
+                {
+                    user.Email = dvm.DeliveryMan.Email;
+                    user.NormalizedEmail = dvm.DeliveryMan.Email.ToUpper();
+                    user.UserName = dvm.DeliveryMan.Email;
+                    user.NormalizedUserName = dvm.DeliveryMan.Email.ToUpper();
+                    deliveryMan.Email = dvm.DeliveryMan.Email;
+                    deliveryMan.HasValidatedEmail = true;
+
+                    await _userManager.UpdateAsync(user);
+                }
+            }
+
+            
+            deliveryMan.Location = deliveryManLocation;
+            locationService.UpdateLocation(deliveryManLocation);
+            deliveryManService.EditDeliveryMan(deliveryMan);
+           
 
             TempData["Message"] = "Livreur modifié avec succès !";
 
             return RedirectToAction("AllDeliveryMen");
         }
 
-       
+        [HttpGet]
+        public IActionResult AcceptDeliveryMan(int id)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(id);
+            if(deliveryMan == null)
+            {
+                return View("NotFound");
+            }
+
+            deliveryManService.AcceptDeliveryMan(deliveryMan);
+
+            TempData["Message"] = "Livreur accepté !";
+
+            return RedirectToAction("NotValidatedDeliveryMen");
+        }
+
+        [HttpGet]
+        public IActionResult RejectDeliveryMan(int id)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(id);
+            if (deliveryMan == null)
+            {
+                return View("NotFound");
+            }
+
+            deliveryManService.DeleteDeliveryMan(id);
+
+            TempData["Message"] = "Livreur refusé !";
+
+            return RedirectToAction("NotValidatedDeliveryMen");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteDeliveryMan(int id)
+        {
+            var deliveryMan = deliveryManService.GetDeliveryManById(id);
+            if(deliveryMan == null)
+            {
+                return View("NotFound");
+            }
+
+            var deliveryManDeliveredOrdersInfos = deliveryInfoService.GetDeliveryManOrderHistory(id);
+            foreach(var info in deliveryManDeliveredOrdersInfos)
+            {
+                info.IdDeliveryMan = 0;
+                deliveryInfoService.EditDeliveryInfo(info);
+            }
+
+            var currentLocation = currentLocationService.GetDeliveryManCurrentLocation(id);
+            currentLocationService.DeleteDeliveryManCurrentLocation(currentLocation);
+
+            deliveryManService.DeleteDeliveryMan(id);
+            locationService.DeleteLocation(deliveryMan.Location.Id);
+
+            TempData["Message"] = "Livreur supprimé !";
+
+            return RedirectToAction("AllDeliveryMen");
+        }
+
     }
 }

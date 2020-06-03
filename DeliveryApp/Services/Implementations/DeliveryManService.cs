@@ -19,6 +19,15 @@ namespace DeliveryApp.Services.Implementations
             this.repoDeliveryMan = repoDeliveryMan;
         }
 
+        public DeliveryMan AcceptDeliveryMan(DeliveryMan deliveryMan)
+        {
+            deliveryMan.IsValidated = true;
+            deliveryMan.IsAvailable = true;
+
+            repoDeliveryMan.Update(deliveryMan);
+            return deliveryMan;
+        }
+
         public DeliveryMan AddDeliveryMan(DeliveryMan newDeliveryMan)
         {
             repoDeliveryMan.Insert(newDeliveryMan);
@@ -83,11 +92,12 @@ namespace DeliveryApp.Services.Implementations
         public IEnumerable<DeliveryMan> GetNotValidatedDeliveryMen()
         {
             var allDeliveryMen = repoDeliveryMan.TableNoTracking
-                .Where(d => d.IsValidated == false)
+                .Where(d => d.IsValidated == false && d.HasValidatedEmail == true)
                 .Include(d => d.Location)
                 .ToList();
             return allDeliveryMen;
         }
+
 
         public DeliveryMan ValidateDeliveryMan(DeliveryMan deliveryMan)
         {

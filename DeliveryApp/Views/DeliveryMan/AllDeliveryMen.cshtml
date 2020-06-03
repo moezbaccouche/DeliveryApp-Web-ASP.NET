@@ -16,6 +16,13 @@
     </div>
 }
 
+<div id="divDeleteSuccess" style="display: none" class="alert alert-success alert-dismissible fade show">
+    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+        <i class="nc-icon nc-simple-remove"></i>
+    </button>
+    <span>Livreur supprimé !</span>
+</div>
+
 <h1>Liste des livreurs</h1>
 
 <div class="container-fluid">
@@ -24,17 +31,18 @@
         {
             <div class="col-md-4 col-sm-4 col-lg-4">
                 <div class="card deliveryMan-card" style="width: 18rem;">
-                    <div class="text-center deliveryMan-card-header">
+                    <div class="text-center deliveryMan-card-header mt-3">
                         <img height="100" width="100" src="@Url.Content(man.PicturePath)" class="img rounded-circle img-deliveryMan-card" alt="Image">
                     </div>
+
                     <div class="card-body">
-                        <h5 class="card-title">@man.FirstName @man.LastName</h5>
-                        <p class="card-text">Email: @man.Email</p>
-                        <p class="card-text">Téléphone: @man.Phone</p>
+                        <h5 class="card-title text-center">@man.FirstName @man.LastName</h5>
+                        <p class="card-text"><strong>Email:</strong> @man.Email</p>
+                        <p class="card-text"><strong>Téléphone:</strong> @man.Phone</p>
 
                         <div class="float-right">
                             <a href="#" class="btn btn-simple btn-info btn-icon ajaxBtn" data-link="/DeliveryMan/EditDeliveryMan?id=@man.Id" data-title="Modifier Livreur"><i class="fa fa-pencil" title="Modifier"></i></a>
-                            <a href="#" class="btn btn-simple btn-danger btn-icon"><i class="fa fa-trash"></i></a>
+                            <a id="btDelete" onclick="deleteDeliveryMan(@man.Id)" class="btn btn-simple btn-danger btn-icon"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
                 </div>
@@ -42,3 +50,54 @@
         }
     </div>
 </div>
+
+@section scripts {
+    <script src="~/assets/js/plugins/bootbox.js"></script>
+    <script>
+
+        function deleteDeliveryMan(idDeliveryMan) {
+            debugger;
+            bootbox.confirm({
+                title: "Confirmation suppression",
+                message: "Etes-vous certain de vouloir supprimer ce livreur ?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Annuler'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirmer'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                            $.ajax({
+                                url: '@Url.Action("DeleteDeliveryMan", "DeliveryMan")',
+                                data: { id: idDeliveryMan },
+                                type: 'GET',
+                                dataType: 'html',
+                                success: function () {
+                                    window.location.reload();
+                            }
+                        });
+
+                    }
+                }
+            });
+        }
+
+        function deliveryManPicChanged(e) {
+            console.log(e);
+            var files = $("#file")[0].files;
+            console.log(files);
+            getBase64(files[0]).then(
+                 data => setDeliveryManPic(data)
+            );
+            
+        }
+
+        function setDeliveryManPic(str) {
+            $("#deliveryManPic").attr("src", str);
+        }
+
+    </script>
+}

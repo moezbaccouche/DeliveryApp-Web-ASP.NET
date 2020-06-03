@@ -59,6 +59,8 @@ namespace DeliveryApp.Services.Implementations
             return treatedOrders;
         }
 
+
+        //To be deleted later
         public IEnumerable<Order> GetDeliveredOrders()
         {
             var deliveredOrders = repoOrder.TableNoTracking
@@ -70,6 +72,7 @@ namespace DeliveryApp.Services.Implementations
             return deliveredOrders;
         }
 
+        //To be deleted later
         public IEnumerable<Order> GetInDeliveryOrders()
         {
             var deliveredOrders = repoOrder.TableNoTracking
@@ -82,6 +85,7 @@ namespace DeliveryApp.Services.Implementations
             return deliveredOrders;
         }
 
+        //To be deleted later
         public IEnumerable<Order> GetPendingOrders()
         {
             var deliveredOrders = repoOrder.TableNoTracking
@@ -124,6 +128,15 @@ namespace DeliveryApp.Services.Implementations
                 .ToList();
 
             return orders;
+        }
+
+        public IEnumerable<Order> GetAllDeliveredOrders()
+        {
+            var deliveredOrders = repoOrder.TableNoTracking
+                .Where(o => o.Status == EnumOrderStatus.Delivered)
+                .ToList();
+
+            return deliveredOrders;
         }
     }
 }
