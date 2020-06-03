@@ -24,6 +24,19 @@ namespace DeliveryApp.Services.Implementations
             return newClient;
         }
 
+        public Client DeleteClient(int clientId)
+        {
+            var client = repoClients.TableNoTracking
+                .Where(c => c.Id == clientId)
+                .FirstOrDefault();
+
+            if(client != null)
+            {
+                repoClients.Delete(client);
+            }
+            return client;
+        }
+
         public IEnumerable<Client> GetAllClients()
         {
             var allClients = repoClients.TableNoTracking

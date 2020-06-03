@@ -12,5 +12,7 @@ namespace DeliveryApp.Services.Contracts
         Rating AddRating(Rating newRating);
         Rating EditRating(Rating newRating);
         IEnumerable<Rating> GetDeliveryManRatings(int deliveryManId);
+        IEnumerable<Rating> GetClientRatings(int clientId);
+        Rating DeleteRating(Rating rating);
     }
 }

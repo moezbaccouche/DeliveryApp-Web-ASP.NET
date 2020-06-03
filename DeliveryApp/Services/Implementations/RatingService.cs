@@ -26,6 +26,16 @@ namespace DeliveryApp.Services.Implementations
             return newRating;
         }
 
+        public Rating DeleteRating(Rating rating)
+        {
+            if(rating != null)
+            {
+                repoRatings.Delete(rating);
+            }
+
+            return rating;
+        }
+
         public Rating EditRating(Rating newRating)
         {
             if(newRating != null)
@@ -41,6 +51,15 @@ namespace DeliveryApp.Services.Implementations
                 .Where(r => r.IdClient == clientId && r.IdDeliveryMan == deliveryManId)
                 .FirstOrDefault();
             return rating;
+        }
+
+        public IEnumerable<Rating> GetClientRatings(int clientId)
+        {
+            var ratings = repoRatings.TableNoTracking
+                .Where(r => r.IdClient == clientId)
+                .ToList();
+
+            return ratings;
         }
 
         public IEnumerable<Rating> GetDeliveryManRatings(int deliveryManId)

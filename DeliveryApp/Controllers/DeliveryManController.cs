@@ -19,16 +19,18 @@ namespace DeliveryApp.Controllers
         private readonly IDeliveryInfoService deliveryInfoService;
         private readonly ICurrentLocationService currentLocationService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IRatingService ratingService;
 
         public DeliveryManController(IDeliveryManService deliveryManService, ILocationService locationService,
             IDeliveryInfoService deliveryInfoService, ICurrentLocationService currentLocationService,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager, IRatingService ratingService)
         {
             this.deliveryManService = deliveryManService;
             this.locationService = locationService;
             this.deliveryInfoService = deliveryInfoService;
             this.currentLocationService = currentLocationService;
             _userManager = userManager;
+            this.ratingService = ratingService;
         }
         public IActionResult Index()
         {
@@ -138,7 +140,7 @@ namespace DeliveryApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult RejectDeliveryMan(int id)
+        public async Task<IActionResult> RejectDeliveryMan(int id)
         {
             var deliveryMan = deliveryManService.GetDeliveryManById(id);
             if (deliveryMan == null)
@@ -148,13 +150,19 @@ namespace DeliveryApp.Controllers
 
             deliveryManService.DeleteDeliveryMan(id);
 
+            var user = await _userManager.FindByIdAsync(deliveryMan.IdentityId);
+            if(user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+
             TempData["Message"] = "Livreur refusé !";
 
             return RedirectToAction("NotValidatedDeliveryMen");
         }
 
         [HttpGet]
-        public IActionResult DeleteDeliveryMan(int id)
+        public async Task<IActionResult> DeleteDeliveryMan(int id)
         {
             var deliveryMan = deliveryManService.GetDeliveryManById(id);
             if(deliveryMan == null)
@@ -172,8 +180,20 @@ namespace DeliveryApp.Controllers
             var currentLocation = currentLocationService.GetDeliveryManCurrentLocation(id);
             currentLocationService.DeleteDeliveryManCurrentLocation(currentLocation);
 
+            var ratings = ratingService.GetDeliveryManRatings(id);
+            foreach(var rating in ratings)
+            {
+                ratingService.DeleteRating(rating);
+            }
+
             deliveryManService.DeleteDeliveryMan(id);
             locationService.DeleteLocation(deliveryMan.Location.Id);
+
+            var user = await _userManager.FindByIdAsync(deliveryMan.IdentityId);
+            if (user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
 
             TempData["Message"] = "Livreur supprimé !";
 

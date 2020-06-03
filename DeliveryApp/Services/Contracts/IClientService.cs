@@ -13,5 +13,6 @@ namespace DeliveryApp.Services.Contracts
         Client AddClient(Client newClient);
         Client UpdateClient(Client newClient);
         IEnumerable<Client> GetAllClients();
+        Client DeleteClient(int clientId);
     }
 }
