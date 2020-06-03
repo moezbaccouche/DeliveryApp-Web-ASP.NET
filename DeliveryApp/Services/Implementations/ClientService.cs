@@ -40,6 +40,7 @@ namespace DeliveryApp.Services.Implementations
         public IEnumerable<Client> GetAllClients()
         {
             var allClients = repoClients.TableNoTracking
+                .Where(c => c.HasValidatedEmail)
                 .Include(c => c.Location)
                 .ToList();
             return allClients;

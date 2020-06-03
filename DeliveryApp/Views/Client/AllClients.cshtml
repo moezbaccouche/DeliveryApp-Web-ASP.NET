@@ -14,13 +14,13 @@
         {
             <div class="col-md-4 col-sm-4 col-lg-4">
                 <div class="card deliveryMan-card" style="width: 18rem;">
-                    <div class="text-center deliveryMan-card-header">
+                    <div class="text-center deliveryMan-card-header mt-3">
                         <img height="100" width="100" src="@Url.Content(client.PicturePath)" class="img rounded-circle img-deliveryMan-card" alt="Image">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">@client.FirstName @client.LastName</h5>
-                        <p class="card-text">Email: @client.Email</p>
-                        <p class="card-text">Téléphone: @client.Phone</p>
+                        <h5 class="card-title text-center">@client.FirstName @client.LastName</h5>
+                        <p class="card-text" style="font-size: 13px"><strong>Email:</strong> @client.Email</p>
+                        <p class="card-text" style="font-size: 13px"><strong>Téléphone:</strong> @client.Phone</p>
                         <div class="float-right">
                             <a onclick="deleteClient(@client.Id)" class="btn btn-simple btn-danger btn-icon"><i class="fa fa-trash"></i></a>
                         </div>

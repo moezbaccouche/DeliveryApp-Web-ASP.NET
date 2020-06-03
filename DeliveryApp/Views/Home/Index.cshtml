@@ -1,4 +1,5 @@
-﻿@{
+﻿@model DeliveryApp.Models.ViewModels.DashboardViewModel
+@{
     ViewBag.CurrentAction = "Index";
     ViewBag.CurrentController = "Dashboard";
     ViewBag.CurrentViewTitle = "Dashboard";
@@ -11,22 +12,45 @@
                 <div class="row">
                     <div class="col-5 col-md-4">
                         <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-globe text-warning"></i>
+                            <i class="nc-icon nc-badge text-warning"></i>
                         </div>
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Capacity</p>
-                            <p class="card-title">150GB<p>
+                            <p class="card-category">Nouveau livreur</p>
+                            <p class="card-title">@Model.NbNewDeliveryMen<p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-refresh"></i>
-                    Update Now
+            @if (Model.NbNewDeliveryMen > 0)
+            {
+                <div class="card-footer ">
+                    <hr>
+                    <div class="stats">
+                        <i style="font-size: 20px" class="nc-icon text-warning nc-alert-circle-i"></i>
+                        <a asp-action="NotValidatedDeliveryMen" asp-controller="DeliveryMan" class="text-warning"><strong>Gérer</strong></a> 
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center icon-warning">
+                            <i class="nc-icon nc-circle-10 text-success"></i>
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-category">Clients</p>
+                            <p class="card-category">Inscrits</p>
+                            <p class="card-title">@Model.NbClients<p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,24 +61,27 @@
                 <div class="row">
                     <div class="col-5 col-md-4">
                         <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-money-coins text-success"></i>
+                            <i class="nc-icon nc-basket text-danger"></i>
                         </div>
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Revenue</p>
-                            <p class="card-title">$ 1,345<p>
+                            <p class="card-category">Commandes en attente</p>
+                            <p class="card-title">@Model.NbPendingOrders<p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-calendar-o"></i>
-                    Last day
+            @if (Model.NbPendingOrders > 0)
+            {
+                <div class="card-footer ">
+                    <hr>
+                    <div class="stats">
+                        <i style="font-size: 20px" class="nc-icon text-warning nc-alert-circle-i"></i>
+                        <a asp-action="NotDeliveredOrders" asp-controller="Order" class="text-warning"><strong>Gérer</strong></a>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
     <div class="col-lg-3 col-md-6 col-sm-6">
@@ -63,48 +90,15 @@
                 <div class="row">
                     <div class="col-5 col-md-4">
                         <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-vector text-danger"></i>
+                            <i class="nc-icon nc-delivery-fast text-primary"></i>
                         </div>
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Errors</p>
-                            <p class="card-title">23<p>
+                            <p class="card-category">Commandes livrées</p>
+                            <p class="card-title">@Model.NbDeliveredOrders<p>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-clock-o"></i>
-                    In the last hour
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card card-stats">
-            <div class="card-body ">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-warning">
-                            <i class="nc-icon nc-favourite-28 text-primary"></i>
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-category">Followers</p>
-                            <p class="card-title">+45K<p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer ">
-                <hr>
-                <div class="stats">
-                    <i class="fa fa-refresh"></i>
-                    Update now
                 </div>
             </div>
         </div>
