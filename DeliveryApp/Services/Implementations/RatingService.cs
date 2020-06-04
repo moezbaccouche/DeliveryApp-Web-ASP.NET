@@ -62,6 +62,26 @@ namespace DeliveryApp.Services.Implementations
             return ratings;
         }
 
+        public double GetDeliveryManRatingOverall(int deliveryManId)
+        {
+            var ratings = repoRatings.TableNoTracking
+                .Where(r => r.IdDeliveryMan == deliveryManId)
+                .ToList();
+
+            double sum = 0;
+            double overall = 0;
+            if(ratings.Count() != 0)
+            {
+                foreach(var rating in ratings)
+                {
+                    sum += rating.Rate;
+                }
+                overall = Math.Round(sum / ratings.Count(), 2);
+            }
+
+            return overall;
+        }
+
         public IEnumerable<Rating> GetDeliveryManRatings(int deliveryManId)
         {
             var ratings = repoRatings.TableNoTracking
