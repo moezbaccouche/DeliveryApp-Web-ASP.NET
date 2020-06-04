@@ -10,9 +10,6 @@ namespace DeliveryApp.Services.Contracts
     {
         Order AddOrder(Order order);
         Order GetOrderById(int id);
-        IEnumerable<Order> GetDeliveredOrders();
-        IEnumerable<Order> GetPendingOrders();
-        IEnumerable<Order> GetInDeliveryOrders();
         Order DeleteOrder(int id);
         Order EditOrder(Order order);
         Order GetClientPendingOrder(int clientId);
@@ -21,5 +18,7 @@ namespace DeliveryApp.Services.Contracts
         int GetClientNbDeliveredProducts(int clientId);
         IEnumerable<Order> GetAllPendingOrders();
         IEnumerable<Order> GetAllDeliveredOrders();
+        IEnumerable<Order> GetAllProcessingOrders();
+        IEnumerable<Order> GetAllInDeliveryOrders();
     }
 }

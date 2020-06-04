@@ -1,4 +1,4 @@
-﻿@model DeliveryApp.Models.ViewModels.OrdersViewModel
+﻿@model DeliveryApp.Models.ViewModels.DeliveredOrdersViewModel
 @{
     ViewData["Title"] = "DeliveredOrders";
     ViewBag.CurrentController = "Order";
@@ -30,10 +30,10 @@
                         @foreach (var order in Model.DeliveredOrders)
                         {
                             <tr>
-                                <td>@order.Id</td>
-                                <td>@order.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td>@order.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td>@order.DeliveryPrice DT</td>
+                                <td>@order.DeliveredOrder.Id</td>
+                                <td>@order.DeliveryInfo.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@order.DeliveryInfo.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@order.DeliveredOrder.DeliveryPrice DT</td>
                                 <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
                                 <td>@order.Client.FirstName @order.Client.LastName</td>
                             </tr>

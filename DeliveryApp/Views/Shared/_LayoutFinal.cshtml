@@ -104,10 +104,16 @@ Coded by www.creative-tim.com
                         </a>
                         <div class="@(ViewBag.CurrentController == "Order" ? "collapse show" : "collapse")" id="pagesExamples">
                             <ul class="nav">
-                                <li class="@(ViewBag.CurrentAction == "NotDeliveredOrders" ? "active" : "")">
-                                    <a asp-controller="Order" asp-action="NotDeliveredOrders">
-                                        <span class="sidebar-mini-icon">AL</span>
-                                        <span class="sidebar-normal"> A Livrer </span>
+                                <li class="@(ViewBag.CurrentAction == "PendingOrders" ? "active" : "")">
+                                    <a asp-controller="Order" asp-action="PendingOrders">
+                                        <span class="sidebar-mini-icon">EA</span>
+                                        <span class="sidebar-normal"> En attente </span>
+                                    </a>
+                                </li>
+                                <li class="@(ViewBag.CurrentAction == "ProcessingOrders" ? "active" : "")">
+                                    <a asp-controller="Order" asp-action="ProcessingOrders">
+                                        <span class="sidebar-mini-icon">ET</span>
+                                        <span class="sidebar-normal"> En cours de traitement </span>
                                     </a>
                                 </li>
                                 <li class="@(ViewBag.CurrentAction == "InDeliveryOrders" ? "active" : "")">

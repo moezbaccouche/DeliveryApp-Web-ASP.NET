@@ -1,5 +1,6 @@
 ﻿@model DeliveryApp.Models.ViewModels.DashboardViewModel
 @{
+    ViewData["Title"] = "Dashboard";
     ViewBag.CurrentAction = "Index";
     ViewBag.CurrentController = "Dashboard";
     ViewBag.CurrentViewTitle = "Dashboard";
@@ -17,7 +18,7 @@
                     </div>
                     <div class="col-7 col-md-8">
                         <div class="numbers">
-                            <p class="card-category">Nouveau livreur</p>
+                            <p class="card-category">Nouveaux livreurs</p>
                             <p class="card-title">@Model.NbNewDeliveryMen<p>
                         </div>
                     </div>
@@ -78,7 +79,7 @@
                     <hr>
                     <div class="stats">
                         <i style="font-size: 20px" class="nc-icon text-warning nc-alert-circle-i"></i>
-                        <a asp-action="NotDeliveredOrders" asp-controller="Order" class="text-warning"><strong>Gérer</strong></a>
+                        <a asp-action="PendingOrders" asp-controller="Order" class="text-warning"><strong>Gérer</strong></a>
                     </div>
                 </div>
             }

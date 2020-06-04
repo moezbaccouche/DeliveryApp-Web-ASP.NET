@@ -1,0 +1,44 @@
+﻿@model DeliveryApp.Models.ViewModels.ProcessingOrderViewModel
+@{
+    ViewData["Title"] = "Commandes en cours de traitement";
+    ViewBag.CurrentController = "Order";
+    ViewBag.CurrentAction = "ProcessingOrders";
+    ViewBag.CurrentViewTitle = "Commandes en cours de traitement";
+}
+
+<h1>Commandes en cours de traitement</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <strong class="card-title">Data Table</strong>
+            </div>
+            <div class="card-body">
+                <table id="bootstrap-data-table-export" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Heure commande</th>
+                            <th>Client</th>
+                            <th>Livreur</th>
+                            <th>Heure estimée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.ProcessingOrders)
+                        {
+                            <tr>
+                                <td>@order.ProcessingOrder.Id</td>
+                                <td>@order.ProcessingOrder.OrderTime.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@order.Client.FirstName @order.Client.LastName</td>
+                                <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>  
+                                <td>@order.DeliveryInfo.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,43 +60,6 @@ namespace DeliveryApp.Services.Implementations
         }
 
 
-        //To be deleted later
-        public IEnumerable<Order> GetDeliveredOrders()
-        {
-            var deliveredOrders = repoOrder.TableNoTracking
-                .Where(o => o.Status == EnumOrderStatus.Delivered)
-                .Include(o => o.DeliveryMan)
-                .Include(o => o.Client)
-                .ToList();
-
-            return deliveredOrders;
-        }
-
-        //To be deleted later
-        public IEnumerable<Order> GetInDeliveryOrders()
-        {
-            var deliveredOrders = repoOrder.TableNoTracking
-                .Where(o => o.Status == EnumOrderStatus.InDelivery)
-                .Include(o => o.DeliveryMan)
-                .Include(o => o.DeliveryMan.Location)
-                .Include(o => o.Client)
-                .ToList();
-
-            return deliveredOrders;
-        }
-
-        //To be deleted later
-        public IEnumerable<Order> GetPendingOrders()
-        {
-            var deliveredOrders = repoOrder.TableNoTracking
-                .Where(o => o.Status == EnumOrderStatus.Pending)
-                .Include(o => o.DeliveryMan)
-                .Include(o => o.Client)
-                .ToList();
-
-            return deliveredOrders;
-        }
-
         public Order GetOrderById(int id)
         {
             var order = repoOrder.TableNoTracking.Where(o => o.Id == id).FirstOrDefault();
@@ -137,6 +100,24 @@ namespace DeliveryApp.Services.Implementations
                 .ToList();
 
             return deliveredOrders;
+        }
+
+        public IEnumerable<Order> GetAllProcessingOrders()
+        {
+            var processingOrders = repoOrder.TableNoTracking
+                .Where(o => o.Status == EnumOrderStatus.Processing)
+                .ToList();
+
+            return processingOrders;
+        }
+
+        public IEnumerable<Order> GetAllInDeliveryOrders()
+        {
+            var inDeliveryOrders = repoOrder.TableNoTracking
+                .Where(o => o.Status == EnumOrderStatus.InDelivery)
+                .ToList();
+
+            return inDeliveryOrders;
         }
     }
 }
