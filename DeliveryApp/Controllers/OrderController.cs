@@ -22,12 +22,15 @@ namespace DeliveryApp.Controllers
         private readonly IDeliveryInfoService deliveryInfoService;
         private readonly IClientService clientService;
         private readonly IEmailSenderService emailSenderService;
+        private readonly IProductService productService;
+        private readonly ICurrentLocationService currentLocationService;
 
         public OrderController(IOrderService orderService,
             IDeliveryManService deliveryManService,
             IProductOrderService productOrderService,
             IProductImageService productImageService, IDeliveryInfoService deliveryInfoService,
-            IClientService clientService, IEmailSenderService emailSenderService)
+            IClientService clientService, IEmailSenderService emailSenderService, IProductService productService,
+            ICurrentLocationService currentLocationService)
         {
             this.orderService = orderService;
             this.deliveryManService = deliveryManService;
@@ -36,6 +39,8 @@ namespace DeliveryApp.Controllers
             this.deliveryInfoService = deliveryInfoService;
             this.clientService = clientService;
             this.emailSenderService = emailSenderService;
+            this.productService = productService;
+            this.currentLocationService = currentLocationService;
         }
         public IActionResult Index()
         {
@@ -103,13 +108,15 @@ namespace DeliveryApp.Controllers
                 var client = clientService.GetClientById(order.IdClient);
                 var info = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
                 var deliveryMan = deliveryManService.GetDeliveryManById(info.IdDeliveryMan);
+                var deliveryManCurrentLocation = currentLocationService.GetDeliveryManCurrentLocation(deliveryMan.Id);
 
                 inDeliveryOrdersDto.Add(new InDeliveryOrderDto
                 {
                     InDeliveryOrder = order,
                     Client = client,
                     DeliveryMan = deliveryMan,
-                    DeliveryInfo = info
+                    DeliveryInfo = info,
+                    DeliveryManCurrentLocation = deliveryManCurrentLocation
                 });
             }
 
@@ -165,18 +172,22 @@ namespace DeliveryApp.Controllers
         {
             var order = orderService.GetOrderById(id);
             var orderProducts = productOrderService.GetOrderProducts(order);
-            List<ProductImage> productsImages = new List<ProductImage>();
-            foreach (var product in orderProducts)
-            {
-                var img = productImageService.GetProductImages(product.Article).FirstOrDefault();
-                productsImages.Add(img);
-            }
 
+            var dto = new List<OrderProductDto>();
+            foreach(var prod in orderProducts)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+                dto.Add(new OrderProductDto
+                {
+                    Product = product,
+                    ProductImage = productImageService.GetProductImages(product).FirstOrDefault(),
+                    OrderProduct = prod
+                });
+            }
 
             var model = new OrderProductsViewModel
             {
-                OrderProducts = orderProducts,
-                ProductImages = productsImages
+                OrderProducts = dto,
             };
 
             return PartialView("_OrderProducts", model);

@@ -12,5 +12,6 @@ namespace DeliveryApp.Models.DTO
         public Client Client { get; set; }
         public DeliveryMan DeliveryMan { get; set; }
         public DeliveryInfo DeliveryInfo { get; set; }
+        public CurrentLocation DeliveryManCurrentLocation { get; set; }
     }
 }

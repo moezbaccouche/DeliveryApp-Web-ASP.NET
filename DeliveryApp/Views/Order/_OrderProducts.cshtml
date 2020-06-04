@@ -6,17 +6,10 @@
         {
             <div style="margin-top: 10px" class="row">
                 <div class="col-sm-4 col-md-4 col-lg-4">
-                    @foreach (var img in Model.ProductImages)
-                    {
-                        if (img.Product.Id == op.Article.Id)
-                        {
-                            <img src="@Url.Content(img.ImagePath)" alt="Produit" />
-                            break;
-                        }
-                    }
+                    <img src="@Url.Content(op.ProductImage.ImagePath)" alt="Produit" />
                 </div>
                 <div class="col-sm-8 col-md-8 col-lg-8">
-                    <span><b>@op.Amount</b> @op.Article.Name</span>
+                    <span><b>@op.OrderProduct.Amount</b> @op.Product.Name</span>
                 </div>
             </div>
         }

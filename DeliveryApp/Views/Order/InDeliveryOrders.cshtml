@@ -11,15 +11,15 @@
 
 }
 
-    @if (TempData["Message"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show">
-            <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
-                <i class="nc-icon nc-simple-remove"></i>
-            </button>
-            <span>@TempData["Message"]</span>
-        </div>
-    }
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="nc-icon nc-simple-remove"></i>
+        </button>
+        <span>@TempData["Message"]</span>
+    </div>
+}
 
 
 <h1>Commandes en cours de livraison</h1>
@@ -51,7 +51,8 @@
                                 <td>
                                     @order.DeliveryMan.FirstName @order.DeliveryMan.LastName
                                     <a href="#" data-toggle="modal"
-                                       onclick="initMap(@order.DeliveryMan.Location.Long, @order.DeliveryMan.Location.Lat);"
+                                       onclick="initMap(@order.DeliveryManCurrentLocation.Long.ToString().Replace(",", "."), @order.DeliveryManCurrentLocation.Lat.ToString().Replace(",", "."),
+                                                        @order.Client.Location.Long.ToString().Replace(",", "."), @order.Client.Location.Lat.ToString().Replace(",", "."));"
                                        data-target="#locationModal"
                                        class="btn btn-simple btn-info btn-icon">
                                         <i class="fa fa-map-marker"></i>
@@ -73,7 +74,7 @@
                             <h5 class="modal-title">Localisation</h5>
                         </div>
                         <div class="modal-body">
-                            <div id="map"></div>
+                            <div id="map" style="height: 500px"></div>
                         </div>
                     </div>
                 </div>
@@ -87,19 +88,83 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
     <script>
 
-        function initMap(long, lat) {
+        function initMap(long, lat, cliLong, cliLat) {
 
+            setTimeout(function () {
+                buildMap(long, lat, cliLong, cliLat)
+            }, 0);
+        }
+
+        function buildMap(long, lat, cliLong, cliLat) {
             mapboxgl.accessToken = 'pk.eyJ1IjoibW9lejk2IiwiYSI6ImNqcHpmb2dxcjA3dmk0MnAzdHJhM2d1cWMifQ.F9tAenloATlCneHfirTbLw';
             var map = new mapboxgl.Map({
                 container: 'map',
                 style: 'mapbox://styles/mapbox/streets-v11',
                 center: [long, lat],
-                zoom: 10
+                zoom: 14
             });
 
-            var marker = new mapboxgl.Marker()
-                .setLngLat([long, lat])
+            map.addControl(new mapboxgl.NavigationControl());
+
+            var el = document.createElement("div");
+            el.className = "marker";
+            el.style.backgroundImage = "url(/assets/img/deliveryTruck48.png)";
+            el.style.width = "48px";
+            el.style.height = "48px";
+
+            var marker = new mapboxgl.Marker(el)
+                            .setLngLat([parseFloat(long), parseFloat(lat)])
+                            .addTo(map);
+            
+
+            new mapboxgl.Marker()
+                .setLngLat([parseFloat(cliLong), parseFloat(cliLat)])
                 .addTo(map);
+
+            var clientCoords = [cliLong, cliLat];
+            var deliveryManCoords = [long, lat];
+
+
+            var coords = [deliveryManCoords, clientCoords];
+            var newCoords = coords.join(";");
+
+            var query = "https://api.mapbox.com/directions/v5/mapbox/driving/" + newCoords +
+                            "?geometries=geojson&steps=true&access_token=pk.eyJ1IjoibW9lejk2IiwiYSI6ImNrOWZrM2JnNDBja28zZmp3ZDlwODc4bzcifQ.p6x9krXl1bJO4NDk0cCMuw";
+
+            console.log(query);
+
+            $.ajax({
+                       method: 'GET',
+                       url: query
+            }).done(function (data) {
+                 if (map.getSource("route")) {
+                        map.removeLayer("route");
+                        map.removeSource("route");
+                 }
+                map.addLayer({
+                    id: "route",
+                    type: "line",
+                    source: {
+                    type: "geojson",
+                    data: {
+                        type: "Feature",
+                        properties: {},
+                        geometry: data.routes[0].geometry,
+                    },
+                },
+                layout: {
+                    "line-join": "round",
+                    "line-cap": "round",
+                },
+                paint: {
+                    "line-color": "#1db7dd",
+                    "line-width": 8,
+                    "line-opacity": 0.8,
+                },
+            });
+            });
         }
+
+
     </script>
 }
