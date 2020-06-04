@@ -20,7 +20,6 @@ namespace DeliveryApp.Models.Data
         public bool IsValidated { get; set; }
         public bool IsAvailable { get; set; }
         public bool HasValidatedEmail { get; set; }
-        public ICollection<Order> OrdersToDeliver { get; set; }
         public string PlayerId { get; set; }
     }
 }

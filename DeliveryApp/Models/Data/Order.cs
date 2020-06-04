@@ -10,16 +10,9 @@ namespace DeliveryApp.Models.Data
     {
         public EnumOrderStatus Status { get; set; }
         public DateTime OrderTime { get; set; }
-        public DateTime EstimatedDeliveryTime { get; set; }
-        public DateTime RealDeliveryTime { get; set; }
         public double OrderPrice { get; set; }
         public double DeliveryPrice { get; set; }
-        public Client Client { get; set; }
         public int IdClient { get; set; }
-        public DeliveryMan DeliveryMan { get; set; }
         public bool WithBill { get; set; }
-
-        [NotMapped]
-        public ICollection<Product> Products { get; set; }
     }
 }

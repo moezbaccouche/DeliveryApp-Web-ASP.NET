@@ -10,7 +10,6 @@ namespace DeliveryApp.Services.Contracts
     {
         DeliveryInfo AddDeliveryInfo(DeliveryInfo newDeliveryInfo);
         DeliveryInfo EditDeliveryInfo(DeliveryInfo newDeliveryInfo);
-        DeliveryInfo RemoveDeliveryInfo(DeliveryInfo deliveryInfo);
         DeliveryInfo GetOrderDeliveryInfo(int orderId);
         IEnumerable<DeliveryInfo> GetAllDeliveryInfos();
         IEnumerable<DeliveryInfo> GetDeliveryManOrderHistory(int deliveryManId);

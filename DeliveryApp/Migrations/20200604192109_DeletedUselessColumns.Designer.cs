@@ -4,14 +4,16 @@ using DeliveryApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeliveryApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200604192109_DeletedUselessColumns")]
+    partial class DeletedUselessColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -360,6 +362,12 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DeliveryManId")
+                        .HasColumnType("int");
+
                     b.Property<double>("DeliveryPrice")
                         .HasColumnType("float");
 
@@ -379,6 +387,10 @@ namespace DeliveryApp.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("DeliveryManId");
 
                     b.ToTable("Order");
                 });
@@ -714,6 +726,17 @@ namespace DeliveryApp.Migrations
 
                     b.HasOne("DeliveryApp.Models.Data.DeliveryMan", "DeliveryMan")
                         .WithMany()
+                        .HasForeignKey("DeliveryManId");
+                });
+
+            modelBuilder.Entity("DeliveryApp.Models.Data.Order", b =>
+                {
+                    b.HasOne("DeliveryApp.Models.Data.Client", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("DeliveryApp.Models.Data.DeliveryMan", null)
+                        .WithMany("OrdersToDeliver")
                         .HasForeignKey("DeliveryManId");
                 });
 

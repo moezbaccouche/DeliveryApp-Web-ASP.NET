@@ -63,15 +63,5 @@ namespace DeliveryApp.Services.Implementations
             return info;
         }
 
-        public DeliveryInfo RemoveDeliveryInfo(DeliveryInfo deliveryInfo)
-        {
-            var info = (from i in repoDeliveryInfo.TableNoTracking
-                        where i.Order.Id == deliveryInfo.Id
-                        select i)
-                        .FirstOrDefault();
-
-            repoDeliveryInfo.Delete(info);
-            return info;
-        }
     }
 }

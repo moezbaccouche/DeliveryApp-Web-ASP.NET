@@ -51,7 +51,6 @@ namespace DeliveryApp.Services.Implementations
             var client = repoClients.TableNoTracking
                 .Where(c => c.Id == id)
                 .Include(c => c.Location)
-                .Include(c => c.Orders)
                 .FirstOrDefault();
             return client;
         }
