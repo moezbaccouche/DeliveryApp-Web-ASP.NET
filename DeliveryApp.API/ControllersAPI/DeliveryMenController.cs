@@ -379,7 +379,7 @@ namespace DeliveryApp.API.ControllersAPI
                 callBackUrl
                 );
 
-            await emailSenderService.SendClientConfirmationEmail(
+            await emailSenderService.SendUserConfirmationEmail(
                 newDeliveryMan.Email,
                 newDeliveryMan.FirstName + " " + newDeliveryMan.LastName,
                 messageBody

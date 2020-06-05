@@ -20,10 +20,12 @@ namespace DeliveryApp.Controllers
         private readonly ICurrentLocationService currentLocationService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRatingService ratingService;
+        private readonly IAdminService adminService;
 
         public DeliveryManController(IDeliveryManService deliveryManService, ILocationService locationService,
             IDeliveryInfoService deliveryInfoService, ICurrentLocationService currentLocationService,
-            UserManager<IdentityUser> userManager, IRatingService ratingService)
+            UserManager<IdentityUser> userManager, IRatingService ratingService,
+            IAdminService adminService)
         {
             this.deliveryManService = deliveryManService;
             this.locationService = locationService;
@@ -31,6 +33,7 @@ namespace DeliveryApp.Controllers
             this.currentLocationService = currentLocationService;
             _userManager = userManager;
             this.ratingService = ratingService;
+            this.adminService = adminService;
         }
         public IActionResult Index()
         {
@@ -39,6 +42,16 @@ namespace DeliveryApp.Controllers
 
         public IActionResult AllDeliveryMen()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             var allDeliveryMen = deliveryManService.GetAllDeliveryMen();
             DeliveryMenViewModel deliveryMenViewModel = new DeliveryMenViewModel
             {
@@ -49,6 +62,16 @@ namespace DeliveryApp.Controllers
 
         public IActionResult NotValidatedDeliveryMen()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
             var notValidatedDeliveryMen = deliveryManService.GetNotValidatedDeliveryMen();
             DeliveryMenViewModel deliveryMenViewModel = new DeliveryMenViewModel
             {
@@ -57,14 +80,11 @@ namespace DeliveryApp.Controllers
             return View(deliveryMenViewModel);
         }
 
-        public IActionResult Maps()
-        {
-            return View();
-        }
-
+       
         [HttpGet]
         public IActionResult EditDeliveryMan(int id)
         {
+
             var deliveryMan = deliveryManService.GetDeliveryManById(id);
             DeliveryMenViewModel model = new DeliveryMenViewModel { DeliveryMan = deliveryMan };
 

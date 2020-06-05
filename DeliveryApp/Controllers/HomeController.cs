@@ -9,6 +9,7 @@ using DeliveryApp.Models;
 using DeliveryApp.Services.Contracts;
 using DeliveryApp.Models.ViewModels;
 using DeliveryApp.Models.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace DeliveryApp.Controllers
 {
@@ -20,10 +21,11 @@ namespace DeliveryApp.Controllers
         private readonly IDeliveryManService deliveryManService;
         private readonly IRatingService ratingService;
         private readonly IDeliveryInfoService deliveryInfoService;
+        private readonly IAdminService adminService;
 
         public HomeController(ILogger<HomeController> logger, IOrderService orderService, IClientService clientService,
             IDeliveryManService deliveryManService, IRatingService ratingService,
-            IDeliveryInfoService deliveryInfoService)
+            IDeliveryInfoService deliveryInfoService, IAdminService adminService)
         {
             _logger = logger;
             this.orderService = orderService;
@@ -31,10 +33,22 @@ namespace DeliveryApp.Controllers
             this.deliveryManService = deliveryManService;
             this.ratingService = ratingService;
             this.deliveryInfoService = deliveryInfoService;
+            this.adminService = adminService;
         }
 
         public IActionResult Index()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+           
             var nbPendingOrders = orderService.GetAllPendingOrders().Count();
             var deliveredOrders = orderService.GetAllDeliveredOrders();
             var nbClients = clientService.GetAllClients().Count();
@@ -88,6 +102,8 @@ namespace DeliveryApp.Controllers
                 RatedDeliveryMen = ratedDeliveryMen,
                 DeliveredOrdersPerDeliveryMan = deliveredOrdersPerDeliveryMan
             };
+
+           
 
             return View(dashboardViewModel);
         }

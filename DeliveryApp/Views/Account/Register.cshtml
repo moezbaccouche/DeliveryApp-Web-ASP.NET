@@ -1,0 +1,259 @@
+﻿@model DeliveryApp.Models.ViewModels.RegisterViewModel
+@{
+    Layout = null;
+}
+<!--
+=========================================================
+* Paper Dashboard 2 PRO - v2.1.1
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-2-pro
+* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon"
+          sizes="76x76"
+          href="../../assets/img//apple-icon.png" />
+    <link rel="icon" type="image/png" href="../../assets/img//favicon.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        DeliveryTN - Inscription
+    </title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no"
+          name="viewport" />
+
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200"
+          rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"
+          rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/css/paper-dashboard.min.css?v=2.1.1" rel="stylesheet" />
+
+</head>
+
+<body class="register-page">
+
+
+    <div class="wrapper wrapper-full-page ">
+        <div class="full-page register-page section-image"
+             filter-color="black"
+             style="background-image: url('/assets/img/bg/jan-sendereks.jpg')">
+            <div class="content">
+                <div class="text-center" style="color:white">
+                    <h1>DeliveryTN</h1>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 ml-auto">
+                            <div class="info-area info-horizontal mt-5">
+                                <div class="icon icon-primary">
+                                    <i class="nc-icon nc-badge"></i>
+                                </div>
+                                <div class="description">
+                                    <h5 class="info-title">Gestion des livreurs</h5>
+                                    <p class="description">
+                                        Gérez vos livreurs et consultez leurs activités en toute simplicité.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="info-area info-horizontal">
+                                <div class="icon icon-primary">
+                                    <i class="nc-icon nc-basket"></i>
+                                </div>
+                                <div class="description">
+                                    <h5 class="info-title">Gestion des commandes</h5>
+                                    <p class="description">
+                                        Visualisez les commandes de vos clients et affectez les à vos livreurs.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="info-area info-horizontal">
+                                <div class="icon icon-info">
+                                    <i class="nc-icon nc-paper"></i>
+                                </div>
+                                <div class="description">
+                                    <h5 class="info-title">Centralisation</h5>
+                                    <p class="description">
+                                        Gardez toutes les informations nécessaires enregistrées de manière centralisée.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-8 mr-auto">
+                            <div class="card card-signup">
+                                <div class="card-header ">
+                                    <h4 class="card-title text-center">Inscription</h4>
+                                </div>
+                                <div class="card-body ">
+                                    <form class="form" method="post" asp-action="Register" asp-controller="Account" enctype="multipart/form-data">
+                                        <div class="author text-center">
+                                            <img height="95" width="95" style="border: solid 2px black; border-radius: 50% " id="adminPic" src="~/Content/AdminPictures/defaultAvatar.jpg" alt="Img">
+
+                                        </div>
+                                        <div class="text-center">
+                                            <span class="btn btn-info btn-round btn-file">
+                                                <span class="fileinput-exists">Changer</span>
+                                                <input id="file" type="file" onchange="adminPicChanged(event)" name="file">
+                                            </span>
+                                        </div>
+
+                                        @if (TempData["ErrorMessage"] != null)
+                                        {
+                                            <div class="alert alert-danger alert-dismissible fade show">
+                                                <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <i class="nc-icon nc-simple-remove"></i>
+                                                </button>
+                                                <span>@TempData["ErrorMessage"]</span>
+                                            </div>
+                                        }
+                                        
+                                        <div class="form-group">
+                                            <label for="firstName">Prénom</label>
+                                            <input asp-for="FirstName" class="form-control" id="firstName" placeholder="Prénom...">
+                                            <span class="text-danger" asp-validation-for="FirstName"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastName">Nom</label>
+                                            <input asp-for="LastName" type="text" class="form-control" id="lastName" placeholder="Nom...">
+                                            <span class="text-danger" asp-validation-for="LastName"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="formGroupExampleInput2">Email</label>
+                                            <input asp-for="Email" type="email" class="form-control" id="email" placeholder="Email">
+                                            <span class="text-danger" asp-validation-for="Email"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Mot de passe</label>
+                                            <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Mot de passe...">
+                                            <span class="text-danger" asp-validation-for="Password"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="phone">Téléphone</label>
+                                            <input asp-for="Phone" type="tel" class="form-control" id="phone" placeholder="Téléphone...">
+                                            <span class="text-danger" asp-validation-for="Phone"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="address">Adresse</label>
+                                            <input asp-for="Address" type="text" class="form-control" id="address" placeholder="Adresse...">
+                                            <span class="text-danger" asp-validation-for="Address"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <label for="city">Gouvernorat</label>
+                                                    <input asp-for="City" type="text" class="form-control" id="city" placeholder="Gouvernorat...">
+                                                    <span class="text-danger" asp-validation-for="City"></span>
+                                                </div>
+                                                <div class="col">
+                                                    <label for="zipCode">Code postal</label>
+                                                    <input asp-for="ZipCode" type="number" class="form-control" id="zipCode" placeholder="Code postal...">
+                                                    <span class="text-danger" asp-validation-for="ZipCode"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:10px" class="text-center">
+                                            <input type="submit" class="btn btn-info btn-round" value="S'inscrire" />
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center" style="margin-top: 0px; padding-top: 0px">
+
+                                    <span>Si vous possédez déjà un compte, <a asp-action="Login" asp-controller="Account">connectez-vous</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer footer-black  footer-white ">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="credits ml-auto">
+                            <span class="copyright">
+                                ©
+                                <script>document.write(new Date().getFullYear());</script>
+                                , made with <i class="fa fa-heart heart"></i> by Creative Tim
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!--   Core JS Files   -->
+    <script src="~/assets/js/core/jquery.min.js"></script>
+    <script src="~/assets/js/core/popper.min.js"></script>
+    <script src="~/assets/js/core/bootstrap.min.js"></script>
+    <script src="~/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <script src="~/assets/js/plugins/moment.min.js"></script>
+    <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+    <script src="~/assets/js/plugins/bootstrap-switch.js"></script>
+    <!--  Plugin for Sweet Alert -->
+    <script src="~/assets/js/plugins/sweetalert2.min.js"></script>
+    <!-- Forms Validations Plugin -->
+    <script src="~/assets/js/plugins/jquery.validate.min.js"></script>
+    <!--  Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
+    <script src="~/assets/js/plugins/jquery.bootstrap-wizard.js"></script>
+    <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+    <script src="~/assets/js/plugins/bootstrap-selectpicker.js"></script>
+    <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+    <script src="~/assets/js/plugins/bootstrap-datetimepicker.js"></script>
+    <!--  DataTables.net Plugin, full documentation here: https://datatables.net/    -->
+    <script src="~/assets/js/plugins/jquery.dataTables.min.js"></script>
+    <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+    <script src="~/assets/js/plugins/bootstrap-tagsinput.js"></script>
+    <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+    <script src="~/assets/js/plugins/jasny-bootstrap.min.js"></script>
+    <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
+    <script src="~/assets/js/plugins/fullcalendar/fullcalendar.min.js"></script>
+    <script src="~/assets/js/plugins/fullcalendar/daygrid.min.js"></script>
+    <script src="~/assets/js/plugins/fullcalendar/timegrid.min.js"></script>
+    <script src="~/assets/js/plugins/fullcalendar/interaction.min.js"></script>
+    <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
+    <script src="~/assets/js/plugins/jquery-jvectormap.js"></script>
+    <!--  Plugin for the Bootstrap Table -->
+    <script src="~/assets/js/plugins/nouislider.min.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Chart JS -->
+    <script src="~/assets/js/plugins/chartjs.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="~/assets/js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="~/assets/demo/demo.js"></script>
+    <!-- Sharrre libray -->
+    <script src="~/assets/demo/jquery.sharrre.js"></script>
+
+    <script src="~/js/site.js"></script>
+
+    <script>
+        function adminPicChanged(e) {
+            console.log(e);
+            var files = $("#file")[0].files;
+            console.log(files);
+            getBase64(files[0]).then(
+                 data => setAdminPic(data)
+            );
+            
+        }
+
+        function setAdminPic(str) {
+            $("#adminPic").attr("src", str);
+        }
+    </script>
+
+</body>
+</html>

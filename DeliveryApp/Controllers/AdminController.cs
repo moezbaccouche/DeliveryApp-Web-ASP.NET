@@ -41,7 +41,17 @@ namespace DeliveryApp.Controllers
         [HttpGet]
         public IActionResult Profile()
         {
-            var admin = adminService.GetAdminByEmail("ademo@gmail.com");
+            Admin loggedUser = null;
+            try
+            {
+                loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
             var deliveryMen = deliveryManService.GetAllDeliveryMen();
             var allClients = clientService.GetAllClients();
@@ -49,7 +59,7 @@ namespace DeliveryApp.Controllers
 
             ProfileViewModel avm = new ProfileViewModel
             {
-                Admin = admin,
+                Admin = loggedUser,
                 NbClients = allClients.Count(), 
                 NbDeliveredOrders = allDeliveredOrders.Count(),
                 DeliveryMen = deliveryMen

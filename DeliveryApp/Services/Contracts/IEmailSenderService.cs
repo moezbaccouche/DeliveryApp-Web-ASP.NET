@@ -7,7 +7,7 @@ namespace DeliveryApp.Services.Contracts
 {
     public interface IEmailSenderService
     {
-        Task SendClientConfirmationEmail(string receiverEmail, string receiverFullName, string message);
+        Task SendUserConfirmationEmail(string receiverEmail, string receiverFullName, string message);
         Task SendResetPasswordEmail(string receiverEmail, string message);
         Task SendBoundOrderDeliveryEmail(string receiverEmail, string receiverFullName, string message);
     }

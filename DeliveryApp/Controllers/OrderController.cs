@@ -8,6 +8,7 @@ using DeliveryApp.Models.Data;
 using DeliveryApp.Models.DTO;
 using DeliveryApp.Models.ViewModels;
 using DeliveryApp.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 
@@ -24,13 +25,14 @@ namespace DeliveryApp.Controllers
         private readonly IEmailSenderService emailSenderService;
         private readonly IProductService productService;
         private readonly ICurrentLocationService currentLocationService;
+        private readonly IAdminService adminService;
 
         public OrderController(IOrderService orderService,
             IDeliveryManService deliveryManService,
             IProductOrderService productOrderService,
             IProductImageService productImageService, IDeliveryInfoService deliveryInfoService,
             IClientService clientService, IEmailSenderService emailSenderService, IProductService productService,
-            ICurrentLocationService currentLocationService)
+            ICurrentLocationService currentLocationService, IAdminService adminService)
         {
             this.orderService = orderService;
             this.deliveryManService = deliveryManService;
@@ -41,6 +43,7 @@ namespace DeliveryApp.Controllers
             this.emailSenderService = emailSenderService;
             this.productService = productService;
             this.currentLocationService = currentLocationService;
+            this.adminService = adminService;
         }
         public IActionResult Index()
         {
@@ -49,6 +52,17 @@ namespace DeliveryApp.Controllers
 
         public IActionResult PendingOrders()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var pendingOrders = orderService.GetAllPendingOrders();
             var pendingOrdersDto = new List<PendingOrderDto>();
             foreach (var order in pendingOrders)
@@ -71,6 +85,17 @@ namespace DeliveryApp.Controllers
         [HttpGet]
         public IActionResult ProcessingOrders()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var processingOrders = orderService.GetAllProcessingOrders();
 
             var processingOrdersDto = new List<ProcessingOrderDto>();
@@ -100,6 +125,17 @@ namespace DeliveryApp.Controllers
         [HttpGet]
         public IActionResult InDeliveryOrders()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var inDeliveryOrders = orderService.GetAllInDeliveryOrders();
 
             var inDeliveryOrdersDto = new List<InDeliveryOrderDto>();
@@ -131,6 +167,18 @@ namespace DeliveryApp.Controllers
         [HttpGet]
         public IActionResult DeliveredOrders()
         {
+
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var deliveredOrders = orderService.GetAllDeliveredOrders();
 
             var deliveredOrdersDto = new List<DeliveredOrderDto>();

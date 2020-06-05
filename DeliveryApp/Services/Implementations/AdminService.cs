@@ -18,6 +18,15 @@ namespace DeliveryApp.Services.Implementations
             this.repoAdmins = repoAdmins;
         }
 
+        public Admin AddAdmin(Admin admin)
+        {
+            if(admin != null)
+            {
+                repoAdmins.Insert(admin);
+            }
+            return admin;
+        }
+
         public Admin EditAdmin(Admin admin)
         {
             if(admin != null)
@@ -41,6 +50,15 @@ namespace DeliveryApp.Services.Implementations
         {
             var admin = repoAdmins.TableNoTracking
                 .Where(a => a.Id == id)
+                .Include(a => a.Location)
+                .FirstOrDefault();
+            return admin;
+        }
+
+        public Admin GetAdminByIdentityId(string identityId)
+        {
+            var admin = repoAdmins.TableNoTracking
+                .Where(a => a.IdentityId == identityId)
                 .Include(a => a.Location)
                 .FirstOrDefault();
             return admin;

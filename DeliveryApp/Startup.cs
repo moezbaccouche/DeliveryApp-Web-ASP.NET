@@ -47,7 +47,14 @@ namespace DeliveryApp
                 options.Password.RequiredLength = 4;
             });
 
-            
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".AdventureWorks.Session";
+                options.IdleTimeout = TimeSpan.FromDays(365);
+                options.Cookie.IsEssential = true;
+            });
+
+
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -86,6 +93,8 @@ namespace DeliveryApp
             }
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 

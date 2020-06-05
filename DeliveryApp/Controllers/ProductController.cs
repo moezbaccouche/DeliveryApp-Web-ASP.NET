@@ -22,20 +22,33 @@ namespace DeliveryApp.Controllers
         private readonly IHtmlHelper htmlHelper;
         private readonly IProductService productService;
         private readonly IProductImageService productImageService;
+        private readonly IAdminService adminService;
 
         public ProductController(ApplicationDbContext context, ICategoryService categoryService, IHtmlHelper htmlHelper,
-            IProductService productService, IProductImageService productImageService)
+            IProductService productService, IProductImageService productImageService, IAdminService adminService)
         {
             _context = context;
             this.categoryService = categoryService;
             this.htmlHelper = htmlHelper;
             this.productService = productService;
             this.productImageService = productImageService;
+            this.adminService = adminService;
         }
 
         [HttpGet]
         public IActionResult AddProduct()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var categories = categoryService.GetAllCategories();
             var units = htmlHelper.GetEnumSelectList<EnumProductUnit>();
             ProductViewModel pvm = new ProductViewModel { Categories = categories, Units = units };
@@ -70,6 +83,17 @@ namespace DeliveryApp.Controllers
 
         public IActionResult AllProducts()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var allCategories = categoryService.GetAllCategories();
             var allProducts = productService.GetAllProducts();
 

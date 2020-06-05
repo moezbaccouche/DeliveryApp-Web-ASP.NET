@@ -15,10 +15,12 @@ namespace DeliveryApp.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;
+        private readonly IAdminService adminService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IAdminService adminService)
         {
             this.categoryService = categoryService;
+            this.adminService = adminService;
         }
 
 
@@ -30,6 +32,17 @@ namespace DeliveryApp.Controllers
         [HttpGet]
         public IActionResult AddCategory()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             return View();
         }
 
@@ -56,6 +69,17 @@ namespace DeliveryApp.Controllers
         [HttpGet]
         public IActionResult AllCategories()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var allCategories = categoryService.GetAllCategories();
             var catViewModel = new CategoryViewModel { Categories = allCategories };
             return View(catViewModel);

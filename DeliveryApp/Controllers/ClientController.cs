@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DeliveryApp.Models.ViewModels;
 using DeliveryApp.Services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,10 +19,11 @@ namespace DeliveryApp.Controllers
         private readonly IFavoritesService favoritesService;
         private readonly ICartProductService cartProductService;
         private readonly IRatingService ratingService;
+        private readonly IAdminService adminService;
 
         public ClientController(IClientService clientService, UserManager<IdentityUser> userManager,
             ILocationService locationService, IOrderService orderService, IFavoritesService favoritesService,
-            ICartProductService cartProductService, IRatingService ratingService)
+            ICartProductService cartProductService, IRatingService ratingService, IAdminService adminService)
         {
             this.clientService = clientService;
             _userManager = userManager;
@@ -30,6 +32,7 @@ namespace DeliveryApp.Controllers
             this.favoritesService = favoritesService;
             this.cartProductService = cartProductService;
             this.ratingService = ratingService;
+            this.adminService = adminService;
         }
         public IActionResult Index()
         {
@@ -38,6 +41,17 @@ namespace DeliveryApp.Controllers
 
         public IActionResult AllClients()
         {
+            try
+            {
+                var loggedUser = adminService.GetAdminById(HttpContext.Session.GetInt32("AdminId").Value);
+                ViewBag.LoggedUserFullName = $"{loggedUser.FirstName} {loggedUser.LastName}";
+                ViewBag.LoggedUserPicture = loggedUser.PicturePath;
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var allClients = clientService.GetAllClients();
             ClientViewModel cvm = new ClientViewModel { AllClients = allClients };
 

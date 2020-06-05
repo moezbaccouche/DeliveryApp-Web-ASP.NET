@@ -46,7 +46,7 @@ namespace DeliveryApp.Services.Implementations
             }
         }
 
-        public async Task SendClientConfirmationEmail(string receiverEmail, string receiverFullName, string message)
+        public async Task SendUserConfirmationEmail(string receiverEmail, string receiverFullName, string message)
         {
             try
             {
