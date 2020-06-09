@@ -283,12 +283,14 @@ namespace DeliveryApp.API.ControllersAPI
         [HttpPost("resetPassword")]
         public async Task<Object> ForgotPassword(EmailForForgotPasswordDto emailDto)
         {
+
+            var ip = UsefulMethods.GetLocalIPAddress();
             var user = await _userManager.FindByEmailAsync(emailDto.Email);
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-                var callBackUrl = "http://192.168.1.5:51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
+                var callBackUrl = "http://" + ip + ":51044/api/resetPassword?userId=" + user.Id + "&token=" + token;
 
                 string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
                 string path;
@@ -359,7 +361,8 @@ namespace DeliveryApp.API.ControllersAPI
 
         private async void SendVerificationEmail(DeliveryMan newDeliveryMan, string userId, string code)
         {
-            var callBackUrl = "http://192.168.1.5:51044/api/ConfirmDeliveryManEmail?userId=" + userId + "&code=" + code;
+            var ip = UsefulMethods.GetLocalIPAddress();
+            var callBackUrl = "http://" + ip + ":51044/api/ConfirmDeliveryManEmail?userId=" + userId + "&code=" + code;
 
             string parent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             string path;
