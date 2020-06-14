@@ -1,4 +1,5 @@
 ﻿using DeliveryApp.Models.Data;
+using DeliveryApp.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace DeliveryApp.Services.Contracts
         IEnumerable<Order> GetAllDeliveredOrders();
         IEnumerable<Order> GetAllProcessingOrders();
         IEnumerable<Order> GetAllInDeliveryOrders();
+        FileModel ExportHistoryFile(IEnumerable<DeliveredOrderDto> deliveredOrders);
     }
 }

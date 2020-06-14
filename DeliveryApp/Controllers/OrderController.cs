@@ -304,6 +304,31 @@ namespace DeliveryApp.Controllers
                 );
         }
 
+        [HttpGet]
+        public IActionResult ExportToExcel()
+        {
+            var deliveredOrders = orderService.GetAllDeliveredOrders();
+
+            var deliveredOrdersDto = new List<DeliveredOrderDto>();
+            foreach (var order in deliveredOrders)
+            {
+                var client = clientService.GetClientById(order.IdClient);
+                var info = deliveryInfoService.GetOrderDeliveryInfo(order.Id);
+                var deliveryMan = deliveryManService.GetDeliveryManById(info.IdDeliveryMan);
+
+                deliveredOrdersDto.Add(new DeliveredOrderDto
+                {
+                    DeliveredOrder = order,
+                    Client = client,
+                    DeliveryMan = deliveryMan,
+                    DeliveryInfo = info
+                });
+            }
+
+            var fileModel = orderService.ExportHistoryFile(deliveredOrdersDto);
+            return File(fileModel.Content, fileModel.ContentType, fileModel.FileName);
+        }
+
 
     }
 }

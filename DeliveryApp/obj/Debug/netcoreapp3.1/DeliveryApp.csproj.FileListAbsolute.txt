@@ -206,7 +206,12 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Account\ConfirmUserEmail.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Order\ProcessingOrders.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Order\PendingOrders.cshtml.g.cs
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Account\Login.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\OfficeOpenXml.Core.ExcelPackage.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\System.IO.Packaging.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\ClosedXML.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache

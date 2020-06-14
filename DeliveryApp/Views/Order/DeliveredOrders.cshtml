@@ -33,13 +33,20 @@
                                 <td>@order.DeliveredOrder.Id</td>
                                 <td>@order.DeliveryInfo.EstimatedDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>@order.DeliveryInfo.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
-                                <td>@order.DeliveredOrder.DeliveryPrice DT</td>
+                                <td>@order.DeliveredOrder.OrderPrice DT</td>
                                 <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
                                 <td>@order.Client.FirstName @order.Client.LastName</td>
                             </tr>
                         }
                     </tbody>
                 </table>
+                @if (Model.DeliveredOrders.Count() != 0)
+                {
+                    <div class="text-center">
+                        <a asp-controller="Order" asp-action="ExportToExcel" class="btn btn-info">Exporter en Excel</a>
+                    </div>
+                }
+
             </div>
         </div>
     </div>

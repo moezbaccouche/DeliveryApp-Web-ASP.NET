@@ -187,3 +187,8 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\D
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ApiResetPassword.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ApiSuccessfulPasswordReset.cshtml.g.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\obj\Debug\netcoreapp3.1\Razor\ViewsAPI\Account\ConfirmUserEmail.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\ClosedXML.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\DocumentFormat.OpenXml.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\OfficeOpenXml.Core.ExcelPackage.dll
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp.API\bin\Debug\netcoreapp3.1\System.IO.Packaging.dll
