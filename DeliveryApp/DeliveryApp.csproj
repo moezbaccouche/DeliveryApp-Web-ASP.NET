@@ -44,4 +44,12 @@
     <None Include="wwwroot\vendors\jquery-validation-unobtrusive\.vsts-pipelines\builds\ci-public.yml" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Update="Views\Order\Invoice.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

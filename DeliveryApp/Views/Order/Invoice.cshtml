@@ -1,0 +1,88 @@
+﻿@model DeliveryApp.Models.DTO.InvoiceDto
+
+@{
+    Layout = "InvoiceLayout";
+}
+
+
+
+<main>
+    <div class="row contacts">
+        <div class="col invoice-to">
+            <div class="text-gray-light">Facture pour:</div>
+            <h2 class="to">@Model.Client.FirstName @Model.Client.LastName</h2>
+            <div class="address">@Model.Client.Location.Address, @Model.Client.Location.City, @Model.Client.Location.ZipCode</div>
+            <div class="email">
+                <a href="#">@Model.Client.Email</a>
+            </div>
+        </div>
+        <div class="col invoice-details">
+            <div class="date">Date commande: @Model.Order.OrderTime.ToString("dd/MM/yyyy HH:mm")</div>
+            <div class="date">Date facture: @Model.DeliveryInfo.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</div>
+        </div>
+    </div>
+    <table border="0" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th class="text-left">ARTICLE</th>
+                <th class="text-right">QUANTITE</th>
+                <th class="text-right">PRIX UNITAIRE</th>
+                <th class="text-right">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                int i = 0;
+                var totalPrice = Model.Order.DeliveryPrice + Model.Order.OrderPrice;
+
+            }
+            @foreach (var orderProduct in Model.OrderProducts)
+            {
+                i++;
+                var productTotalPrice = orderProduct.Product.Price * Int32.Parse(orderProduct.OrderProduct.Amount);
+                <tr>
+                    <td class="no">@i</td>
+                    <td class="text-left">
+                        <h3>
+                            @orderProduct.Product.Name
+                        </h3>
+                    </td>
+                    <td class="qty">@orderProduct.OrderProduct.Amount</td>
+                    <td class="unit">@orderProduct.Product.Price DT</td>
+                    <td class="total">@productTotalPrice DT</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="2">Prix total articles</td>
+                <td>@Model.Order.OrderPrice</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="2">Prix de livraison</td>
+                <td>@Model.Order.DeliveryPrice</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td colspan="2">Total</td>
+                <td>@totalPrice DT</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="thanks">Nous vous remercions pour votre confiance ! A bientôt</div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <span style="font-weight: bold; font-size: medium;">Signature</span>
+            <br />
+            <img src="data:image/jpeg;base64,@Model.SignatureBase64String"
+                 alt="Img Signature"
+                 height="200"
+                 width="200" />
+        </div>
+    </div>
+</main>

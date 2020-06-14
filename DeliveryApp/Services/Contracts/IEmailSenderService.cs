@@ -10,5 +10,6 @@ namespace DeliveryApp.Services.Contracts
         Task SendUserConfirmationEmail(string receiverEmail, string receiverFullName, string message);
         Task SendResetPasswordEmail(string receiverEmail, string message);
         Task SendBoundOrderDeliveryEmail(string receiverEmail, string receiverFullName, string message);
+        Task SendEmail(string receiverEmail, string subject, string message);
     }
 }

@@ -16,6 +16,7 @@ using PFEGestionConges.Data.Repo;
 using DeliveryApp.Services.Contracts;
 using DeliveryApp.Services.Implementations;
 using Microsoft.AspNetCore.Http;
+using DeliveryApp.RazorHtmlEmails;
 
 namespace DeliveryApp
 {
@@ -74,6 +75,7 @@ namespace DeliveryApp
             services.AddTransient<IRatingService, RatingService>();
             services.AddTransient<ICurrentLocationService, CurrentLocationService>();
             services.AddTransient<IEmailSenderService, EmailSenderService>();
+            services.AddTransient<IRazorViewToStringRenderer, RazorViewToStringRenderer>();
 
             // Repository
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));

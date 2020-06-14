@@ -24,6 +24,7 @@
                             <th>Prix</th>
                             <th>Livreur</th>
                             <th>Client</th>
+                            <th>Opération</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +37,17 @@
                                 <td>@order.DeliveredOrder.OrderPrice DT</td>
                                 <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
                                 <td>@order.Client.FirstName @order.Client.LastName</td>
+                                @if (order.DeliveredOrder.WithBill)
+                                {
+                                    <td>
+                                        <a href="SendInvoice?orderId=@order.DeliveredOrder.Id"><i class="fa fa-print text-info"></i></a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>

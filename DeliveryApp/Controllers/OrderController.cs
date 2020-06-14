@@ -7,6 +7,7 @@ using DeliveryApp.Extensions;
 using DeliveryApp.Models.Data;
 using DeliveryApp.Models.DTO;
 using DeliveryApp.Models.ViewModels;
+using DeliveryApp.RazorHtmlEmails;
 using DeliveryApp.Services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +27,16 @@ namespace DeliveryApp.Controllers
         private readonly IProductService productService;
         private readonly ICurrentLocationService currentLocationService;
         private readonly IAdminService adminService;
+        private readonly IRazorViewToStringRenderer _razorViewToStringRenderer;
+
 
         public OrderController(IOrderService orderService,
             IDeliveryManService deliveryManService,
             IProductOrderService productOrderService,
             IProductImageService productImageService, IDeliveryInfoService deliveryInfoService,
             IClientService clientService, IEmailSenderService emailSenderService, IProductService productService,
-            ICurrentLocationService currentLocationService, IAdminService adminService)
+            ICurrentLocationService currentLocationService, IAdminService adminService, 
+            IRazorViewToStringRenderer razorViewToStringRenderer)
         {
             this.orderService = orderService;
             this.deliveryManService = deliveryManService;
@@ -44,6 +48,7 @@ namespace DeliveryApp.Controllers
             this.productService = productService;
             this.currentLocationService = currentLocationService;
             this.adminService = adminService;
+            _razorViewToStringRenderer = razorViewToStringRenderer;
         }
         public IActionResult Index()
         {
@@ -329,6 +334,45 @@ namespace DeliveryApp.Controllers
             return File(fileModel.Content, fileModel.ContentType, fileModel.FileName);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SendInvoice(int orderId)
+        {
+            var order = orderService.GetOrderById(orderId);
+            var client = clientService.GetClientById(order.IdClient);
+            var infos = deliveryInfoService.GetOrderDeliveryInfo(orderId);
+            var orderProducts = productOrderService.GetOrderProducts(order);
+            var signatureBase64String = Convert.ToBase64String(infos.SignatureImageBase64);
 
+
+            var dto = new List<OrderProductDto>();
+            foreach (var prod in orderProducts)
+            {
+                var product = productService.GetProductById(prod.IdProduct);
+                dto.Add(new OrderProductDto
+                {
+                    Product = product,
+                    ProductImage = productImageService.GetProductImages(product).FirstOrDefault(),
+                    OrderProduct = prod
+                });
+            }
+
+            var invoiceViewModel = new InvoiceDto
+            {
+                Order = order,
+                DeliveryInfo = infos,
+                Client = client,
+                OrderProducts = dto,
+                SignatureBase64String = signatureBase64String
+            };
+
+            string body = await _razorViewToStringRenderer.RenderViewToStringAsync("/Views/Order/Invoice.cshtml", invoiceViewModel);
+
+            await emailSenderService.SendEmail(client.Email, "Facture", body);
+
+            order.WithBill = false;
+            orderService.EditOrder(order);
+
+            return RedirectToAction("DeliveredOrders");
+        }
     }
 }

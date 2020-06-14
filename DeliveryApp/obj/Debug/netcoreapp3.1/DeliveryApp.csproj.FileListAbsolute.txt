@@ -215,3 +215,5 @@ C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\Docum
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\bin\Debug\netcoreapp3.1\ExcelNumberFormat.dll
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\DeliveryApp.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Order\Invoice.cshtml.g.cs
+C:\Users\Moez\source\repos\DeliveryApp\DeliveryApp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\InvoiceLayout.cshtml.g.cs
