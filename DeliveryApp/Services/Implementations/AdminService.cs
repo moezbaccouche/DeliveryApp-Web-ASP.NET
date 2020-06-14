@@ -63,5 +63,11 @@ namespace DeliveryApp.Services.Implementations
                 .FirstOrDefault();
             return admin;
         }
+
+        public IEnumerable<Admin> GetAllAdmins()
+        {
+            var admins = repoAdmins.TableNoTracking.ToList();
+            return admins;
+        }
     }
 }

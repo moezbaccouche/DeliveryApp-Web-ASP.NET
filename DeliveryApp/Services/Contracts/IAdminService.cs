@@ -13,5 +13,6 @@ namespace DeliveryApp.Services.Contracts
         Admin GetAdminByIdentityId(string identityId);
         Admin GetAdminByEmail(string email);
         Admin EditAdmin(Admin admin);
+        IEnumerable<Admin> GetAllAdmins();
     }
 }

@@ -27,11 +27,14 @@ namespace DeliveryApp.API.ControllersAPI
         private readonly IDeliveryManService deliveryManService;
         private readonly IRatingService ratingService;
         private readonly IMapper _mapper;
+        private readonly IAdminService adminService;
+        private readonly IEmailSenderService emailSenderService;
 
         public OrderController(IClientService clientService, IOrderService orderService,
             IProductOrderService productOrderService, IProductService productService,
             ICartProductService cartProductService, IDeliveryInfoService deliveryInfoService,
-            IDeliveryManService deliveryManService, IRatingService ratingService, IMapper mapper)
+            IDeliveryManService deliveryManService, IRatingService ratingService, IMapper mapper,
+            IAdminService adminService, IEmailSenderService emailSenderService)
         {
             this.clientService = clientService;
             this.orderService = orderService;
@@ -42,6 +45,8 @@ namespace DeliveryApp.API.ControllersAPI
             this.deliveryManService = deliveryManService;
             this.ratingService = ratingService;
             _mapper = mapper;
+            this.adminService = adminService;
+            this.emailSenderService = emailSenderService;
         }
 
         [EnableCors("AllowAll")]
@@ -56,7 +61,7 @@ namespace DeliveryApp.API.ControllersAPI
 
             //Calculate delivery price
             double deliveryPrice;
-            if(orderDto.Distance >= 0 && orderDto.Distance <= 10)
+            if (orderDto.Distance >= 0 && orderDto.Distance <= 10)
             {
                 deliveryPrice = 2;
             }
@@ -113,6 +118,19 @@ namespace DeliveryApp.API.ControllersAPI
             //Empty the client cart
             cartProductService.RemoveAllProducts(client.Id);
 
+            //Send email to admins
+            var admin = adminService.GetAdminByEmail("moez.deliverytn@gmail.com");
+
+            if(admin != null)
+            {
+                var msg = "<span>Bonjour <strong>" + admin.FirstName + " " + admin.LastName + "</strong>,</span>" +
+                "<br />" +
+                "<p>Une nouvelle commande a été enregistrée.</p>" +
+                "<p>Connectez-vous à l'application pour avoir plus de détails en cliquant <a href='https://localhost:44352/Order/PendingOrders'>ici</a></p>";
+
+                emailSenderService.SendEmail(admin.Email, "Nouvelle commande", msg);
+            }
+            
             return Ok(order);
         }
 
@@ -877,13 +895,13 @@ namespace DeliveryApp.API.ControllersAPI
         public ActionResult<int> CancelPendingOrder([FromBody] OrderToCancel orderToCancel)
         {
             var order = orderService.GetOrderById(orderToCancel.OrderId);
-            if(order == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
             var orderProducts = productOrderService.GetOrderProducts(order);
-            foreach(var product in orderProducts)
+            foreach (var product in orderProducts)
             {
                 productOrderService.DeleteProduct(orderToCancel.OrderId, product.IdProduct);
             }
