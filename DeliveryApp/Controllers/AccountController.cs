@@ -49,6 +49,12 @@ namespace DeliveryApp.Controllers
             if(user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var admin = adminService.GetAdminByIdentityId(user.Id);
+                if(admin == null)
+                {
+                    TempData["ErrorMessage"] = "Email ou mot de passe incorrect.";
+                    return View();
+                }
+
                 if(!admin.HasValidatedEmail)
                 {
                     TempData["ErrorMessage"] = "Votre compte n'est encore activé. Vérifiez votre boite Emails.";

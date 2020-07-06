@@ -8,6 +8,16 @@
 
 <h1>Commandes livrées</h1>
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="nc-icon nc-simple-remove"></i>
+        </button>
+        <span>@TempData["Message"]</span>
+    </div>
+}
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -23,6 +33,7 @@
                             <th>Heure réelle</th>
                             <th>Prix</th>
                             <th>Livreur</th>
+                            <th>Prix livraison</th>
                             <th>Client</th>
                             <th>Opération</th>
                         </tr>
@@ -36,6 +47,7 @@
                                 <td>@order.DeliveryInfo.RealDeliveryTime.ToString("dd/MM/yyyy HH:mm")</td>
                                 <td>@order.DeliveredOrder.OrderPrice DT</td>
                                 <td>@order.DeliveryMan.FirstName @order.DeliveryMan.LastName</td>
+                                <td>@order.DeliveredOrder.DeliveryPrice DT</td>
                                 <td>@order.Client.FirstName @order.Client.LastName</td>
                                 @if (order.DeliveredOrder.WithBill)
                                 {

@@ -654,14 +654,13 @@ namespace DeliveryApp.API.ControllersAPI
                 return NotFound();
             }
 
-            double totalPrice = order.OrderPrice;
+            double totalPrice = 0;
             /*
              * If there are missing products we have to delete them from orderProducts table 
              * and update the orderPrice
             */
             if (orderToUpdate.MissingProducts.Length != 0)
             {
-                totalPrice = 0;
                 foreach (int id in orderToUpdate.MissingProducts)
                 {
                     var orderProduct = productOrderService.GetOrderProduct(orderToUpdate.IdOrder, id);

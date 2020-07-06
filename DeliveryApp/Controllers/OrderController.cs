@@ -372,6 +372,7 @@ namespace DeliveryApp.Controllers
             order.WithBill = false;
             orderService.EditOrder(order);
 
+            TempData["Message"] = "Facture envoyée à " + client.FirstName + " " + client.LastName;
             return RedirectToAction("DeliveredOrders");
         }
     }
